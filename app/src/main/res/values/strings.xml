@@ -1,0 +1,62 @@
+<resources>
+    <string name="app_name">Cash Flow</string>
+
+    <string name="wallet">Wallet</string>
+    <string name="this_month_balance">This month balance</string>
+    <string name="balance">Balance: %1$s</string>
+
+    <string name="bills">To Add Bills</string>
+    <string name="clothes">To Add Clothes</string>
+    <string name="eating_out">To Add Eating out</string>
+    <string name="entertainment">To Add Entertainment</string>
+    <string name="food">Food</string>
+    <string name="gifts">To Add Gifts</string>
+    <string name="health">Health</string>
+    <string name="home">Home</string>
+    <string name="pets">To Add Pets</string>
+    <string name="sport">Sport</string>
+    <string name="subscription">To Add Subscriptions</string>
+    <string name="transportation">Transportation</string>
+    <string name="travel">Travel</string>
+    <string name="no_category">No category</string>
+
+    <string name="salary">Salary</string>
+    <string name="savings">Savings</string>
+
+    <string name="deposit">Deposit</string>
+    <string name="expense">Expense</string>
+    <string name="move">Movement</string>
+    <string name="new_deposit">New deposit</string>
+    <string name="new_expense">New expense</string>
+    <string name="new_move">New movement</string>
+
+    <string name="amount">Amount</string>
+    <string name="description">Description</string>
+    <string name="transaction_saved">Transaction saved</string>
+    <string name="transaction_deleted">Transaction deleted</string>
+    <string name="transaction_report">Transaction report</string>
+    <string name="amount_insert_prompt">Insert the amount</string>
+
+    <string name="tag">Tag</string>
+    <string name="tag_no">No tags</string>
+    <string name="tag_add">Add tag</string>
+    <string name="tag_show">Show tags</string>
+
+    <string name="category">Category</string>
+    <string name="category_add">Add category</string>
+    <string name="category_show">Category: %1$s</string>
+    <string name="category_select_prompt">Select the category</string>
+
+    <string name="location">Location</string>
+    <string name="location_add">Add location</string>
+
+    <string name="movement_select_wallets">Select wallets</string>
+
+    <string name="currency_eur_name">Euro</string>
+    <string name="currency_usd_name">US dollar</string>
+    <string name="currency_sek_name">Swedish crown</string>
+
+    <string name="err_divide_by_zero">Cannot divide by zero</string>
+    <string name="loading">Loading</string>
+
+</resources>
