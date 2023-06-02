@@ -7,6 +7,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.zhengzhou.cashflow.R
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
@@ -41,6 +44,15 @@ data class Wallet(
                 name = "Loading Wallet"
             )
         }
+    }
+}
+
+data class WalletSelection(
+    val wallet: Wallet = Wallet(),
+    var toShow: Boolean = false
+) {
+    fun invertToShow() {
+        toShow = !toShow
     }
 }
 

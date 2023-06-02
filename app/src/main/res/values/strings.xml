@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Cash Flow</string>
 
+    <string name="empty_group">Empty group</string>
+
     <string name="wallet">Wallet</string>
     <string name="this_month_balance">This month balance</string>
     <string name="balance">Balance: %1$s</string>

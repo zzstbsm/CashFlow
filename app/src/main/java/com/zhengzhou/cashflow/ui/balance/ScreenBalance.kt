@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.zhengzhou.cashflow.R
@@ -26,6 +29,9 @@ private fun BalanceScreenPreview(){
 fun BalanceScreen(
     navController: NavController
 ) {
+
+    val balanceViewModel: BalanceViewModel = viewModel()
+    val uiState by balanceViewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {

@@ -1,10 +1,13 @@
 package com.zhengzhou.cashflow.ui.balance
 
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.data.WalletSelection
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,9 +18,89 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 data class BalanceUiState(
-    val wallet  : Wallet = Wallet.loadingWallet(),
-    val isLoading: Boolean = true,
-)
+    val balanceGroup: BalanceGroup = BalanceGroup(),
+    val equivalentWallet: Wallet = Wallet()
+) {
+
+    private fun updateEquivalentWallet(): Wallet {
+        return Wallet(
+
+        )
+    }
+
+    suspend fun selectWalletInGroup(walletPositionInArray: Int) : BalanceUiState {
+
+        val tempGroup = this.balanceGroup.invertWalletToShow(walletPositionInArray = walletPositionInArray)
+        return this.copy(
+            balanceGroup = tempGroup
+        )
+    }
+
+    suspend fun setWalletList(walletList: List<Wallet>) : BalanceUiState {
+
+        val tempGroup = BalanceGroup()
+        val tempWalletSelection: MutableList<WalletSelection> = mutableListOf()
+        for (wallet in walletList) {
+            tempWalletSelection += WalletSelection(wallet = wallet, toShow = true) // TODO: set toShow based on the config file
+        }
+        tempGroup.walletSelection = tempWalletSelection
+        tempGroup.refreshTransactionList()
+
+        return this.copy(
+            balanceGroup = tempGroup
+        )
+    }
+}
+
+data class BalanceGroup(
+    var name: String = "Group",
+    var groupId: UUID = UUID.randomUUID(),
+    var iconId: Int = R.drawable.ic_wallet,
+    var walletSelection: List<WalletSelection> = listOf(WalletSelection()),
+    val transactionList: List<Transaction> = listOf(),
+    var lastAccess: Date = Date(),
+) {
+    suspend fun invertWalletToShow(
+        walletPositionInArray: Int
+    ) : BalanceGroup {
+        val tempBalanceGroup = this.copy()
+
+        tempBalanceGroup.walletSelection[walletPositionInArray].invertToShow()
+        tempBalanceGroup.refreshTransactionList()
+
+        return tempBalanceGroup
+    }
+
+    suspend fun refreshTransactionList(): BalanceGroup {
+        val tempTransactionList = mutableListOf<Transaction>()
+        if (walletSelection.isEmpty()) {
+            return this.copy(
+                name = "No wallets",
+                lastAccess = Date(),
+                transactionList = listOf(),
+            )
+        }
+
+        walletSelection.forEach {walletSelection ->
+            if (walletSelection.toShow)
+                tempTransactionList += getTransactionList(walletSelection.wallet.id)
+        }
+        return this.copy(
+            transactionList = tempTransactionList,
+            lastAccess = Date(),
+        )
+    }
+
+    private suspend fun getTransactionList(walletId: UUID) : List<Transaction> {
+        val repository = DatabaseRepository.get()
+        var transactionList = listOf<Transaction>()
+        repository.getTransactionListInWallet(walletId).collect { transactionListPerWallet ->
+            transactionList = transactionListPerWallet
+        }
+        return transactionList
+    }
+
+}
 
 class BalanceViewModel() : ViewModel() {
 
@@ -27,76 +110,11 @@ class BalanceViewModel() : ViewModel() {
     private var _uiState = MutableStateFlow(BalanceUiState())
     val uiState: StateFlow<BalanceUiState> = _uiState.asStateFlow()
 
-    // List of all categories
-    private val _categoriesList:
-            MutableStateFlow<MutableList<Category>> = MutableStateFlow(mutableListOf())
-    val categoriesList: StateFlow<MutableList<Category>> = _categoriesList.asStateFlow()
-
-    // List of transactions to show
-    private val _transactionList:
-            MutableStateFlow<MutableList<Transaction>> = MutableStateFlow(mutableListOf())
-    val transactionList: StateFlow<MutableList<Transaction>> = _transactionList.asStateFlow()
-
-    // List of wallets
-    private val _walletList:
-            MutableStateFlow<List<Wallet>> = MutableStateFlow(emptyList())
-    private val walletList: StateFlow<List<Wallet>>
-        get() = _walletList.asStateFlow()
-
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getWalletList().collect {
-                _walletList.value = it
-                _uiState.value = uiState.value.copy(
-                    isLoading = false
-                )
-                // Important to keep separate in order to load data
-                _uiState.value = uiState.value.copy(
-                    wallet = getWalletToShow()
-                )
-                loadTransactions()
+            repository.getWalletList().collect { walletList ->
+                _uiState.value = uiState.value.setWalletList(walletList)
             }
         }
     }
-
-    private fun loadTransactions() {
-        viewModelScope.launch {
-            repository.getTransactionListInWallet(uiState.value.wallet.id).collect {
-                _transactionList.value = it as MutableList<Transaction>
-            }
-        }
-    }
-
-    private suspend fun getWalletToShow(): Wallet {
-
-        lateinit var walletToReturn: Wallet
-
-        if (uiState.value.isLoading) {
-            // Data still loading
-            walletToReturn = Wallet.loadingWallet()
-        } else {
-            if (ifZeroWallets()) {
-                // Create empty wallet and save it
-                walletToReturn = Wallet.emptyWallet()
-                viewModelScope.launch {
-                    repository.addWallet(walletToReturn)
-                }
-            } else {
-                // Retrieve wallet
-                walletToReturn = repository.getWalletLastAccessed().copy(
-                    lastAccess = Date()
-                )
-                // Update last access
-                viewModelScope.launch {
-                    repository.updateWallet(walletToReturn)
-                }
-            }
-        }
-        return walletToReturn
-    }
-
-    private fun ifZeroWallets(): Boolean {
-        return walletList.value.isEmpty()
-    }
-
 }
