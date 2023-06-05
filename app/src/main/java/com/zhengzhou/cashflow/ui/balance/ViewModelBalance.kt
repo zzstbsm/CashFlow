@@ -81,7 +81,7 @@ data class BalanceGroup(
             )
         }
 
-        walletSelection.forEach {walletSelection ->
+        walletSelection.forEach { walletSelection ->
             if (walletSelection.toShow)
                 tempTransactionList += getTransactionList(walletSelection.wallet.id)
         }

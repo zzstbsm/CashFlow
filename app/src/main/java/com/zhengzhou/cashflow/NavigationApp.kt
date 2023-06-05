@@ -2,6 +2,8 @@ package com.zhengzhou.cashflow
 
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.navigation.NavController
@@ -9,23 +11,35 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.zhengzhou.cashflow.ui.balance.BalanceScreen
-/*
-import com.zhengzhou.cashflow.data.TransactionType
-import com.zhengzhou.cashflow.ui.balanceOverviewScreen.BalanceOverviewScreen
-import com.zhengzhou.cashflow.ui.operationScreen.OperationScreen
-import com.zhengzhou.cashflow.ui.transactionReportScreen.TransactionReportScreen
-import com.zhengzhou.cashflow.ui.walletOverviewScreen.WalletOverviewScreen
- */
-import java.util.*
+import com.zhengzhou.cashflow.ui.profile.ProfileScreen
 
 @Composable
 fun NavigationApp() {
+
+    var bottomOptionCurrentScreen by remember {
+        mutableStateOf(BottomOptionCurrentScreen.Balance)
+    }
 
     // Set the navigation controller
     val navController = rememberNavController()
     NavHost(navController, startDestination = Screen.Balance.route) {
         composable(route = Screen.Balance.route) {
-            BalanceScreen(navController = navController)
+            BalanceScreen(
+                bottomOptionCurrentScreen = bottomOptionCurrentScreen,
+                setBottomOptionCurrentScreen = { screen ->
+                    bottomOptionCurrentScreen = screen
+                },
+                navController = navController,
+            )
+        }
+        composable(route = Screen.Profile.route) {
+            ProfileScreen(
+                bottomOptionCurrentScreen = bottomOptionCurrentScreen,
+                setBottomOptionCurrentScreen = { screen ->
+                    bottomOptionCurrentScreen = screen
+                },
+                navController = navController,
+            )
         }
         /*
         composable(route = Screen.WalletOverview.route) {
@@ -68,8 +82,58 @@ fun NavigationApp() {
     }
 }
 
+enum class BottomOptionCurrentScreen(
+    @DrawableRes
+    val iconId: Int,
+    @StringRes
+    val optionName: Int,
+    @StringRes
+    val accessibilityText: Int,
+    val route: String,
+) {
+    // TODO: update all images
+    Balance(
+        iconId = R.drawable.ic_home,
+        optionName = R.string.bottom_bar_balance,
+        accessibilityText = R.string.accessibility_menu_navbar_balance,
+        route = "Balance"
+    ),
+    Overview(
+        iconId = R.drawable.ic_trending_up,
+        optionName = R.string.bottom_bar_overview,
+        accessibilityText = R.string.accessibility_menu_navbar_overview,
+        route = "Overview"
+    ),
+    Profile(
+        iconId = R.drawable.ic_account,
+        optionName = R.string.bottom_bar_profile,
+        accessibilityText = R.string.accessibility_menu_navbar_profile,
+        route = "Profile"
+    );
+
+    companion object {
+        val elements: List<BottomOptionCurrentScreen> = listOf(
+            Balance,
+            // Overview,
+            Profile,
+        )
+    }
+
+    fun navigate(
+        navController: NavController
+    ) {
+        navController.navigate(route)
+    }
+}
+
 sealed class Screen(val route: String) {
-    object Balance: Screen("Balance")
+    object Balance: Screen(
+        route = BottomOptionCurrentScreen.Balance.route
+    )
+    object Profile: Screen(
+        route = BottomOptionCurrentScreen.Profile.route
+    )
+
     object TransactionEdit: Screen(
         "TransactionEdit" +
                 "/{walletUUIDStr}" +

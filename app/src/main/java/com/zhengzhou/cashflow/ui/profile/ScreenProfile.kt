@@ -1,9 +1,6 @@
-package com.zhengzhou.cashflow.ui.balance
+package com.zhengzhou.cashflow.ui.profile
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,36 +18,29 @@ import com.zhengzhou.cashflow.ui.BottomNavigationBar
 
 @Preview
 @Composable
-private fun BalanceScreenPreview(){
-    BalanceScreen(
-        bottomOptionCurrentScreen = BottomOptionCurrentScreen.Balance,
+private fun ProfileScreenPreview(){
+    ProfileScreen(
+        bottomOptionCurrentScreen = BottomOptionCurrentScreen.Profile,
         setBottomOptionCurrentScreen = { },
-        navController = rememberNavController(),
+        navController = rememberNavController()
     )
 }
 
 @Composable
-fun BalanceScreen(
+fun ProfileScreen(
     bottomOptionCurrentScreen: BottomOptionCurrentScreen,
     setBottomOptionCurrentScreen: (BottomOptionCurrentScreen) -> Unit,
-    navController: NavController
+    navController: NavController,
 ) {
+    val profileViewModel: ProfileViewModel = viewModel()
+    val profileUiState by profileViewModel.uiState.collectAsState()
 
-    val balanceViewModel: BalanceViewModel = viewModel()
-    val balanceUiState by balanceViewModel.uiState.collectAsState()
-
-    Scaffold(
+    Scaffold (
         topBar = {
-             BalanceTopAppBar(
-         )
+            ProfileTopAppBar()
         },
-        content = { innerPadding ->
-            BalanceMainBody(
-                balanceUiState = balanceUiState,
-                balanceViewModel = balanceViewModel,
-                navController = navController,
-                modifier = Modifier.padding(paddingValues = innerPadding)
-            )
+        content = {
+
         },
         bottomBar = {
             BottomNavigationBar(
@@ -58,19 +48,19 @@ fun BalanceScreen(
                 setBottomOptionCurrentScreen = setBottomOptionCurrentScreen,
                 navController = navController,
             )
-        },
+        }
     )
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun BalanceTopAppBar(
+private fun ProfileTopAppBar(
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
         title = {
-            Text(text = stringResource(id = R.string.wallet))
+            Text(text = stringResource(id = R.string.profile))
         },
         navigationIcon = {
             IconButton(
@@ -87,18 +77,4 @@ private fun BalanceTopAppBar(
             )
         }
     )
-}
-
-@Composable
-private fun BalanceMainBody(
-    balanceUiState: BalanceUiState,
-    balanceViewModel: BalanceViewModel,
-    navController: NavController,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-    ) {
-
-    }
 }

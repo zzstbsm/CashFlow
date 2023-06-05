@@ -2,10 +2,19 @@
     <string name="app_name">Cash Flow</string>
 
     <string name="empty_group">Empty group</string>
+    <string name="accessibility_menu_navbar">Navigation bar</string>
+    <string name="accessibility_menu_navbar_balance">Balance</string>
+    <string name="accessibility_menu_navbar_overview">Overview</string>
+    <string name="accessibility_menu_navbar_profile">Profile</string>
+
+    <string name="bottom_bar_balance">Balance</string>
+    <string name="bottom_bar_overview">Overview</string>
+    <string name="bottom_bar_profile">Profile</string>
 
     <string name="wallet">Wallet</string>
     <string name="this_month_balance">This month balance</string>
     <string name="balance">Balance: %1$s</string>
+    <string name="profile">Profile</string>
 
     <string name="bills">To Add Bills</string>
     <string name="clothes">To Add Clothes</string>
