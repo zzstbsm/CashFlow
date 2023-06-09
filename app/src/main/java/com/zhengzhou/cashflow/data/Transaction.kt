@@ -6,6 +6,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.database.DatabaseRepository
 import java.util.*
 
 @Entity(tableName = "movement")
@@ -22,7 +23,12 @@ data class Transaction (
     val idLocation: UUID = UUID(0L,0L),
     @ColumnInfo(name = "movement_type")
     val movementType: Int = TransactionType.Loading.id
-)
+) {
+    suspend fun getCategory() : Category {
+        val repository = DatabaseRepository.get()
+        return repository.getCategory(idCategory)
+    }
+}
 
 enum class TransactionType (
     val id: Int,

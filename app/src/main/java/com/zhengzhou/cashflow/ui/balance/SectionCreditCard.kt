@@ -30,7 +30,7 @@ fun CreditCardSection(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp)
+            .height(250.dp)
             .padding(horizontal = 32.dp, vertical = 4.dp),
         elevation = CardDefaults.elevatedCardElevation(),
         shape = RoundedCornerShape(16.dp)
