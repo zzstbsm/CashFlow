@@ -2,7 +2,6 @@ package com.zhengzhou.cashflow.ui.balance
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -36,7 +35,11 @@ fun BalanceScreen(
     navController: NavController
 ) {
 
-    val balanceViewModel: BalanceViewModel = viewModel()
+    val balanceViewModel: BalanceViewModel = viewModel {
+        BalanceViewModel(
+            navController = navController
+        )
+    }
     val balanceUiState by balanceViewModel.uiState.collectAsState()
 
     Scaffold(
@@ -99,6 +102,26 @@ private fun BalanceMainBody(
     Column(
         modifier = modifier
     ) {
+        CreditCardSection(
+            balanceUiState = balanceUiState,
+            balanceViewModel = balanceViewModel,
+        )
+        /*
+        TransactionsButtonsSection(
+            wallet = uiState.walletToShow,
+            navController = navController,
+        )
 
+        TransactionListSection(
+            transactionListState = transactionListState,
+            viewModel = viewModel,
+            navController = navController,
+            currencyFormatter = currencyFormatter,
+            modifier = modifier
+                .fillMaxWidth()
+                .weight(1f, fill = true)
+        )
+
+         */
     }
 }

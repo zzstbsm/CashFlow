@@ -2,6 +2,7 @@ package com.zhengzhou.cashflow.data
 
 import androidx.annotation.StringRes
 import com.zhengzhou.cashflow.R
+import java.text.NumberFormat
 import java.util.*
 
 enum class Currency(
@@ -43,4 +44,11 @@ fun setCurrency(
     // The currency is not supported
     return null
 
+}
+
+fun formatCurrency(
+    currency : NumberFormat,
+    amount : Float,
+) : String {
+    return currency.format(amount)
 }
