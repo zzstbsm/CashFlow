@@ -16,8 +16,8 @@ import com.zhengzhou.cashflow.ui.profile.ProfileScreen
 @Composable
 fun NavigationApp() {
 
-    var bottomOptionCurrentScreen by remember {
-        mutableStateOf(BottomOptionCurrentScreen.Balance)
+    var currentScreen by remember {
+        mutableStateOf(NavigationCurrentScreen.Balance)
     }
 
     // Set the navigation controller
@@ -25,18 +25,18 @@ fun NavigationApp() {
     NavHost(navController, startDestination = Screen.Balance.route) {
         composable(route = Screen.Balance.route) {
             BalanceScreen(
-                bottomOptionCurrentScreen = bottomOptionCurrentScreen,
-                setBottomOptionCurrentScreen = { screen ->
-                    bottomOptionCurrentScreen = screen
+                currentScreen = currentScreen,
+                setCurrentScreen = { screen ->
+                    currentScreen = screen
                 },
                 navController = navController,
             )
         }
         composable(route = Screen.Profile.route) {
             ProfileScreen(
-                bottomOptionCurrentScreen = bottomOptionCurrentScreen,
-                setBottomOptionCurrentScreen = { screen ->
-                    bottomOptionCurrentScreen = screen
+                currentScreen = currentScreen,
+                setCurrentScreen = { screen ->
+                    currentScreen = screen
                 },
                 navController = navController,
             )
@@ -82,7 +82,7 @@ fun NavigationApp() {
     }
 }
 
-enum class BottomOptionCurrentScreen(
+enum class NavigationCurrentScreen(
     @DrawableRes
     val iconId: Int,
     @StringRes
@@ -90,31 +90,43 @@ enum class BottomOptionCurrentScreen(
     @StringRes
     val accessibilityText: Int,
     val route: String,
+    val routeActive: Boolean,
+    val navBarActive: Boolean,
+    val bottomActive: Boolean,
 ) {
     // TODO: update all images
     Balance(
         iconId = R.drawable.ic_home,
         optionName = R.string.bottom_bar_balance,
         accessibilityText = R.string.accessibility_menu_navbar_balance,
-        route = "Balance"
+        route = "Balance",
+        routeActive = true,
+        navBarActive = true,
+        bottomActive = true,
     ),
     Overview(
         iconId = R.drawable.ic_trending_up,
         optionName = R.string.bottom_bar_overview,
         accessibilityText = R.string.accessibility_menu_navbar_overview,
-        route = "Overview"
+        route = "Overview",
+        routeActive = false,
+        navBarActive = true,
+        bottomActive = true,
     ),
     Profile(
         iconId = R.drawable.ic_account,
         optionName = R.string.bottom_bar_profile,
         accessibilityText = R.string.accessibility_menu_navbar_profile,
-        route = "Profile"
+        route = "Profile",
+        routeActive = true,
+        navBarActive = true,
+        bottomActive = true,
     );
 
     companion object {
-        val elements: List<BottomOptionCurrentScreen> = listOf(
+        val elements: List<NavigationCurrentScreen> = listOf(
             Balance,
-            // Overview,
+            Overview,
             Profile,
         )
     }
@@ -128,10 +140,10 @@ enum class BottomOptionCurrentScreen(
 
 sealed class Screen(val route: String) {
     object Balance: Screen(
-        route = BottomOptionCurrentScreen.Balance.route
+        route = NavigationCurrentScreen.Balance.route
     )
     object Profile: Screen(
-        route = BottomOptionCurrentScreen.Profile.route
+        route = NavigationCurrentScreen.Profile.route
     )
 
     object TransactionEdit: Screen(

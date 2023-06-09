@@ -13,24 +13,26 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.zhengzhou.cashflow.BottomOptionCurrentScreen
+import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
+import com.zhengzhou.cashflow.ui.CustomNavigationDrawerSheet
+import kotlinx.coroutines.launch
 
 @Preview
 @Composable
 private fun BalanceScreenPreview(){
     BalanceScreen(
-        bottomOptionCurrentScreen = BottomOptionCurrentScreen.Balance,
-        setBottomOptionCurrentScreen = { },
+        currentScreen = NavigationCurrentScreen.Balance,
+        setCurrentScreen = { },
         navController = rememberNavController(),
     )
 }
 
 @Composable
 fun BalanceScreen(
-    bottomOptionCurrentScreen: BottomOptionCurrentScreen,
-    setBottomOptionCurrentScreen: (BottomOptionCurrentScreen) -> Unit,
+    currentScreen: NavigationCurrentScreen,
+    setCurrentScreen: (NavigationCurrentScreen) -> Unit,
     navController: NavController
 ) {
 
@@ -40,37 +42,57 @@ fun BalanceScreen(
         )
     }
     val balanceUiState by balanceViewModel.uiState.collectAsState()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-    Scaffold(
-        topBar = {
-             BalanceTopAppBar()
-        },
-        content = { innerPadding ->
-            BalanceMainBody(
-                balanceUiState = balanceUiState,
-                balanceViewModel = balanceViewModel,
-                innerPaddingValues = innerPadding,
+    ModalNavigationDrawer(
+        drawerContent = {
+            CustomNavigationDrawerSheet(
+                drawerState = drawerState,
+                currentScreen = currentScreen,
+                setCurrentScreen = setCurrentScreen,
+                navController = navController
             )
         },
-        bottomBar = {
-            BottomNavigationBar(
-                bottomOptionCurrentScreen = bottomOptionCurrentScreen,
-                setBottomOptionCurrentScreen = setBottomOptionCurrentScreen,
-                navController = navController,
-            )
-        },
-        floatingActionButton = {
-            BalanceFloatingActionButtons()
-        }
-    )
+        gesturesEnabled = drawerState.currentValue == DrawerValue.Open,
+        drawerState = drawerState,
+    ) {
+        Scaffold(
+            topBar = {
+                BalanceTopAppBar(
+                    drawerState = drawerState
+                )
+            },
+            content = { innerPadding ->
+                BalanceMainBody(
+                    balanceUiState = balanceUiState,
+                    balanceViewModel = balanceViewModel,
+                    innerPaddingValues = innerPadding,
+                )
+            },
+            bottomBar = {
+                BottomNavigationBar(
+                    currentScreen = currentScreen,
+                    setCurrentScreen = setCurrentScreen,
+                    navController = navController,
+                )
+            },
+            floatingActionButton = {
+                BalanceFloatingActionButtons()
+            },
+        )
+    }
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BalanceTopAppBar(
+    drawerState: DrawerState,
     modifier: Modifier = Modifier,
 ) {
+
+    val scope = rememberCoroutineScope()
+
     TopAppBar(
         title = {
             Text(text = stringResource(id = R.string.wallet))
@@ -78,7 +100,9 @@ private fun BalanceTopAppBar(
         navigationIcon = {
             IconButton(
                 onClick = {
-                    // TODO navigation
+                    scope.launch {
+                        drawerState.open()
+                    }
                 },
                 content = {
                     Image(
