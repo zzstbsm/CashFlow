@@ -52,3 +52,14 @@ fun formatCurrency(
 ) : String {
     return currency.format(amount)
 }
+
+fun setCurrencyFormatter(currencyString: String) : NumberFormat {
+
+    val currency: Currency? = setCurrency(currencyString)
+
+    return if (currency != null) {
+        NumberFormat.getCurrencyInstance(currency.locale)
+    } else {
+        NumberFormat.getCurrencyInstance()
+    }
+}

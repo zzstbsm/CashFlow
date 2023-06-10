@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.zhengzhou.cashflow.ui.balance.BalanceScreen
 import com.zhengzhou.cashflow.ui.profile.ProfileScreen
+import com.zhengzhou.cashflow.ui.walletOverview.WalletOverviewScreen
 
 @Composable
 fun NavigationApp() {
@@ -41,10 +42,16 @@ fun NavigationApp() {
                 navController = navController,
             )
         }
-        /*
         composable(route = Screen.WalletOverview.route) {
-            WalletOverviewScreen(navController = navController)
+            WalletOverviewScreen(
+                currentScreen = currentScreen,
+                setCurrentScreen = { screen ->
+                    currentScreen = screen
+                },
+                navController = navController,
+            )
         }
+        /*
         composable(route = Screen.BalanceOverview.route) {
             BalanceOverviewScreen(navController = navController)
         }
@@ -97,25 +104,25 @@ enum class NavigationCurrentScreen(
     // TODO: update all images
     Balance(
         iconId = R.drawable.ic_home,
-        optionName = R.string.bottom_bar_balance,
+        optionName = R.string.nav_name_balance,
         accessibilityText = R.string.accessibility_menu_navbar_balance,
         route = "Balance",
         routeActive = true,
         navBarActive = true,
         bottomActive = true,
     ),
-    Overview(
-        iconId = R.drawable.ic_trending_up,
-        optionName = R.string.bottom_bar_overview,
+    WalletOverview(
+        iconId = R.drawable.ic_wallet,
+        optionName = R.string.nav_name_wallet,
         accessibilityText = R.string.accessibility_menu_navbar_overview,
-        route = "Overview",
-        routeActive = false,
+        route = "Wallet",
+        routeActive = true,
         navBarActive = true,
         bottomActive = true,
     ),
     Profile(
         iconId = R.drawable.ic_account,
-        optionName = R.string.bottom_bar_profile,
+        optionName = R.string.nav_name_profile,
         accessibilityText = R.string.accessibility_menu_navbar_profile,
         route = "Profile",
         routeActive = true,
@@ -124,11 +131,7 @@ enum class NavigationCurrentScreen(
     );
 
     companion object {
-        val elements: List<NavigationCurrentScreen> = listOf(
-            Balance,
-            Overview,
-            Profile,
-        )
+        val elements: List<NavigationCurrentScreen> = enumValues<NavigationCurrentScreen>().toList()
     }
 
     fun navigate(
@@ -144,6 +147,9 @@ sealed class Screen(val route: String) {
     )
     object Profile: Screen(
         route = NavigationCurrentScreen.Profile.route
+    )
+    object WalletOverview: Screen(
+        route = NavigationCurrentScreen.WalletOverview.route
     )
 
     object TransactionEdit: Screen(

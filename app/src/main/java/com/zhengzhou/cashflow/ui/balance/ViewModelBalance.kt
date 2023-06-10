@@ -44,18 +44,6 @@ data class BalanceUiState(
     }
 }
 
-private fun setCurrencyFormatter(currencyString: String) : NumberFormat {
-
-    val currency: Currency? = setCurrency(currencyString)
-
-    return if (currency != null) {
-        NumberFormat.getCurrencyInstance(currency.locale)
-    } else {
-        NumberFormat.getCurrencyInstance()
-    }
-}
-
-
 data class BalanceGroup(
     var name: String = "Group",
     var groupId: UUID = UUID.randomUUID(),
