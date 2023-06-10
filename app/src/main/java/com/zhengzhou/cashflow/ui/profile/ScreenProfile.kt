@@ -16,7 +16,8 @@ import androidx.navigation.compose.rememberNavController
 import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
-import com.zhengzhou.cashflow.ui.CustomNavigationDrawerSheet
+import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
+import com.zhengzhou.cashflow.ui.SectionTopAppBar
 import kotlinx.coroutines.launch
 
 @Preview
@@ -42,7 +43,7 @@ fun ProfileScreen(
 
     ModalNavigationDrawer(
         drawerContent = {
-            CustomNavigationDrawerSheet(
+            SectionNavigationDrawerSheet(
                 drawerState = drawerState,
                 currentScreen = currentScreen,
                 setCurrentScreen = setCurrentScreen,
@@ -54,7 +55,8 @@ fun ProfileScreen(
     ) {
         Scaffold (
             topBar = {
-                ProfileTopAppBar(
+                SectionTopAppBar(
+                    currentScreen = currentScreen,
                     drawerState = drawerState,
                 )
             },
@@ -71,36 +73,4 @@ fun ProfileScreen(
         )
     }
 
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ProfileTopAppBar(
-    drawerState: DrawerState,
-    modifier: Modifier = Modifier,
-) {
-
-    val scope = rememberCoroutineScope()
-
-    TopAppBar(
-        title = {
-            Text(text = stringResource(id = R.string.profile))
-        },
-        navigationIcon = {
-            IconButton(
-                onClick = {
-                    scope.launch {
-                        drawerState.open()
-                    }
-                },
-                content = {
-                    Image(
-                        painter  = painterResource(id = R.drawable.ic_menu),
-                        contentDescription = stringResource(id = R.string.accessibility_menu_navbar),
-                    )
-                },
-                modifier = modifier
-            )
-        }
-    )
 }
