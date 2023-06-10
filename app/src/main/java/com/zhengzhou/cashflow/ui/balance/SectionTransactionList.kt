@@ -49,7 +49,9 @@ fun TransactionEntry(
         val coroutineScope = CoroutineScope(Dispatchers.Main)
 
         coroutineScope.launch {
-            category = transaction.getCategory()
+            transaction.getCategory().let { item ->
+                category = item ?: Category()
+            }
         }
 
         Row(

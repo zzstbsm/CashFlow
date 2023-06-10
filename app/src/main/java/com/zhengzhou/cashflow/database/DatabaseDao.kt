@@ -13,7 +13,7 @@ interface DatabaseDao {
 
     // Category section
     @Query("SELECT * FROM category WHERE id=(:categoryUUID)")
-    suspend fun getCategory(categoryUUID: UUID): Category
+    suspend fun getCategory(categoryUUID: UUID): Category?
     @Insert(entity = Category::class, onConflict = OnConflictStrategy.ABORT)
     suspend fun addCategory(category: Category)
     @Update(entity = Category::class)
@@ -26,7 +26,7 @@ interface DatabaseDao {
 
     // Tag section
     @Query("SELECT * FROM tag WHERE id=(:id)")
-    fun getTag(id: UUID): Tag
+    fun getTag(id: UUID): Tag?
     @Insert(entity = Tag::class, onConflict = OnConflictStrategy.ABORT)
     suspend fun addTag(tag: Tag)
     @Update(entity = Tag::class)
@@ -39,7 +39,7 @@ interface DatabaseDao {
 
     // Transaction section
     @Query("SELECT * FROM movement WHERE id=(:id)")
-    suspend fun getTransaction(id: UUID): Transaction
+    suspend fun getTransaction(id: UUID): Transaction?
     @Insert(entity = Transaction::class, onConflict = OnConflictStrategy.ABORT)
     suspend fun addTransaction(transaction: Transaction)
     @Update(entity = Transaction::class)
@@ -52,7 +52,7 @@ interface DatabaseDao {
 
     // Wallet section
     @Query("SELECT * FROM wallet WHERE id=(:id)")
-    suspend fun getWallet(id: UUID): Wallet
+    suspend fun getWallet(id: UUID): Wallet?
     @Insert(entity = Wallet::class, onConflict = OnConflictStrategy.ABORT)
     suspend fun addWallet(wallet: Wallet)
     @Update(entity = Wallet::class)
@@ -64,6 +64,6 @@ interface DatabaseDao {
     fun getWalletList(): Flow<List<Wallet>>
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT *,MAX(last_access) FROM wallet")
-    fun getWalletLastAccessed(): Wallet
+    fun getWalletLastAccessed(): Wallet?
 
 }

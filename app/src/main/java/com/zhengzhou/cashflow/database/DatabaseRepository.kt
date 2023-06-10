@@ -45,7 +45,7 @@ class DatabaseRepository private constructor(
 
 
     /* Category section */
-    suspend fun getCategory(categoryUUID: UUID) : Category
+    suspend fun getCategory(categoryUUID: UUID) : Category?
         = database.databaseDao().getCategory(categoryUUID = categoryUUID)
     suspend fun addCategory(category: Category) {
         database.databaseDao().addCategory(category)
@@ -59,7 +59,7 @@ class DatabaseRepository private constructor(
     fun getCategoryList(): Flow<List<Category>> = database.databaseDao().getCategoryList()
 
     /* Tag section */
-    fun getTag(id: UUID): Tag = database.databaseDao().getTag(id)
+    fun getTag(id: UUID): Tag? = database.databaseDao().getTag(id)
     suspend fun addTag(tag: Tag) {
         database.databaseDao().addTag(tag)
     }
@@ -72,7 +72,7 @@ class DatabaseRepository private constructor(
     fun getTagList(): Flow<List<Tag>> = database.databaseDao().getTagList()
 
     /* Transaction section */
-    suspend fun getTransaction(transactionId: UUID): Transaction = database.databaseDao().getTransaction(transactionId)
+    suspend fun getTransaction(transactionId: UUID): Transaction? = database.databaseDao().getTransaction(transactionId)
     suspend fun addTransaction(transaction: Transaction) {
         database.databaseDao().addTransaction(transaction)
     }
@@ -86,7 +86,7 @@ class DatabaseRepository private constructor(
             = database.databaseDao().getTransactionListInWallet(idWallet)
 
     /* Wallet section */
-    suspend fun getWallet(walletUUID: UUID): Wallet = database.databaseDao().getWallet(walletUUID)
+    suspend fun getWallet(walletUUID: UUID): Wallet? = database.databaseDao().getWallet(walletUUID)
     suspend fun addWallet(wallet: Wallet) {
         database.databaseDao().addWallet(wallet)
     }
@@ -97,7 +97,7 @@ class DatabaseRepository private constructor(
         database.databaseDao().updateWallet(wallet)
     }
     fun getWalletList(): Flow<List<Wallet>> = database.databaseDao().getWalletList()
-    fun getWalletLastAccessed(): Wallet {
+    fun getWalletLastAccessed(): Wallet? {
         return database.databaseDao().getWalletLastAccessed()
     }
 }

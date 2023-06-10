@@ -17,11 +17,11 @@ class EventMessages {
             get() = statusMessage
 
         fun sendMessage(message: String) {
-            statusMessage.value = Event(message)
+            statusMessage.postValue(Event(message))
         }
 
         fun sendMessageId(message: Int) {
-            statusMessageId.value = Event(message)
+            statusMessageId.postValue(Event(message))
         }
     }
 }

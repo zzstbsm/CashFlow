@@ -24,7 +24,7 @@ data class Transaction (
     @ColumnInfo(name = "movement_type")
     val movementType: Int = TransactionType.Loading.id
 ) {
-    suspend fun getCategory() : Category {
+    suspend fun getCategory() : Category? {
         val repository = DatabaseRepository.get()
         return repository.getCategory(idCategory)
     }
