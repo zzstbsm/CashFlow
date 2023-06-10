@@ -26,7 +26,9 @@ data class Wallet(
     @ColumnInfo(name = "creation_date")
     val creationDate: Date = Date(),
     @ColumnInfo(name = "last_access")
-    val lastAccess: Date = Date()
+    val lastAccess: Date = Date(),
+    @ColumnInfo(name = "budget_enabled")
+    val budgetEnabled: Boolean = false,
 ) : Parcelable {
 
     companion object {

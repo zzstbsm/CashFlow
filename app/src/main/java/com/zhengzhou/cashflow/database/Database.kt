@@ -3,6 +3,8 @@ package com.zhengzhou.cashflow.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.zhengzhou.cashflow.data.*
 
 @Database(
@@ -12,9 +14,10 @@ import com.zhengzhou.cashflow.data.*
         Category::class,
         Tag::class,
         TagTransaction::class,
-        TagLocation::class
+        TagLocation::class,
+        Budget::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = false,
 )
 @TypeConverters(TransactionTypeConverters::class)
@@ -22,12 +25,20 @@ abstract class RegisterDatabase : RoomDatabase() {
     abstract fun databaseDao(): DatabaseDao
 }
 
-/*
-val migration_1_2 = object : Migration(1,2) {
+val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL(
-            // SQL COMMAND
+            "ALTER TABLE wallet " +
+                    "ADD COLUMN budget_enabled INTEGER NOT NULL DEFAULT 0"
+        )
+        database.execSQL(
+            "CREATE TABLE IF NOT EXISTS budget " +
+                    "(id BLOB NOT NULL, " +
+                    "start_date INTEGER NOT NULL, " +
+                    "end_date INTEGER NOT NULL, " +
+                    "category_id BLOB NOT NULL, " +
+                    "max_expense REAL NOT NULL, " +
+                    "PRIMARY KEY(id))"
         )
     }
 }
-*/

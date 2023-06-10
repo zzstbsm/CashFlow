@@ -41,6 +41,7 @@ class DatabaseRepository private constructor(
             DATABASE_NAME
         )
         //.addMigrations(migration_1_2, migration_2_3)
+        .addMigrations(MIGRATION_1_2)
         .build()
 
 
