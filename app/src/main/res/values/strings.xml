@@ -6,6 +6,7 @@
     <string name="nav_name_overview">Overview</string>
     <string name="nav_name_profile">Profile</string>
     <string name="nav_name_wallet">Wallet</string>
+    <string name="nav_name_wallet_edit">Edit wallet</string>
 
     <string name="accessibility_menu_navbar">Navigation bar</string>
     <string name="accessibility_menu_navbar_balance">Balance</string>

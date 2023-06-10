@@ -71,7 +71,13 @@ fun WalletOverviewScreen(
             },
             floatingActionButton = {
                 if (walletOverviewUiState.ifZeroWallet) {
-                    ExtendedFloatingActionButton(onClick = { /*TODO*/ }) {
+                    ExtendedFloatingActionButton(
+                        onClick = {
+                            NavigationCurrentScreen.WalletEdit.navigate(
+                                navController = navController
+                            )
+                        }
+                    ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_add),
                             contentDescription = stringResource(id = R.string.add_wallet), 

@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.zhengzhou.cashflow.ui.balance.BalanceScreen
 import com.zhengzhou.cashflow.ui.profile.ProfileScreen
+import com.zhengzhou.cashflow.ui.walletEdit.WalletEditScreen
 import com.zhengzhou.cashflow.ui.walletOverview.WalletOverviewScreen
 
 @Composable
@@ -44,6 +45,15 @@ fun NavigationApp() {
         }
         composable(route = Screen.WalletOverview.route) {
             WalletOverviewScreen(
+                currentScreen = currentScreen,
+                setCurrentScreen = { screen ->
+                    currentScreen = screen
+                },
+                navController = navController,
+            )
+        }
+        composable(route = Screen.WalletEdit.route) {
+            WalletEditScreen(
                 currentScreen = currentScreen,
                 setCurrentScreen = { screen ->
                     currentScreen = screen
@@ -111,6 +121,15 @@ enum class NavigationCurrentScreen(
         navBarActive = true,
         bottomActive = true,
     ),
+    WalletEdit(
+        iconId = 0,
+        optionName = R.string.wallet_edit,
+        accessibilityText = 0,
+        route = "WalletEdit",
+        routeActive = true,
+        navBarActive = false,
+        bottomActive = false,
+    ),
     WalletOverview(
         iconId = R.drawable.ic_wallet,
         optionName = R.string.nav_name_wallet,
@@ -135,6 +154,7 @@ enum class NavigationCurrentScreen(
     }
 
     fun navigate(
+        route: String = this.route,
         navController: NavController
     ) {
         navController.navigate(route)
@@ -147,6 +167,9 @@ sealed class Screen(val route: String) {
     )
     object Profile: Screen(
         route = NavigationCurrentScreen.Profile.route
+    )
+    object WalletEdit: Screen(
+        route = NavigationCurrentScreen.WalletEdit.route
     )
     object WalletOverview: Screen(
         route = NavigationCurrentScreen.WalletOverview.route
@@ -172,7 +195,6 @@ sealed class Screen(val route: String) {
             transactionUUIDStr: String
         ) = "TransactionReport/$transactionUUIDStr"
     }
-    object WalletEdit: Screen("WalletEdit")
 }
 
 /*

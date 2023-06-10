@@ -102,6 +102,7 @@ fun SectionNavigationDrawerSheet(
 fun SectionTopAppBar(
     currentScreen: NavigationCurrentScreen,
     drawerState: DrawerState,
+    pageName: String? = null,
     modifier: Modifier = Modifier,
 ) {
 
@@ -109,7 +110,7 @@ fun SectionTopAppBar(
 
     TopAppBar(
         title = {
-            Text(text = stringResource(id = currentScreen.optionName))
+            Text(text = pageName ?: stringResource(id = currentScreen.optionName))
         },
         navigationIcon = {
             IconButton(
