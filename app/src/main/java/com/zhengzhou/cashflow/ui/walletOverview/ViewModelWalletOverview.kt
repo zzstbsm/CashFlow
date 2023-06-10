@@ -15,6 +15,7 @@ import java.util.*
 
 data class WalletOverviewUiState(
     val wallet: Wallet = Wallet(),
+    val ifZeroWallet: Boolean = false
 ) {
     suspend fun updateWallet(wallet: Wallet): WalletOverviewUiState {
         val repository = DatabaseRepository.get()
@@ -45,14 +46,20 @@ class WalletOverviewViewModel(
 
             try {
                 lastAccessedWallet = repository.getWalletLastAccessed()
-            } catch (e: Exception) {
-                EventMessages.sendMessage("No wallets")
+            } catch (_: Exception) {
+
             }
 
             if (lastAccessedWallet == null) {
                 lastAccessedWallet = Wallet.emptyWallet()
+                _uiState.value = uiState.value.copy(
+                    ifZeroWallet = true,
+                )
             }
             _uiState.value = uiState.value.updateWallet(lastAccessedWallet)
         }
     }
+
+
+
 }
