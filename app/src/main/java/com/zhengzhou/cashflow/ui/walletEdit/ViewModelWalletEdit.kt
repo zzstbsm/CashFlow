@@ -19,6 +19,11 @@ data class WalletEditUiState(
 
 }
 
+enum class WalletEditOption(){
+    ADD(),
+    EDIT(),
+}
+
 class WalletEditViewModel(
     navController: NavController,
 ): ViewModel() {

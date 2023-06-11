@@ -5,6 +5,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -16,8 +18,7 @@ import com.zhengzhou.cashflow.ui.SectionTopAppBar
 
 @Composable
 fun WalletEditScreen(
-    currentScreen: NavigationCurrentScreen,
-    setCurrentScreen: (NavigationCurrentScreen) -> Unit,
+    walletEditOption: WalletEditOption,
     navController: NavController
 ) {
 
@@ -27,44 +28,19 @@ fun WalletEditScreen(
         )
     }
     val walletEditUiState by walletEditViewModel.uiState.collectAsState()
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-    ModalNavigationDrawer(
-        drawerContent = {
-            SectionNavigationDrawerSheet(
-                drawerState = drawerState,
-                currentScreen = currentScreen,
-                setCurrentScreen = setCurrentScreen,
-                navController = navController,
+    Scaffold(
+        topBar = {
+            WalletEditTopAppBar(navController = navController)
+        },
+        content = { innerPadding ->
+            WalletEditMainBody(
+                walletEditUiState = walletEditUiState,
+                walletEditViewModel = walletEditViewModel,
+                innerPadding = innerPadding,
             )
         },
-        gesturesEnabled = drawerState.currentValue == DrawerValue.Open,
-        drawerState = drawerState,
-    ) {
-        Scaffold(
-            topBar = {
-                SectionTopAppBar(
-                    currentScreen = currentScreen,
-                    drawerState = drawerState,
-                    pageName = stringResource(id = R.string.add_wallet)
-                )
-            },
-            content = { innerPadding ->
-                WalletEditMainBody(
-                    walletEditUiState = walletEditUiState,
-                    walletEditViewModel = walletEditViewModel,
-                    innerPadding = innerPadding,
-                )
-            },
-            bottomBar = {
-                BottomNavigationBar(
-                    currentScreen = currentScreen,
-                    setCurrentScreen = setCurrentScreen,
-                    navController = navController
-                )
-            },
-        )
-    }
+    )
 }
 
 @Composable
@@ -73,4 +49,24 @@ fun WalletEditMainBody(
     walletEditViewModel: WalletEditViewModel,
     innerPadding: PaddingValues,
 ) {
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun WalletEditTopAppBar(
+    navController: NavController,
+) {
+    TopAppBar(
+        title = {
+            Text(text = stringResource(id = R.string.add_wallet))
+        },
+        navigationIcon = {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_arrow_left),
+                    contentDescription = stringResource(id = R.string.nav_back)
+                )
+            }
+        }
+    )
 }

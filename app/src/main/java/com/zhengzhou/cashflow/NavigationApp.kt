@@ -1,19 +1,27 @@
 package com.zhengzhou.cashflow
 
+import android.os.Build
+import android.os.Bundle
+import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.zhengzhou.cashflow.ui.balance.BalanceScreen
 import com.zhengzhou.cashflow.ui.profile.ProfileScreen
+import com.zhengzhou.cashflow.ui.walletEdit.WalletEditOption
 import com.zhengzhou.cashflow.ui.walletEdit.WalletEditScreen
 import com.zhengzhou.cashflow.ui.walletOverview.WalletOverviewScreen
+import java.io.Serializable
+
+const val TAG = "NavigationApp"
 
 @Composable
 fun NavigationApp() {
@@ -52,12 +60,20 @@ fun NavigationApp() {
                 navController = navController,
             )
         }
-        composable(route = Screen.WalletEdit.route) {
+        composable(route = Screen.WalletEdit.route) { navBackStackEntry ->
+            Log.d(TAG,"Entering the navigation composable of WalletEdit")
+            val walletEditOption = getSerializable(
+                bundle = navBackStackEntry.arguments,
+                key = "walletEditOption",
+                m_class = WalletEditOption::class.java,
+            )
+            Log.d(TAG,"WalletEditOption retrieved")
+            requireNotNull(walletEditOption) {
+                "Exception: passed walletEditOption not valid"
+            }
+            Log.d(TAG,"WalletEditOption not null")
             WalletEditScreen(
-                currentScreen = currentScreen,
-                setCurrentScreen = { screen ->
-                    currentScreen = screen
-                },
+                walletEditOption = walletEditOption,
                 navController = navController,
             )
         }
@@ -169,8 +185,14 @@ sealed class Screen(val route: String) {
         route = NavigationCurrentScreen.Profile.route
     )
     object WalletEdit: Screen(
-        route = NavigationCurrentScreen.WalletEdit.route
-    )
+        route = NavigationCurrentScreen.WalletEdit.route +
+                "/{walletEditOption}"
+    ) {
+        fun createRoute(
+            walletEditOption: WalletEditOption,
+        ) = NavigationCurrentScreen.WalletEdit.route +
+                "/${walletEditOption.name}"
+    }
     object WalletOverview: Screen(
         route = NavigationCurrentScreen.WalletOverview.route
     )
@@ -254,4 +276,12 @@ fun BackHandler(
             backCallback.remove()
         }
     }
+}
+
+@Suppress("DEPRECATION")
+fun <T : Serializable?> getSerializable(bundle: Bundle?, key: String, m_class: Class<T>): T? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        bundle?.getSerializable(key, m_class)!!
+    else
+        bundle?.getSerializable(key) as? T?
 }

@@ -2,6 +2,8 @@
     <string name="app_name">Cash Flow</string>
 
     <!-- Navigation pages -->
+    <string name="nav_back">Go back</string>
+
     <string name="nav_name_balance">Balance</string>
     <string name="nav_name_overview">Overview</string>
     <string name="nav_name_profile">Profile</string>
