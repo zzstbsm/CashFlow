@@ -34,9 +34,9 @@ data class Wallet(
     companion object {
         fun emptyWallet() : Wallet {
             return Wallet().copy(
-                name = "New Wallet",
+                name = "",
                 // TODO: next line to remove after the implementation of EditWalletScreen
-                startAmount = 100f,
+                startAmount = 0f,
                 iconId = R.drawable.ic_wallet,
             )
         }

@@ -12,73 +12,73 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 
-sealed class KeypadDigit(
+enum class KeypadDigit(
     val value: String,
-    val operation: Boolean
+    val operation: Boolean,
 ) {
-    object Key0: KeypadDigit(
+    Key0(
         value = "0",
-        operation = false
-    )
-    object Key1: KeypadDigit(
+        operation = false,
+    ),
+    Key1(
         value = "1",
-        operation = false
-    )
-    object Key2: KeypadDigit(
+        operation = false,
+    ),
+    Key2(
         value = "2",
-        operation = false
-    )
-    object Key3: KeypadDigit(
+        operation = false,
+    ),
+    Key3(
         value = "3",
-        operation = false
-    )
-    object Key4: KeypadDigit(
+        operation = false,
+    ),
+    Key4(
         value = "4",
-        operation = false
-    )
-    object Key5: KeypadDigit(
+        operation = false,
+    ),
+    Key5(
         value = "5",
-        operation = false
-    )
-    object Key6: KeypadDigit(
+        operation = false,
+    ),
+    Key6(
         value = "6",
-        operation = false
-    )
-    object Key7: KeypadDigit(
+        operation = false,
+    ),
+    Key7(
         value = "7",
-        operation = false
-    )
-    object Key8: KeypadDigit(
+        operation = false,
+    ),
+    Key8(
         value = "8",
-        operation = false
-    )
-    object Key9: KeypadDigit(
+        operation = false,
+    ),
+    Key9(
         value = "9",
-        operation = false
-    )
-    object KeyDot: KeypadDigit(
+        operation = false,
+    ),
+    KeyDot(
         value = ".",
-        operation = false
-    )
-    object KeyEqual: KeypadDigit(
+        operation = false,
+    ),
+    KeyEqual(
         value = "=",
-        operation = true
-    )
-    object KeyPlus: KeypadDigit(
+        operation = true,
+    ),
+    KeyPlus(
         value = "+",
-        operation = true
-    )
-    object KeyMinus: KeypadDigit(
+        operation = true,
+    ),
+    KeyMinus(
         value = "-",
-        operation = true
-    )
-    object KeyTimes: KeypadDigit(
+        operation = true,
+    ),
+    KeyTimes(
         value = "\u00D7",
-        operation = true
-    )
-    object KeyDivide: KeypadDigit(
+        operation = true,
+    ),
+    KeyDivide(
         value = "\u00F7",
-        operation = true
+        operation = true,
     )
 }
 

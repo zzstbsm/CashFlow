@@ -73,6 +73,12 @@
 
     <string name="movement_select_wallets">Select wallets</string>
 
+    <!-- WalletEdit page -->
+    <string name="WalletEdit_creation_date">Creation date</string>
+    <string name="WalletEdit_initial_amount">Initial amount</string>
+    <string name="WalletEdit_name">Wallet name</string>
+    <string name="WalletEdit_last_access">Last access</string>
+
     <!-- WalletOverview page-->
     <string name="add_wallet">Add wallet</string>
     <string name="no_transactions">No transactions</string>

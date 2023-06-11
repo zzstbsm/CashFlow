@@ -14,9 +14,27 @@ import java.util.*
 
 
 data class WalletEditUiState(
-    val wallet: Wallet = Wallet(),
+    val wallet: Wallet = Wallet.emptyWallet(),
 ) {
+    fun updateWalletName(
+        name : String,
+    ) : WalletEditUiState{
+        return this.copy(
+            wallet = this.wallet.copy(
+                name = name
+            )
+        )
+    }
 
+    fun updateWalletAmount(
+        amount: Float,
+    ) : WalletEditUiState{
+        return this.copy(
+            wallet = this.wallet.copy(
+                startAmount = amount
+            )
+        )
+    }
 }
 
 enum class WalletEditOption(){
@@ -41,6 +59,13 @@ class WalletEditViewModel(
         }
     }
 
+    fun updateWalletName(name: String) {
+        _uiState.value = uiState.value.updateWalletName(name)
+    }
+
+    fun updateWalletAmount(amount: Float) {
+        _uiState.value = uiState.value.updateWalletAmount(amount)
+    }
 
 
 }
