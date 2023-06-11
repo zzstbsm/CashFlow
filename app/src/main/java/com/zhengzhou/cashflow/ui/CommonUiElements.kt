@@ -1,6 +1,5 @@
 package com.zhengzhou.cashflow.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
@@ -29,23 +28,18 @@ fun BottomNavigationBar(
             }.forEach { item ->
                 NavigationBarItem(
                     icon = {
-                        Icon(
-                            painter = painterResource(id = item.iconId),
-                            contentDescription = stringResource(id = item.accessibilityText),
-                        )
+                        RouteIcon(navigationCurrentScreen = item)
                     },
                     label = {
                         Text(stringResource(item.optionName))
                     },
                     selected = (currentScreen == item),
                     onClick = {
-                        if (item.routeActive) {
-                            setCurrentScreen(item)
-                            item.navigate(navController = navController)
-                        }
-                        else {
-                            EventMessages.sendMessage("Route not active")
-                        }
+                        routeClick(
+                            setCurrentScreen = setCurrentScreen,
+                            navigationCurrentScreen = item,
+                            navController = navController,
+                        )
                     }
                 )
             }
@@ -72,22 +66,17 @@ fun SectionNavigationDrawerSheet(
                 .forEach { item ->
                     NavigationDrawerItem(
                         icon = {
-                            Icon(
-                                painter = painterResource(id = item.iconId),
-                                contentDescription = stringResource(id = item.accessibilityText),
-                            )
+                            RouteIcon(navigationCurrentScreen = item)
                         },
                         label = { Text(stringResource(id = item.optionName)) },
                         selected = item == currentScreen,
                         onClick = {
                             scope.launch { drawerState.close() }
-                            if (item.routeActive) {
-                                setCurrentScreen(item)
-                                item.navigate(navController = navController)
-                            }
-                            else {
-                                EventMessages.sendMessage("Route not active")
-                            }
+                            routeClick(
+                                setCurrentScreen = setCurrentScreen,
+                                navigationCurrentScreen = item,
+                                navController = navController,
+                            )
                         },
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                     )
@@ -102,8 +91,8 @@ fun SectionNavigationDrawerSheet(
 fun SectionTopAppBar(
     currentScreen: NavigationCurrentScreen,
     drawerState: DrawerState,
-    pageName: String? = null,
     modifier: Modifier = Modifier,
+    pageName: String? = null,
 ) {
 
     val scope = rememberCoroutineScope()
@@ -128,4 +117,32 @@ fun SectionTopAppBar(
             }
         }
     )
+}
+
+@Composable
+private fun RouteIcon(
+    navigationCurrentScreen : NavigationCurrentScreen,
+) {
+    Icon(
+        painter = painterResource(id = navigationCurrentScreen.iconId),
+        contentDescription = if (navigationCurrentScreen.accessibilityText == null) {
+            null
+        } else {
+            stringResource(id = navigationCurrentScreen.accessibilityText)
+        }
+    )
+}
+
+private fun routeClick(
+    setCurrentScreen: (NavigationCurrentScreen) -> Unit,
+    navigationCurrentScreen: NavigationCurrentScreen,
+    navController: NavController
+) {
+    if (navigationCurrentScreen.routeActive) {
+        setCurrentScreen(navigationCurrentScreen)
+        navigationCurrentScreen.navigateTab(navController = navController)
+    }
+    else {
+        EventMessages.sendMessage("Route not active")
+    }
 }
