@@ -17,9 +17,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.ui.SectionTopAppBar
+import com.zhengzhou.cashflow.ui.walletEdit.WalletEditOption
 
 @Composable
 fun WalletOverviewScreen(
@@ -73,8 +75,9 @@ fun WalletOverviewScreen(
                 if (walletOverviewUiState.ifZeroWallet) {
                     ExtendedFloatingActionButton(
                         onClick = {
-                            NavigationCurrentScreen.WalletEdit.navigate(
-                                navController = navController
+                            Screen.WalletEdit.navigate(
+                                walletEditOption = WalletEditOption.ADD,
+                                navController = navController,
                             )
                         }
                     ) {

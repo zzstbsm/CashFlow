@@ -1,7 +1,5 @@
 package com.zhengzhou.cashflow
 
-import android.os.Build
-import android.os.Bundle
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
@@ -9,7 +7,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,7 +16,6 @@ import com.zhengzhou.cashflow.ui.profile.ProfileScreen
 import com.zhengzhou.cashflow.ui.walletEdit.WalletEditOption
 import com.zhengzhou.cashflow.ui.walletEdit.WalletEditScreen
 import com.zhengzhou.cashflow.ui.walletOverview.WalletOverviewScreen
-import java.io.Serializable
 
 const val TAG = "NavigationApp"
 
@@ -51,29 +47,29 @@ fun NavigationApp() {
                 navController = navController,
             )
         }
+        composable(route = Screen.WalletEdit.route) { navBackStackEntry ->
+            Log.d(TAG,"Entering the navigation composable of WalletEdit")
+            val walletEditOption = WalletEditOption.valueOf(
+                navBackStackEntry.arguments?.getString(
+                    "walletEditOption"
+                ) ?:
+                throw java.lang.NullPointerException(
+                    "Exception: passed walletEditOption not valid"
+                )
+
+            )
+            Log.d(TAG,"WalletEditOption not null")
+            WalletEditScreen(
+                walletEditOption = walletEditOption,
+                navController = navController,
+            )
+        }
         composable(route = Screen.WalletOverview.route) {
             WalletOverviewScreen(
                 currentScreen = currentScreen,
                 setCurrentScreen = { screen ->
                     currentScreen = screen
                 },
-                navController = navController,
-            )
-        }
-        composable(route = Screen.WalletEdit.route) { navBackStackEntry ->
-            Log.d(TAG,"Entering the navigation composable of WalletEdit")
-            val walletEditOption = getSerializable(
-                bundle = navBackStackEntry.arguments,
-                key = "walletEditOption",
-                m_class = WalletEditOption::class.java,
-            )
-            Log.d(TAG,"WalletEditOption retrieved")
-            requireNotNull(walletEditOption) {
-                "Exception: passed walletEditOption not valid"
-            }
-            Log.d(TAG,"WalletEditOption not null")
-            WalletEditScreen(
-                walletEditOption = walletEditOption,
                 navController = navController,
             )
         }
@@ -117,41 +113,33 @@ fun NavigationApp() {
 
 enum class NavigationCurrentScreen(
     @DrawableRes
-    val iconId: Int,
+    val iconId: Int = 0,
     @StringRes
     val optionName: Int,
     @StringRes
-    val accessibilityText: Int,
+    val accessibilityText: Int? = null,
     val route: String,
-    val routeActive: Boolean,
-    val navBarActive: Boolean,
-    val bottomActive: Boolean,
+    val routeActive: Boolean = true,
+    val navBarActive: Boolean = false,
+    val bottomActive: Boolean = false,
 ) {
+    /*
+     * The order here is the same shown in the navigation bar if enabled
+     */
     // TODO: update all images
     Balance(
         iconId = R.drawable.ic_home,
         optionName = R.string.nav_name_balance,
         accessibilityText = R.string.accessibility_menu_navbar_balance,
         route = "Balance",
-        routeActive = true,
         navBarActive = true,
         bottomActive = true,
-    ),
-    WalletEdit(
-        iconId = 0,
-        optionName = R.string.wallet_edit,
-        accessibilityText = 0,
-        route = "WalletEdit",
-        routeActive = true,
-        navBarActive = false,
-        bottomActive = false,
     ),
     WalletOverview(
         iconId = R.drawable.ic_wallet,
         optionName = R.string.nav_name_wallet,
         accessibilityText = R.string.accessibility_menu_navbar_overview,
         route = "Wallet",
-        routeActive = true,
         navBarActive = true,
         bottomActive = true,
     ),
@@ -160,93 +148,110 @@ enum class NavigationCurrentScreen(
         optionName = R.string.nav_name_profile,
         accessibilityText = R.string.accessibility_menu_navbar_profile,
         route = "Profile",
-        routeActive = true,
         navBarActive = true,
         bottomActive = true,
-    );
+    ),
+
+    /*
+     * Not present in the navigation bar
+     */
+
+    WalletEdit(
+        optionName = R.string.nav_name_wallet_edit,
+        accessibilityText = null,
+        route = "WalletEdit",
+    ),
+    TransactionEdit(
+        optionName = R.string.nav_name_transaction_edit,
+        accessibilityText = null,
+        route = "TransactionEdit",
+        routeActive = false,
+    ),
+    TransactionReport(
+        optionName = R.string.nav_name_transaction_report,
+        accessibilityText = null,
+        route = "TransactionReport",
+        routeActive = false
+    )
+    ;
+    fun navigateTab(navController: NavController) {
+        navController.navigate(this.route)
+    }
 
     companion object {
         val elements: List<NavigationCurrentScreen> = enumValues<NavigationCurrentScreen>().toList()
     }
-
-    fun navigate(
-        route: String = this.route,
-        navController: NavController
-    ) {
-        navController.navigate(route)
-    }
 }
 
-sealed class Screen(val route: String) {
+sealed class Screen(
+    val route: String,
+    val screenEnum: NavigationCurrentScreen,
+) {
+
+    private fun createRoute() = this.route
+    fun navigate(navController: NavController) {
+        navController.navigate(createRoute())
+    }
+
     object Balance: Screen(
-        route = NavigationCurrentScreen.Balance.route
+        route = NavigationCurrentScreen.Balance.route,
+        screenEnum = NavigationCurrentScreen.Balance,
     )
     object Profile: Screen(
-        route = NavigationCurrentScreen.Profile.route
+        route = NavigationCurrentScreen.Profile.route,
+        screenEnum = NavigationCurrentScreen.Profile,
     )
     object WalletEdit: Screen(
         route = NavigationCurrentScreen.WalletEdit.route +
-                "/{walletEditOption}"
+                "/{walletEditOption}",
+        screenEnum = NavigationCurrentScreen.WalletEdit,
     ) {
-        fun createRoute(
+        private fun createRoute(
             walletEditOption: WalletEditOption,
-        ) = NavigationCurrentScreen.WalletEdit.route +
-                "/${walletEditOption.name}"
+        ) : String {
+            Log.d(TAG,"New argument in route {${walletEditOption.name}}")
+            return NavigationCurrentScreen.WalletEdit.route +
+                    "/${walletEditOption.name}"
+        }
+        fun navigate(
+            walletEditOption: WalletEditOption,
+            navController: NavController,
+        ) {
+            navController.navigate(
+                createRoute(
+                    walletEditOption = walletEditOption
+                )
+            )
+        }
     }
     object WalletOverview: Screen(
-        route = NavigationCurrentScreen.WalletOverview.route
+        route = NavigationCurrentScreen.WalletOverview.route,
+        screenEnum = NavigationCurrentScreen.Balance,
     )
 
     object TransactionEdit: Screen(
-        "TransactionEdit" +
+        route = NavigationCurrentScreen.TransactionEdit.route +
                 "/{walletUUIDStr}" +
                 "/{transactionType}" +
-                "/{transactionUUIDStr}"
+                "/{transactionUUIDStr}",
+        screenEnum = NavigationCurrentScreen.Balance,
     ) {
         fun createRoute(
             walletUUIDStr: String,
             transactionType: Int,
             transactionUUIDStr: String,
-        ) = "Operation/$walletUUIDStr/$transactionType/$transactionUUIDStr"
+        ) = "${screenEnum.route}/$walletUUIDStr/$transactionType/$transactionUUIDStr"
     }
     object TransactionReport: Screen(
-        "TransactionReport" +
-                "/{transactionUUIDStr}"
+        route = NavigationCurrentScreen.TransactionReport.route +
+                "/{transactionUUIDStr}",
+        screenEnum = NavigationCurrentScreen.Balance,
     ) {
         fun createRoute(
             transactionUUIDStr: String
-        ) = "TransactionReport/$transactionUUIDStr"
+        ) = "{${screenEnum.route}}/$transactionUUIDStr"
     }
 }
-
-/*
-fun navToOperation(
-    walletUUID: UUID,
-    transactionType: TransactionType,
-    transactionUUID: UUID,
-    navController: NavController,
-) {
-    navController.navigate(
-        Screen.Operation.createRoute(
-            walletUUIDStr = walletUUID.toString(),
-            transactionType = transactionType.id,
-            transactionUUIDStr = transactionUUID.toString()
-        )
-    )
-}
-
-fun navToTransactionReport(
-    transactionUUID: UUID,
-    navController: NavController,
-) {
-    navController.navigate(
-        Screen.TransactionReport.createRoute(
-            transactionUUIDStr = transactionUUID.toString(),
-        )
-    )
-}
-
- */
 
 @Composable
 fun BackHandler(
@@ -276,12 +281,4 @@ fun BackHandler(
             backCallback.remove()
         }
     }
-}
-
-@Suppress("DEPRECATION")
-fun <T : Serializable?> getSerializable(bundle: Bundle?, key: String, m_class: Class<T>): T? {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-        bundle?.getSerializable(key, m_class)!!
-    else
-        bundle?.getSerializable(key) as? T?
 }

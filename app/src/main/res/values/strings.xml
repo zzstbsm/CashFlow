@@ -7,6 +7,8 @@
     <string name="nav_name_balance">Balance</string>
     <string name="nav_name_overview">Overview</string>
     <string name="nav_name_profile">Profile</string>
+    <string name="nav_name_transaction_edit">Edit transaction</string>
+    <string name="nav_name_transaction_report">Transaction report</string>
     <string name="nav_name_wallet">Wallet</string>
     <string name="nav_name_wallet_edit">Edit wallet</string>
 
@@ -18,7 +20,7 @@
     <string name="wallet">Wallet</string>
     <string name="this_month_balance">This month balance</string>
     <string name="balance">Balance: %1$s</string>
-    <string name="profile">Profile</string>
+    <string name="profile">4Profile</string>
     <string name="wallet_edit">Edit wallet</string>
 
     <!-- Default categories -->
