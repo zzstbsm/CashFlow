@@ -6,8 +6,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.tools.EventMessages
@@ -58,7 +61,13 @@ fun SectionNavigationDrawerSheet(
 
     ModalDrawerSheet {
         Column() {
-            Text(text = stringResource(id = R.string.app_name))
+            Text(
+                text = stringResource(id = R.string.app_name),
+                fontWeight = FontWeight.Bold,
+                color = Color.Gray,
+                maxLines = 1,
+                modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
+            )
             NavigationCurrentScreen.elements
                 .filter { item ->
                     item.navBarActive
