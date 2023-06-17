@@ -21,7 +21,7 @@ import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.ui.SectionTopAppBar
-import com.zhengzhou.cashflow.ui.walletEdit.WalletEditOption
+import java.util.UUID
 
 @Composable
 fun WalletOverviewScreen(
@@ -76,7 +76,7 @@ fun WalletOverviewScreen(
                     ExtendedFloatingActionButton(
                         onClick = {
                             Screen.WalletEdit.navigate(
-                                walletEditOption = WalletEditOption.ADD,
+                                walletID = UUID(0L,0L),
                                 navController = navController,
                             )
                         }

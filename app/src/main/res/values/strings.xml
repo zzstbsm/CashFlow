@@ -2,6 +2,7 @@
     <string name="app_name">Cash Flow</string>
 
     <!-- Navigation pages -->
+    <string name="confirm">Confirm</string>
     <string name="nav_back">Go back</string>
 
     <string name="nav_name_balance">Balance</string>
@@ -10,6 +11,7 @@
     <string name="nav_name_transaction_edit">Edit transaction</string>
     <string name="nav_name_transaction_report">Transaction report</string>
     <string name="nav_name_wallet">Wallet</string>
+    <string name="nav_name_wallet_add">Add wallet</string>
     <string name="nav_name_wallet_edit">Edit wallet</string>
 
     <string name="accessibility_menu_navbar">Navigation bar</string>

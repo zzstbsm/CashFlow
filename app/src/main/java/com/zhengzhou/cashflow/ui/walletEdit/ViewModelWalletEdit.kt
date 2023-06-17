@@ -1,8 +1,10 @@
 package com.zhengzhou.cashflow.ui.walletEdit
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import kotlinx.coroutines.Dispatchers
@@ -35,11 +37,16 @@ data class WalletEditUiState(
             )
         )
     }
-}
 
-enum class WalletEditOption(){
-    ADD(),
-    EDIT(),
+    fun updateWalletCreationDate(
+        creationDate: Date,
+    ) : WalletEditUiState{
+        return this.copy(
+            wallet = this.wallet.copy(
+                creationDate = creationDate
+            )
+        )
+    }
 }
 
 class WalletEditViewModel(
@@ -52,10 +59,10 @@ class WalletEditViewModel(
     private val repository = DatabaseRepository.get()
 
     init {
+
+
+
         viewModelScope.launch(Dispatchers.IO){
-
-
-
         }
     }
 
@@ -65,6 +72,12 @@ class WalletEditViewModel(
 
     fun updateWalletAmount(amount: Float) {
         _uiState.value = uiState.value.updateWalletAmount(amount)
+    }
+
+    fun updateWalletCreationDate(millis: Long?) {
+        if (millis != null) {
+            _uiState.value = uiState.value.updateWalletCreationDate(Date(millis))
+        }
     }
 
 

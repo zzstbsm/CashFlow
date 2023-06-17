@@ -13,9 +13,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.zhengzhou.cashflow.ui.balance.BalanceScreen
 import com.zhengzhou.cashflow.ui.profile.ProfileScreen
-import com.zhengzhou.cashflow.ui.walletEdit.WalletEditOption
 import com.zhengzhou.cashflow.ui.walletEdit.WalletEditScreen
 import com.zhengzhou.cashflow.ui.walletOverview.WalletOverviewScreen
+import java.util.UUID
 
 const val TAG = "NavigationApp"
 
@@ -25,10 +25,13 @@ fun NavigationApp() {
     var currentScreen by remember {
         mutableStateOf(NavigationCurrentScreen.Balance)
     }
+    // val startDestination = Screen.Balance.route
+    val testing = true
+    val startDestination = Screen.WalletEdit.route
 
     // Set the navigation controller
     val navController = rememberNavController()
-    NavHost(navController, startDestination = Screen.Balance.route) {
+    NavHost(navController, startDestination = startDestination) {
         composable(route = Screen.Balance.route) {
             BalanceScreen(
                 currentScreen = currentScreen,
@@ -48,19 +51,17 @@ fun NavigationApp() {
             )
         }
         composable(route = Screen.WalletEdit.route) { navBackStackEntry ->
-            Log.d(TAG,"Entering the navigation composable of WalletEdit")
-            val walletEditOption = WalletEditOption.valueOf(
-                navBackStackEntry.arguments?.getString(
-                    "walletEditOption"
-                ) ?:
-                throw java.lang.NullPointerException(
-                    "Exception: passed walletEditOption not valid"
-                )
+            var walletUUIDStr = navBackStackEntry.arguments?.getString("walletUUIDStr")
 
-            )
-            Log.d(TAG,"WalletEditOption not null")
+            if (testing && walletUUIDStr == null) {
+                walletUUIDStr = UUID(0L,0L).toString()
+            } else if (!testing)  {
+                requireNotNull(walletUUIDStr) {
+                    "Exception: passed walletUUIDStr not valid"
+                }
+            }
             WalletEditScreen(
-                walletEditOption = walletEditOption,
+                walletUUID = UUID.fromString(walletUUIDStr),
                 navController = navController,
             )
         }
@@ -203,23 +204,22 @@ sealed class Screen(
     )
     object WalletEdit: Screen(
         route = NavigationCurrentScreen.WalletEdit.route +
-                "/{walletEditOption}",
+                "/{walletUUIDStr}",
         screenEnum = NavigationCurrentScreen.WalletEdit,
     ) {
         private fun createRoute(
-            walletEditOption: WalletEditOption,
+            walletID: UUID,
         ) : String {
-            Log.d(TAG,"New argument in route {${walletEditOption.name}}")
             return NavigationCurrentScreen.WalletEdit.route +
-                    "/${walletEditOption.name}"
+                    "/${walletID}"
         }
         fun navigate(
-            walletEditOption: WalletEditOption,
+            walletID: UUID,
             navController: NavController,
         ) {
             navController.navigate(
                 createRoute(
-                    walletEditOption = walletEditOption
+                    walletID = walletID
                 )
             )
         }

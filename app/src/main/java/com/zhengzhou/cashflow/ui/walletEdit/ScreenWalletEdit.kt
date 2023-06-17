@@ -1,7 +1,12 @@
 package com.zhengzhou.cashflow.ui.walletEdit
 
+import android.text.format.DateFormat
+import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -9,34 +14,55 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.BackHandler
-import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.tools.Calculator
 import com.zhengzhou.cashflow.tools.KeypadDigit
 import com.zhengzhou.cashflow.tools.mapCharToKeypadDigit
-import com.zhengzhou.cashflow.ui.BottomNavigationBar
-import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
-import com.zhengzhou.cashflow.ui.SectionTopAppBar
+import java.util.UUID
+
+private enum class WalletEditOption(
+    @StringRes
+    val title: Int,
+){
+    ADD(
+        title = R.string.nav_name_wallet_add
+    ),
+    EDIT(
+        title = R.string.nav_name_wallet_edit
+    );
+
+    companion object {
+        fun chooseOption(id: UUID) : WalletEditOption{
+            return if(id == UUID(0L,0L)) {
+                ADD
+            } else {
+                EDIT
+            }
+        }
+    }
+
+}
 
 @Composable
 fun WalletEditScreen(
-    walletEditOption: WalletEditOption,
+    walletUUID: UUID,
     navController: NavController
 ) {
+
+    val walletEditOption = WalletEditOption.chooseOption(walletUUID)
 
     val walletEditViewModel: WalletEditViewModel = viewModel {
         WalletEditViewModel(
@@ -47,7 +73,10 @@ fun WalletEditScreen(
 
     Scaffold(
         topBar = {
-            WalletEditTopAppBar(navController = navController)
+            WalletEditTopAppBar(
+                walletEditOption = walletEditOption,
+                navController = navController,
+            )
         },
         content = { innerPadding ->
             WalletEditMainBody(
@@ -56,17 +85,26 @@ fun WalletEditScreen(
                 innerPadding = innerPadding,
             )
         },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_save),
+                    contentDescription = null,
+                )
+            }
+        }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun WalletEditTopAppBar(
+    walletEditOption: WalletEditOption,
     navController: NavController,
 ) {
     TopAppBar(
         title = {
-            Text(text = stringResource(id = R.string.add_wallet))
+            Text(text = stringResource(id = walletEditOption.title))
         },
         navigationIcon = {
             IconButton(onClick = { navController.popBackStack() }) {
@@ -89,11 +127,11 @@ fun WalletEditMainBody(
 
     val modifier = Modifier
         .fillMaxWidth()
-        .padding(16.dp)
+        .padding(horizontal = 16.dp, vertical = 8.dp)
 
 
     Column(
-        modifier = Modifier.padding(innerPadding)
+        modifier = Modifier.padding(innerPadding),
     ) {
         TextWalletName(
             walletEditUiState = walletEditUiState,
@@ -101,6 +139,11 @@ fun WalletEditMainBody(
             modifier = modifier,
         )
         TextWalletAmount(
+            walletEditUiState = walletEditUiState,
+            walletEditViewModel = walletEditViewModel,
+            modifier = modifier,
+        )
+        TextWalletCreationDate(
             walletEditUiState = walletEditUiState,
             walletEditViewModel = walletEditViewModel,
             modifier = modifier,
@@ -181,13 +224,63 @@ private fun TextWalletBudgetFlag(
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun TextWalletCreationDate(
     walletEditUiState: WalletEditUiState,
     walletEditViewModel: WalletEditViewModel,
     modifier: Modifier = Modifier,
 ) {
+    var showDatePickerState by remember {
+        mutableStateOf(false)
+    }
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = walletEditUiState.wallet.creationDate.time
+    )
 
+    val focusManager = LocalFocusManager.current
+
+    OutlinedTextField(
+        label = {
+            Text(text = stringResource(id = R.string.WalletEdit_creation_date))
+        },
+        value = DateFormat.format(
+            "EEEE, dd MMMM yyyy",
+            walletEditUiState.wallet.creationDate
+        ).toString(),
+        onValueChange = { },
+        modifier = modifier
+            .onFocusChanged { focusState ->
+                if (focusState.isFocused) {
+                    showDatePickerState = true
+                    focusManager.clearFocus()
+                }
+            }
+        ,
+        maxLines = 1,
+    )
+
+    if (showDatePickerState) {
+        DatePickerDialog(
+            onDismissRequest = {
+                showDatePickerState = false
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        walletEditViewModel.updateWalletCreationDate(datePickerState.selectedDateMillis)
+                        showDatePickerState = false
+                    }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.confirm)
+                    )
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
 }
 
 @Composable
