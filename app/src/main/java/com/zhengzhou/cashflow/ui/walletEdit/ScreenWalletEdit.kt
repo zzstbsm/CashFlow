@@ -2,11 +2,8 @@ package com.zhengzhou.cashflow.ui.walletEdit
 
 import android.text.format.DateFormat
 import androidx.annotation.StringRes
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Call
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -14,16 +11,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -129,6 +123,8 @@ fun WalletEditMainBody(
         .fillMaxWidth()
         .padding(horizontal = 16.dp, vertical = 8.dp)
 
+    // TODO: set testing env
+    walletEditViewModel.updateWalletBudgetEnabled(true)
 
     Column(
         modifier = Modifier.padding(innerPadding),
@@ -148,6 +144,17 @@ fun WalletEditMainBody(
             walletEditViewModel = walletEditViewModel,
             modifier = modifier,
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
+        Divider()
+        Spacer(modifier = Modifier.height(8.dp))
+
+        SectionWalletBudget(
+            walletEditUiState = walletEditUiState,
+            walletEditViewModel = walletEditViewModel,
+            modifier = modifier
+        )
+
     }
 
 }
@@ -215,13 +222,6 @@ private fun TextWalletIcon(
     modifier: Modifier = Modifier,
 ) {
 
-}@Composable
-private fun TextWalletBudgetFlag(
-    walletEditUiState: WalletEditUiState,
-    walletEditViewModel: WalletEditViewModel,
-    modifier: Modifier = Modifier,
-) {
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -281,13 +281,4 @@ private fun TextWalletCreationDate(
             DatePicker(state = datePickerState)
         }
     }
-}
-
-@Composable
-private fun TextWalletSetBudget(
-    walletEditUiState: WalletEditUiState,
-    walletEditViewModel: WalletEditViewModel,
-    modifier: Modifier = Modifier,
-) {
-
 }

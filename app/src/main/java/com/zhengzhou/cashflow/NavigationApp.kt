@@ -18,6 +18,7 @@ import com.zhengzhou.cashflow.ui.walletOverview.WalletOverviewScreen
 import java.util.UUID
 
 const val TAG = "NavigationApp"
+const val testing = true
 
 @Composable
 fun NavigationApp() {
@@ -26,7 +27,6 @@ fun NavigationApp() {
         mutableStateOf(NavigationCurrentScreen.Balance)
     }
     // val startDestination = Screen.Balance.route
-    val testing = true
     val startDestination = Screen.WalletEdit.route
 
     // Set the navigation controller

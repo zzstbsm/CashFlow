@@ -3,6 +3,8 @@
 
     <!-- Navigation pages -->
     <string name="confirm">Confirm</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
     <string name="nav_back">Go back</string>
 
     <string name="nav_name_balance">Balance</string>
@@ -80,6 +82,7 @@
     <string name="WalletEdit_initial_amount">Initial amount</string>
     <string name="WalletEdit_name">Wallet name</string>
     <string name="WalletEdit_last_access">Last access</string>
+    <string name="WalletEdit_if_budget_on">Enable budget option</string>
 
     <!-- WalletOverview page-->
     <string name="add_wallet">Add wallet</string>

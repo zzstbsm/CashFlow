@@ -1,10 +1,9 @@
 package com.zhengzhou.cashflow.ui.walletEdit
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.data.BudgetPeriod
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +16,7 @@ import java.util.*
 
 data class WalletEditUiState(
     val wallet: Wallet = Wallet.emptyWallet(),
+    val budgetPeriod: BudgetPeriod = BudgetPeriod(),
 ) {
     fun updateWalletName(
         name : String,
@@ -47,6 +47,37 @@ data class WalletEditUiState(
             )
         )
     }
+
+    fun updateWalletBudgetEnabled(
+        budgetEnabled: Boolean
+    ) : WalletEditUiState{
+        return this.copy(
+            wallet = this.wallet.copy(
+                budgetEnabled = budgetEnabled
+            )
+        )
+    }
+
+    fun updateWalletBudgetStartDate(
+        creationDate: Date,
+    ) : WalletEditUiState{
+        return this.copy(
+            budgetPeriod = this.budgetPeriod.copy(
+                startDate = creationDate
+            )
+        )
+    }
+
+    fun updateWalletBudgetEndDate(
+        creationDate: Date,
+    ) : WalletEditUiState{
+        return this.copy(
+            budgetPeriod = this.budgetPeriod.copy(
+                endDate = creationDate
+            )
+        )
+    }
+
 }
 
 class WalletEditViewModel(
@@ -80,5 +111,20 @@ class WalletEditViewModel(
         }
     }
 
+    fun updateWalletBudgetStartDate(millis: Long?) {
+        if (millis != null) {
+            _uiState.value = uiState.value.updateWalletBudgetStartDate(Date(millis))
+        }
+    }
+
+    fun updateWalletBudgetEndDate(millis: Long?) {
+        if (millis != null) {
+            _uiState.value = uiState.value.updateWalletBudgetEndDate(Date(millis))
+        }
+    }
+
+    fun updateWalletBudgetEnabled(budgetEnabled: Boolean) {
+        _uiState.value = uiState.value.updateWalletBudgetEnabled(budgetEnabled = budgetEnabled)
+    }
 
 }
