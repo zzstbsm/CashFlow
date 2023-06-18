@@ -1,7 +1,14 @@
 package com.zhengzhou.cashflow.database
 
 import android.content.Context
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import androidx.room.Room
+import androidx.room.Update
+import com.zhengzhou.cashflow.data.BudgetCategory
+import com.zhengzhou.cashflow.data.BudgetPeriod
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.Transaction
@@ -44,6 +51,36 @@ class DatabaseRepository private constructor(
         //.addMigrations(MIGRATION_1_2)
         .build()
 
+
+
+    /* BudgetCategory Section */
+    suspend fun getBudgetCategory(budgetPeriodUUID: UUID, categoryUUID: UUID): BudgetCategory?
+        = database.databaseDao().getBudgetCategory(budgetPeriodUUID,categoryUUID)
+    suspend fun addBudgetCategory(budgetCategory: BudgetCategory) {
+        database.databaseDao().addBudgetCategory(budgetCategory)
+    }
+    suspend fun updateBudgetCategory(budgetCategory: BudgetCategory)  {
+        database.databaseDao().updateBudgetCategory(budgetCategory)
+    }
+    suspend fun deleteBudgetCategory(budgetCategory: BudgetCategory) {
+        database.databaseDao().deleteBudgetCategory(budgetCategory)
+    }
+
+
+    /* BudgetPeriod section */
+    fun getBudgetPeriodListFromWallet(walletUUID: UUID): Flow<List<BudgetPeriod>>
+        = database.databaseDao().getBudgetPeriodListFromWallet(walletUUID)
+    suspend fun addBudgetPeriod(budgetPeriod: BudgetPeriod) {
+        database.databaseDao().addBudgetPeriod(budgetPeriod)
+    }
+    suspend fun updateBudgetPeriod(budgetPeriod: BudgetPeriod) {
+        database.databaseDao().updateBudgetPeriod(budgetPeriod)
+    }
+    suspend fun deleteBudgetPeriod(budgetPeriod: BudgetPeriod) {
+        database.databaseDao().deleteBudgetPeriod(budgetPeriod)
+    }
+    fun getBudgetPeriodLastActive(walletUUID: UUID): BudgetPeriod?
+        = database.databaseDao().getBudgetPeriodLastActive(walletUUID)
 
     /* Category section */
     suspend fun getCategory(categoryUUID: UUID) : Category?

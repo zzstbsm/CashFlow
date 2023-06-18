@@ -26,13 +26,15 @@ interface DatabaseDao {
 
     // BudgetPeriod section
     @Query("SELECT * FROM budget_period WHERE id_wallet=(:walletUUID)")
-    suspend fun getBudgetPeriodListFromWallet(walletUUID: UUID): Flow<List<BudgetPeriod>>
+    fun getBudgetPeriodListFromWallet(walletUUID: UUID): Flow<List<BudgetPeriod>>
     @Insert(entity = BudgetPeriod::class, onConflict = OnConflictStrategy.ABORT)
     suspend fun addBudgetPeriod(budgetPeriod: BudgetPeriod)
     @Update(entity = BudgetPeriod::class)
     suspend fun updateBudgetPeriod(budgetPeriod: BudgetPeriod)
     @Delete(entity = BudgetPeriod::class)
     suspend fun deleteBudgetPeriod(budgetPeriod: BudgetPeriod)
+    @Query("SELECT * FROM budget_period WHERE id_wallet=(:walletUUID) ORDER BY end_date DESC LIMIT 1")
+    fun getBudgetPeriodLastActive(walletUUID: UUID): BudgetPeriod?
 
     // Category section
     @Query("SELECT * FROM category WHERE id=(:categoryUUID)")
@@ -85,8 +87,9 @@ interface DatabaseDao {
 
     @Query("SELECT * FROM wallet")
     fun getWalletList(): Flow<List<Wallet>>
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT *,MAX(last_access) FROM wallet")
+    //@SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    //@Query("SELECT *,MAX(last_access) FROM wallet")
+    @Query("SELECT * FROM wallet ORDER BY last_access DESC LIMIT 1")
     fun getWalletLastAccessed(): Wallet?
 
 }

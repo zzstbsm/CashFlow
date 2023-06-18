@@ -20,14 +20,25 @@ data class BudgetCategory(
     @PrimaryKey
     val id: UUID = UUID(0L,0L),
     @ColumnInfo(name = "id_period")
-    val periodId: UUID = UUID(0L,0L),
+    val idPeriod: UUID = UUID(0L,0L),
     @ColumnInfo(name = "id_category")
-    val categoryId: UUID = UUID(0L,0L),
+    val idCategory: UUID = UUID(0L,0L),
     @ColumnInfo(name = "enabled")
     val enabled: Boolean = false,
     @ColumnInfo(name = "max_category_amount")
     val maxCategoryAmount: Float = 0f,
-)
+) {
+    companion object {
+        fun newCategory(
+            idCategory: UUID,
+        ) : BudgetCategory {
+            return BudgetCategory(
+                id = UUID.randomUUID(),
+                idCategory = idCategory,
+            )
+        }
+    }
+}
 
 @Entity(tableName = "budget_period")
 data class BudgetPeriod(
