@@ -1,9 +1,7 @@
 package com.zhengzhou.cashflow.ui.walletEdit
 
-import android.text.format.DateFormat
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -11,20 +9,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.tools.Calculator
-import com.zhengzhou.cashflow.tools.KeypadDigit
-import com.zhengzhou.cashflow.tools.mapCharToKeypadDigit
+import com.zhengzhou.cashflow.data.Currency
+import com.zhengzhou.cashflow.ui.DateSelector
+import com.zhengzhou.cashflow.ui.MoneyTextField
 import java.util.UUID
 
 private enum class WalletEditOption(
@@ -60,7 +58,8 @@ fun WalletEditScreen(
 
     val walletEditViewModel: WalletEditViewModel = viewModel {
         WalletEditViewModel(
-            navController = navController
+            walletUUID = walletUUID,
+            navController = navController,
         )
     }
     val walletEditUiState by walletEditViewModel.uiState.collectAsState()
@@ -111,7 +110,7 @@ private fun WalletEditTopAppBar(
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletEditMainBody(
     walletEditUiState: WalletEditUiState,
@@ -123,9 +122,6 @@ fun WalletEditMainBody(
         .fillMaxWidth()
         .padding(horizontal = 16.dp, vertical = 8.dp)
 
-    // TODO: set testing env
-    walletEditViewModel.updateWalletBudgetEnabled(true)
-
     Column(
         modifier = Modifier.padding(innerPadding),
     ) {
@@ -134,16 +130,29 @@ fun WalletEditMainBody(
             walletEditViewModel = walletEditViewModel,
             modifier = modifier,
         )
-        TextWalletAmount(
-            walletEditUiState = walletEditUiState,
-            walletEditViewModel = walletEditViewModel,
-            modifier = modifier,
+        MoneyTextField(
+            label = stringResource(id = R.string.WalletEdit_initial_amount),
+            onValueChange = { amount ->
+                walletEditViewModel.updateWalletAmount(amount = amount)
+            },
+            modifier = modifier
         )
-        TextWalletCreationDate(
-            walletEditUiState = walletEditUiState,
-            walletEditViewModel = walletEditViewModel,
-            modifier = modifier,
-        )
+        Row {
+            DateSelector(
+                label = stringResource(id = R.string.WalletEdit_creation_date),
+                dateFormat = "EEEE, dd MMMM yyyy",
+                date = walletEditUiState.wallet.creationDate,
+                onSelectDate = { millis ->
+                    walletEditViewModel.updateWalletCreationDate(millis)
+                },
+                modifier = modifier.weight(2f),
+            )
+            TextWalletCurrencyChooser(
+                walletEditUiState = walletEditUiState,
+                walletEditViewModel = walletEditViewModel,
+                modifier = modifier.weight(1f),
+            )
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
         Divider()
@@ -179,43 +188,6 @@ private fun TextWalletName(
 }
 
 @Composable
-private fun TextWalletAmount(
-    walletEditUiState: WalletEditUiState,
-    walletEditViewModel: WalletEditViewModel,
-    modifier: Modifier = Modifier,
-) {
-
-    val calculator: Calculator by remember { mutableStateOf(Calculator()) }
-    var amountOnScreen by remember { mutableStateOf(calculator.onScreenString()) }
-
-    OutlinedTextField(
-        label = {
-            Text(text = stringResource(id = R.string.WalletEdit_initial_amount))
-        },
-        value = amountOnScreen,
-        onValueChange = { newText ->
-            if (newText.length >= calculator.onScreenString().length) {
-                val newDigit = newText.last()
-                val newKey: KeypadDigit? = mapCharToKeypadDigit(newDigit)
-                if (newKey != null) {
-                    calculator.addKey(newKey)
-                }
-            } else {
-                calculator.dropLastDigit()
-            }
-            amountOnScreen = calculator.onScreenString()
-            walletEditViewModel.updateWalletAmount(amount = amountOnScreen.toFloat())
-        },
-        modifier = modifier,
-        maxLines = 1,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Decimal
-        )
-    )
-}
-
-
-@Composable
 private fun TextWalletIcon(
     walletEditUiState: WalletEditUiState,
     walletEditViewModel: WalletEditViewModel,
@@ -224,61 +196,64 @@ private fun TextWalletIcon(
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-private fun TextWalletCreationDate(
+private fun TextWalletCurrencyChooser(
     walletEditUiState: WalletEditUiState,
     walletEditViewModel: WalletEditViewModel,
     modifier: Modifier = Modifier,
 ) {
-    var showDatePickerState by remember {
-        mutableStateOf(false)
-    }
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = walletEditUiState.wallet.creationDate.time
-    )
 
+    var showDropDownMenu by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
-    OutlinedTextField(
-        label = {
-            Text(text = stringResource(id = R.string.WalletEdit_creation_date))
-        },
-        value = DateFormat.format(
-            "EEEE, dd MMMM yyyy",
-            walletEditUiState.wallet.creationDate
-        ).toString(),
-        onValueChange = { },
+    Box(
         modifier = modifier
-            .onFocusChanged { focusState ->
-                if (focusState.isFocused) {
-                    showDatePickerState = true
-                    focusManager.clearFocus()
-                }
-            }
-        ,
-        maxLines = 1,
-    )
-
-    if (showDatePickerState) {
-        DatePickerDialog(
-            onDismissRequest = {
-                showDatePickerState = false
+    ) {
+        OutlinedTextField(
+            label = {
+                Text(text = stringResource(id = R.string.currency))
             },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        walletEditViewModel.updateWalletCreationDate(datePickerState.selectedDateMillis)
-                        showDatePickerState = false
+            value = walletEditUiState.wallet.currency,
+            onValueChange = { },
+            modifier = Modifier
+                .onFocusChanged { focusState ->
+                    if (focusState.isFocused) {
+                        showDropDownMenu = true
+                        focusManager.clearFocus()
                     }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.confirm)
-                    )
                 }
-            }
+            ,
+            maxLines = 1,
+        )
+
+        DropdownMenu(
+            expanded = showDropDownMenu,
+            onDismissRequest = {
+                showDropDownMenu = false
+            },
         ) {
-            DatePicker(state = datePickerState)
+            Currency.supportedCurrencyList().forEach { currency ->
+
+                DropdownMenuItem(
+                    leadingIcon = {
+                        Text(
+                            text = currency.iconEmojiUnicode,
+                            style = TextStyle(fontSize = 20.sp)
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = currency.abbreviation
+                        )
+                    },
+                    onClick = {
+                        walletEditViewModel.updateWalletCurrency(currency = currency)
+                        showDropDownMenu = false
+                    }
+                )
+            }
         }
     }
+
+
 }

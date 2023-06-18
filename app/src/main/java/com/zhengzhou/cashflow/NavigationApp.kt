@@ -27,7 +27,12 @@ fun NavigationApp() {
         mutableStateOf(NavigationCurrentScreen.Balance)
     }
     // val startDestination = Screen.Balance.route
-    val startDestination = Screen.WalletEdit.route
+
+    val startDestination = if (testing) {
+        Screen.WalletEdit.route
+    } else {
+        Screen.Balance.route
+    }
 
     // Set the navigation controller
     val navController = rememberNavController()

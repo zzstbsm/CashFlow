@@ -2,6 +2,17 @@ package com.zhengzhou.cashflow.tools
 
 import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
+
+fun getToday() : Date {
+
+    val calendar = Calendar.getInstance()
+    calendar.time = Date()
+    calendar.timeZone = TimeZone.getTimeZone("UTC")
+    calendar.add(Calendar.MILLISECOND,TimeZone.getDefault().getOffset(calendar.timeInMillis))
+
+    return calendar.time
+}
 
 fun getFirstDayOfCurrentMonth() : Date {
 
@@ -12,6 +23,10 @@ fun getFirstDayOfCurrentMonth() : Date {
     calendar.set(Calendar.MINUTE,0)
     calendar.set(Calendar.SECOND,0)
     calendar.set(Calendar.MILLISECOND,0)
+
+    calendar.timeZone = TimeZone.getTimeZone("UTC")
+    calendar.add(Calendar.MILLISECOND,TimeZone.getDefault().getOffset(calendar.timeInMillis))
+
     return calendar.time
 
 }
@@ -26,20 +41,24 @@ fun getLastDayOfCurrentMonth() : Date {
     )
     calendar.set(
         Calendar.HOUR_OF_DAY,
-        calendar.getActualMaximum(Calendar.HOUR_OF_DAY),
+        0,
     )
     calendar.set(
         Calendar.MINUTE,
-        calendar.getActualMaximum(Calendar.MINUTE),
+        0,
     )
     calendar.set(
         Calendar.SECOND,
-        calendar.getActualMaximum(Calendar.SECOND),
+        0,
     )
     calendar.set(
         Calendar.MILLISECOND,
-        calendar.getActualMaximum(Calendar.MILLISECOND),
+        0,
     )
+
+    calendar.timeZone = TimeZone.getTimeZone("UTC")
+    calendar.add(Calendar.MILLISECOND,TimeZone.getDefault().getOffset(calendar.timeInMillis))
+
     return calendar.time
 
 }

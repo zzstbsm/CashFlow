@@ -1,21 +1,34 @@
 package com.zhengzhou.cashflow.ui
 
+import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.tools.Calculator
+import com.zhengzhou.cashflow.tools.KeypadDigit
+import com.zhengzhou.cashflow.tools.mapCharToKeypadDigit
 import kotlinx.coroutines.launch
+import java.util.Date
 
 @Composable
 fun BottomNavigationBar(
@@ -24,7 +37,7 @@ fun BottomNavigationBar(
     navController: NavController,
 ) {
 
-    NavigationBar() {
+    NavigationBar {
         NavigationCurrentScreen.elements
             .filter{ screen ->
             screen.bottomActive
@@ -60,7 +73,7 @@ fun SectionNavigationDrawerSheet(
     val scope = rememberCoroutineScope()
 
     ModalDrawerSheet {
-        Column() {
+        Column {
             Text(
                 text = stringResource(id = R.string.app_name),
                 fontWeight = FontWeight.Bold,
@@ -153,5 +166,108 @@ private fun routeClick(
     }
     else {
         EventMessages.sendMessage("Route not active")
+    }
+}
+
+@Composable
+fun MoneyTextField(
+    label: String,
+    onValueChange: (Float) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+
+    val calculator: Calculator by remember { mutableStateOf(Calculator()) }
+    var amountOnScreen by remember { mutableStateOf(calculator.onScreenString()) }
+
+    OutlinedTextField(
+        label = {
+            Text(text = label)
+        },
+        value = amountOnScreen,
+        onValueChange = { newText ->
+            if (newText.length >= calculator.onScreenString().length) {
+                val newDigit = newText.last()
+                val newKey: KeypadDigit? = mapCharToKeypadDigit(newDigit)
+                if (newKey != null) {
+                    calculator.addKey(newKey)
+                }
+            } else {
+                calculator.dropLastDigit()
+            }
+            amountOnScreen = calculator.onScreenString()
+            onValueChange(amountOnScreen.toFloat())
+        },
+        modifier = modifier,
+        maxLines = 1,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Decimal
+        )
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DateSelector(
+    label: String,
+    dateFormat: String,
+    date: Date,
+    onSelectDate: (Long?) -> Unit,
+    modifier: Modifier = Modifier,
+    selectableDatesCondition: (Long) -> Boolean = { true },
+) {
+    var showDatePickerState by remember {
+        mutableStateOf(false)
+    }
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = date.time,
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return selectableDatesCondition(utcTimeMillis)
+            }
+        },
+    )
+
+    val focusManager = LocalFocusManager.current
+
+    OutlinedTextField(
+        label = {
+            Text(text = label)
+        },
+        value = DateFormat.format(
+            dateFormat,
+            date
+        ).toString(),
+        onValueChange = { },
+        modifier = modifier
+            .onFocusChanged { focusState ->
+                if (focusState.isFocused) {
+                    showDatePickerState = true
+                    focusManager.clearFocus()
+                }
+            }
+        ,
+        maxLines = 1,
+    )
+
+    if (showDatePickerState) {
+        DatePickerDialog(
+            onDismissRequest = {
+                showDatePickerState = false
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onSelectDate(datePickerState.selectedDateMillis)
+                        showDatePickerState = false
+                    }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.confirm)
+                    )
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
     }
 }
