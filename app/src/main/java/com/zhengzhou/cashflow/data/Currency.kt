@@ -8,25 +8,37 @@ import java.util.*
 enum class Currency(
     val locale: Locale,
     val abbreviation: String,
-    @StringRes val nameCurrency: Int
+    @StringRes val nameCurrency: Int,
+    val iconEmojiUnicode: String,
 ) {
     USA(
         locale = Locale.US,
         abbreviation = "USD",
-        nameCurrency = R.string.currency_usd_name
+        nameCurrency = R.string.currency_usd_name,
+        iconEmojiUnicode = "\uD83C\uDDFA\uD83C\uDDF8",
     ),
 
     EUR(
         locale = Locale.ITALY,
         abbreviation = "EUR",
-        nameCurrency = R.string.currency_usd_name
+        nameCurrency = R.string.currency_usd_name,
+        iconEmojiUnicode = "\uD83C\uDDEA\uD83C\uDDFA"
     ),
 
     SEK(
         locale = Locale("sv","se"),
         abbreviation = "SEK",
-        nameCurrency = R.string.currency_sek_name
-    )
+        nameCurrency = R.string.currency_sek_name,
+        iconEmojiUnicode = "\uD83C\uDDF8\uD83C\uDDEA"
+    );
+
+    companion object {
+        fun supportedCurrencyList() : List<Currency> {
+            return Currency.values().toList().sortedBy { currency ->
+                currency.abbreviation
+            }
+        }
+    }
 }
 
 fun setCurrency(

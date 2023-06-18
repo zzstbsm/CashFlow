@@ -15,9 +15,10 @@ import com.zhengzhou.cashflow.data.*
         Tag::class,
         TagTransaction::class,
         TagLocation::class,
-        Budget::class,
+        BudgetCategory::class,
+        BudgetPeriod::class,
     ],
-    version = 2,
+    version = 1,
     exportSchema = false,
 )
 @TypeConverters(TransactionTypeConverters::class)
@@ -25,6 +26,7 @@ abstract class RegisterDatabase : RoomDatabase() {
     abstract fun databaseDao(): DatabaseDao
 }
 
+/*
 val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL(
@@ -42,3 +44,4 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         )
     }
 }
+ */

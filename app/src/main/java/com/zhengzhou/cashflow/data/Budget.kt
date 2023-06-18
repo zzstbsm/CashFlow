@@ -15,26 +15,30 @@ import java.util.*
  *
  */
 
-@Entity(tableName = "budget_amount")
-data class Budget(
+@Entity(tableName = "budget_category")
+data class BudgetCategory(
     @PrimaryKey
     val id: UUID = UUID(0L,0L),
-    @ColumnInfo(name = "period_id")
+    @ColumnInfo(name = "id_period")
     val periodId: UUID = UUID(0L,0L),
-    @ColumnInfo(name = "category_id")
+    @ColumnInfo(name = "id_category")
     val categoryId: UUID = UUID(0L,0L),
-    @ColumnInfo(name = "max_expense")
-    val maxExpense: Float = 0f,
+    @ColumnInfo(name = "enabled")
+    val enabled: Boolean = false,
+    @ColumnInfo(name = "max_category_amount")
+    val maxCategoryAmount: Float = 0f,
 )
 
 @Entity(tableName = "budget_period")
 data class BudgetPeriod(
     @PrimaryKey
     val id: UUID = UUID(0L,0L),
-    @ColumnInfo(name = "wallet_id")
+    @ColumnInfo(name = "id_wallet")
     val walletId: UUID = UUID(0L,0L),
     @ColumnInfo(name = "start_date")
     val startDate: Date = getFirstDayOfCurrentMonth(),
     @ColumnInfo(name = "end_date")
     val endDate: Date = getLastDayOfCurrentMonth(),
+    @ColumnInfo(name = "max_period_amount")
+    val maxPeriodAmount: Float = 0f,
 )
