@@ -14,7 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.data.formatCurrency
+import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.tools.addDaysFromDate
 import com.zhengzhou.cashflow.tools.balanceFlowIn
 import com.zhengzhou.cashflow.tools.balanceFlowOut
@@ -90,9 +90,9 @@ private fun CardText(
     val balanceIn = balanceFlowIn(transactionListFilteredByDate)
     val balanceOut = balanceFlowOut(transactionListFilteredByDate)
 
-    val formattedBalance = formatCurrency(currencyFormatter, balance)
-    val formattedIn = formatCurrency(currencyFormatter,balanceIn)
-    val formattedOut = formatCurrency(currencyFormatter,balanceOut)
+    val formattedBalance = Currency.formatCurrency(currencyFormatter, balance)
+    val formattedIn = Currency.formatCurrency(currencyFormatter,balanceIn)
+    val formattedOut = Currency.formatCurrency(currencyFormatter,balanceOut)
 
     val wallet = balanceUiState.equivalentWallet
 

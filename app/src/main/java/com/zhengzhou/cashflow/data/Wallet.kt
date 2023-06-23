@@ -22,7 +22,7 @@ data class Wallet(
     val startAmount: Float = 0f,
     @ColumnInfo(name = "icon_id")
     @DrawableRes val iconId: Int = R.drawable.ic_wallet,
-    val currency: String = "EUR",
+    val currency: Currency = Currency.EUR,
     @ColumnInfo(name = "creation_date")
     val creationDate: Date = Date(),
     @ColumnInfo(name = "last_access")

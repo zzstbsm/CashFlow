@@ -51,7 +51,7 @@ data class BalanceGroup(
     var walletSelection: List<WalletSelection> = listOf(WalletSelection()),
     val transactionList: List<Transaction> = listOf(),
     var lastAccess: Date = Date(),
-    val currencyFormatter: NumberFormat = setCurrencyFormatter(Currency.EUR.abbreviation),
+    val currencyFormatter: NumberFormat = Currency.setCurrencyFormatter(Currency.EUR.abbreviation),
 ) {
     suspend fun checkSingleWalletInGroup(
         walletPositionInArray: Int

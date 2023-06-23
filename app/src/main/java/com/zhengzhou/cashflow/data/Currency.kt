@@ -38,40 +38,41 @@ enum class Currency(
                 currency.abbreviation
             }
         }
-    }
-}
 
-fun setCurrency(
-    abbreviation: String
-) : Currency? {
+        fun setCurrency(
+            abbreviation: String
+        ) : Currency? {
 
-    // Check if the currency is supported
-    // Return currency if supported
-    Currency.values().forEach { currency: Currency ->
-        if (currency.abbreviation == abbreviation) {
-            return currency
+            // Check if the currency is supported
+            // Return currency if supported
+            Currency.values().forEach { currency: Currency ->
+                if (currency.abbreviation == abbreviation) {
+                    return currency
+                }
+            }
+
+            // The currency is not supported
+            return null
+
         }
-    }
 
-    // The currency is not supported
-    return null
+        fun formatCurrency(
+            currency : NumberFormat,
+            amount : Float,
+        ) : String {
+            return currency.format(amount)
+        }
 
-}
+        fun setCurrencyFormatter(currencyString: String) : NumberFormat {
 
-fun formatCurrency(
-    currency : NumberFormat,
-    amount : Float,
-) : String {
-    return currency.format(amount)
-}
+            val currency: Currency? = setCurrency(currencyString)
 
-fun setCurrencyFormatter(currencyString: String) : NumberFormat {
+            return if (currency != null) {
+                NumberFormat.getCurrencyInstance(currency.locale)
+            } else {
+                NumberFormat.getCurrencyInstance()
+            }
+        }
 
-    val currency: Currency? = setCurrency(currencyString)
-
-    return if (currency != null) {
-        NumberFormat.getCurrencyInstance(currency.locale)
-    } else {
-        NumberFormat.getCurrencyInstance()
     }
 }
