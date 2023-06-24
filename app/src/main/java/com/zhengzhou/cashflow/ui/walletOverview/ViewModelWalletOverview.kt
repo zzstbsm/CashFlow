@@ -7,15 +7,20 @@ import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.EventMessages
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 
 data class WalletOverviewUiState(
     val wallet: Wallet = Wallet(),
-    val ifZeroWallet: Boolean = false
+    val walletList: List<Wallet> = listOf(),
+    val ifZeroWallet: Boolean = false,
+    val isLoading: Boolean = true,
 ) {
     suspend fun updateWallet(wallet: Wallet): WalletOverviewUiState {
         val repository = DatabaseRepository.get()
@@ -42,24 +47,46 @@ class WalletOverviewViewModel(
     init {
         viewModelScope.launch(Dispatchers.IO){
 
-            var lastAccessedWallet: Wallet? = null
-
-            try {
-                lastAccessedWallet = repository.getWalletLastAccessed()
-            } catch (_: Exception) {
-
+            viewModelScope.launch {
+                repository.getWalletList().collect {
+                    _uiState.value = uiState.value.copy(
+                        walletList = it,
+                        ifZeroWallet = it.isEmpty(),
+                        isLoading = false
+                    )
+                }
             }
 
-            if (lastAccessedWallet == null) {
-                lastAccessedWallet = Wallet.emptyWallet()
-                _uiState.value = uiState.value.copy(
-                    ifZeroWallet = true,
-                )
+            viewModelScope.launch {
+                while (uiState.value.isLoading) {
+                    delay(20)
+                }
+                if (!uiState.value.ifZeroWallet) {
+                    loadLastAccessed()
+                }
             }
-            _uiState.value = uiState.value.updateWallet(lastAccessedWallet)
         }
     }
 
+    private suspend fun loadLastAccessed() {
+        _uiState.value = uiState.value.copy(
+            wallet = repository.getWalletLastAccessed() ?: Wallet.emptyWallet()
+        )
+    }
 
+    fun deleteShownWallet() {
+        viewModelScope.launch {
+            repository.deleteWallet(uiState.value.wallet)
+            _uiState.value = uiState.value.copy(
+                wallet = Wallet()
+            )
+            loadLastAccessed()
+            if (uiState.value.wallet.id == UUID(0L,0L)) {
+                _uiState.value = uiState.value.copy(
+                    ifZeroWallet = true
+                )
+            }
+        }
+    }
 
 }

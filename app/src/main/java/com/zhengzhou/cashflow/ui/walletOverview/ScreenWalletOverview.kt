@@ -7,6 +7,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -55,6 +58,13 @@ fun WalletOverviewScreen(
                 SectionTopAppBar(
                     currentScreen = currentScreen,
                     drawerState = drawerState,
+                    actions = {
+                        WalletOverviewAppBarAction(
+                            walletOverviewUiState = walletOverviewUiState,
+                            walletOverviewViewModel = walletOverviewViewModel,
+                            navController = navController,
+                        )
+                    }
                 )
             },
             content = { innerPadding ->
@@ -83,15 +93,79 @@ fun WalletOverviewScreen(
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_add),
-                            contentDescription = stringResource(id = R.string.add_wallet), 
+                            contentDescription = stringResource(id = R.string.WalletOverview_add_wallet),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = stringResource(id = R.string.add_wallet) 
+                            text = stringResource(id = R.string.nav_name_wallet_add)
                         )
                     }
                 }
             }
+        )
+    }
+}
+
+@Composable
+fun WalletOverviewAppBarAction(
+    walletOverviewUiState: WalletOverviewUiState,
+    walletOverviewViewModel: WalletOverviewViewModel,
+    navController: NavController,
+) {
+
+    var openMenu by remember { mutableStateOf(false)}
+
+    Row {
+        if (!walletOverviewUiState.ifZeroWallet) {
+            IconButton(
+                onClick = { 
+                    Screen.WalletEdit.navigate(
+                        walletID = walletOverviewUiState.wallet.id,
+                        navController = navController,
+                    ) 
+                }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_edit),
+                    contentDescription = stringResource(id = R.string.WalletOverview_edit_wallet)
+                )
+            }
+            
+            IconButton(onClick = { openMenu = true }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_more_vert),
+                    contentDescription =  stringResource(R.string.accessibility_menu_action_open),
+                )
+            }
+        }
+    }
+    DropdownMenu(
+        expanded = openMenu,
+        onDismissRequest = {
+            openMenu = false
+        }
+    ) {
+        DropdownMenuItem(
+            text = {
+                Text(text = stringResource(id = R.string.nav_name_wallet_add))
+            },
+            onClick = {
+                Screen.WalletEdit.navigate(
+                    walletID  = UUID(0L,0L),
+                    navController = navController,
+                )
+            },
+        )
+
+        DropdownMenuItem(
+            text = {
+                Text(text = stringResource(id = R.string.nav_name_wallet_delete))
+            },
+            onClick = {
+                walletOverviewViewModel.deleteShownWallet()
+                openMenu = false
+
+            },
         )
     }
 }
@@ -172,9 +246,9 @@ private fun WalletInfoSection(
     ) {
         Text(
             text = if (walletOverviewUiState.ifZeroWallet) {
-                stringResource(id = R.string.no_wallet)
+                stringResource(id = R.string.WalletOverview_no_wallet)
             } else {
-                "Euro" // TODO: put amount
+                walletOverviewUiState.wallet.name
             },
             color = Color.DarkGray,
             fontWeight = FontWeight.Bold,
@@ -194,9 +268,9 @@ private fun TransactionListSection(
         Text(
             text = stringResource(
                 id = if (walletOverviewUiState.ifZeroWallet) {
-                    R.string.no_transactions
+                    R.string.WalletOverview_no_transactions
                 } else {
-                    R.string.recent_transactions
+                    R.string.WalletOverview_recent_transactions
                 }
             ),
             color = Color.Gray,

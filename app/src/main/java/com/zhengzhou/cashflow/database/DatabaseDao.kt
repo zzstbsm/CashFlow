@@ -90,6 +90,6 @@ interface DatabaseDao {
     //@SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     //@Query("SELECT *,MAX(last_access) FROM wallet")
     @Query("SELECT * FROM wallet ORDER BY last_access DESC LIMIT 1")
-    fun getWalletLastAccessed(): Wallet?
+    suspend fun getWalletLastAccessed(): Wallet?
 
 }

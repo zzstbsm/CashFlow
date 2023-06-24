@@ -34,6 +34,7 @@ data class Wallet(
     companion object {
         fun emptyWallet() : Wallet {
             return Wallet().copy(
+                id = UUID(0L,0L),
                 name = "",
                 // TODO: next line to remove after the implementation of EditWalletScreen
                 startAmount = 0f,

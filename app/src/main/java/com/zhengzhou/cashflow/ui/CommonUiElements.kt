@@ -2,6 +2,7 @@ package com.zhengzhou.cashflow.ui
 
 import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -115,6 +116,7 @@ fun SectionTopAppBar(
     drawerState: DrawerState,
     modifier: Modifier = Modifier,
     pageName: String? = null,
+    actions: @Composable RowScope.() -> Unit = { },
 ) {
 
     val scope = rememberCoroutineScope()
@@ -137,7 +139,8 @@ fun SectionTopAppBar(
                     contentDescription = stringResource(id = R.string.accessibility_menu_navbar),
                 )
             }
-        }
+        },
+        actions = actions
     )
 }
 

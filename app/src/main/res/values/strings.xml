@@ -15,16 +15,18 @@
     <string name="nav_name_wallet">Wallet</string>
     <string name="nav_name_wallet_add">Add wallet</string>
     <string name="nav_name_wallet_edit">Edit wallet</string>
+    <string name="nav_name_wallet_delete">Delete wallet</string>
 
     <string name="accessibility_menu_navbar">Navigation bar</string>
     <string name="accessibility_menu_navbar_balance">Balance</string>
     <string name="accessibility_menu_navbar_overview">Overview</string>
     <string name="accessibility_menu_navbar_profile">Profile</string>
+    <string name="accessibility_menu_action_open">Open menu</string>
 
     <string name="wallet">Wallet</string>
     <string name="this_month_balance">This month balance</string>
     <string name="balance">Balance: %1$s</string>
-    <string name="profile">4Profile</string>
+    <string name="profile">Profile</string>
     <string name="wallet_edit">Edit wallet</string>
 
     <!-- Default categories -->
@@ -87,10 +89,11 @@
     <string name="WalletEdit_not_set">Not set</string>
 
     <!-- WalletOverview page-->
-    <string name="add_wallet">Add wallet</string>
-    <string name="no_transactions">No transactions</string>
-    <string name="no_wallet">No wallet</string>
-    <string name="recent_transactions">Recent transactions</string>
+    <string name="WalletOverview_add_wallet">Add wallet</string>
+    <string name="WalletOverview_edit_wallet">Edit wallet</string>
+    <string name="WalletOverview_no_transactions">No transactions</string>
+    <string name="WalletOverview_no_wallet">No wallet</string>
+    <string name="WalletOverview_recent_transactions">Recent transactions</string>
 
     <!-- Supported currencies -->
     <string name="currency">Currency</string>
