@@ -18,7 +18,7 @@ import com.zhengzhou.cashflow.ui.walletOverview.WalletOverviewScreen
 import java.util.UUID
 
 const val TAG = "NavigationApp"
-const val testing = true
+const val testing = false
 
 @Composable
 fun NavigationApp() {

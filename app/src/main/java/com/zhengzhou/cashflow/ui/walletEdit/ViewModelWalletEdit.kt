@@ -15,10 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.properties.Delegates
 
 
 data class WalletEditUiState(
@@ -63,6 +61,10 @@ data class WalletEditUiState(
         return this.copy(
             wallet = this.wallet.copy(
                 budgetEnabled = budgetEnabled
+            ),
+            budgetPeriod = this.budgetPeriod.copy(
+                id = UUID.randomUUID(),
+                walletId = this.wallet.id,
             )
         )
     }
@@ -88,7 +90,7 @@ data class WalletEditUiState(
     }
 
     fun updateWalletCurrency(
-        currency: String,
+        currency: Currency,
     ) : WalletEditUiState{
         return this.copy(
             wallet = this.wallet.copy(
@@ -108,7 +110,8 @@ class WalletEditViewModel(
     navController: NavController,
 ): ViewModel() {
 
-    var newWallet = true
+    private var _newWallet = true
+    private var _budgetEnabledWhenLoaded: Boolean = false
 
     private var _uiState = MutableStateFlow(WalletEditUiState())
     val uiState: StateFlow<WalletEditUiState> = _uiState.asStateFlow()
@@ -117,23 +120,24 @@ class WalletEditViewModel(
 
     init {
 
-        newWallet = walletUUID == UUID(0L,0L)
+        _newWallet = walletUUID == UUID(0L,0L)
 
         viewModelScope.launch(Dispatchers.IO) {
 
             _uiState.value = uiState.value.copy(
-                wallet = if (newWallet) {
+                wallet = if (_newWallet) {
                     Wallet.emptyWallet()
                 } else {
                     repository.getWallet(walletUUID) ?: Wallet.emptyWallet()
                 }
             )
+            _budgetEnabledWhenLoaded = uiState.value.wallet.budgetEnabled
         }
 
         viewModelScope.launch(Dispatchers.IO) {
 
             // Load data about the budget period
-            if (!newWallet) {
+            if (!_newWallet) {
                 _uiState.value = uiState.value.copy(
                     budgetPeriod = repository.getBudgetPeriodLastActive(
                         walletUUID = walletUUID
@@ -155,7 +159,7 @@ class WalletEditViewModel(
                 val groupCategoryAndBudgetList: MutableList<GroupCategoryAndBudget> = mutableListOf()
                 categoryListExpenses.forEach {category ->
 
-                    val budgetCategory: BudgetCategory = if (newWallet) {
+                    val budgetCategory: BudgetCategory = if (_newWallet) {
                         BudgetCategory.newCategory(
                             idCategory = category.id
                         )
@@ -186,8 +190,6 @@ class WalletEditViewModel(
             }
         }
     }
-
-
 
     fun updateWalletName(name: String) {
         _uiState.value = uiState.value.updateWalletName(name)
@@ -221,7 +223,38 @@ class WalletEditViewModel(
 
     fun updateWalletCurrency(currency: Currency) {
         _uiState.value = uiState.value.updateWalletCurrency(
-            currency = currency.abbreviation
+            currency = currency
         )
+    }
+
+    fun saveWallet() {
+
+        viewModelScope.launch {
+            if (_newWallet) {
+                repository.addWallet(uiState.value.wallet)
+            } else {
+                repository.updateWallet(uiState.value.wallet)
+            }
+
+            // Currently (23/06/2023) disabled
+            val budgetEnabledWhileSaving = uiState.value.wallet.budgetEnabled
+            if (_budgetEnabledWhenLoaded != budgetEnabledWhileSaving) {
+
+                if (budgetEnabledWhileSaving && _newWallet) {
+                    repository.addBudgetPeriod(uiState.value.budgetPeriod)
+                } else {
+                    repository.updateBudgetPeriod(uiState.value.budgetPeriod)
+                }
+
+                // TODO: handle budget and category while saving the budget in database.
+                uiState.value.groupCategoryAndBudgetList.forEach { groupCategoryAndBudget ->
+                    val category = groupCategoryAndBudget.category
+                    val budgetCategory = groupCategoryAndBudget.budgetCategory
+
+                    // Actions
+
+                }
+            }
+        }
     }
 }

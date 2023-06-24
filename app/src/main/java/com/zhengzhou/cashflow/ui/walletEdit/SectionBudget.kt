@@ -14,11 +14,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,8 +29,6 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.BudgetCategory
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
-import com.zhengzhou.cashflow.data.formatCurrency
-import com.zhengzhou.cashflow.data.setCurrencyFormatter
 import com.zhengzhou.cashflow.ui.DateSelector
 import java.text.NumberFormat
 
@@ -60,12 +56,16 @@ fun SectionWalletBudget(
                 onCheckedChange = { budgetEnabled ->
                     walletEditViewModel.updateWalletBudgetEnabled(budgetEnabled = budgetEnabled)
                 },
+                enabled = false, // TODO: to remove after start planning to implement the budget
             )
         }
 
+        Text(
+            text = "Budget feature not completed",
+            modifier = modifier
+        )
+
         if (walletEditUiState.wallet.budgetEnabled) {
-
-
 
             Spacer(modifier = Modifier.height(8.dp))
             Divider()
@@ -91,7 +91,6 @@ fun SectionWalletBudget(
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SectionWalletSetBudget(
     walletEditUiState: WalletEditUiState,
@@ -159,7 +158,10 @@ private fun CategoryBudgetSetter(
                 CategoryBoxToSet(
                     category = category,
                     budgetCategory = budgetCategory,
-                    onClick = { /*TODO*/ },
+                    onClick = { category, budgetCategory ->
+                        // TODO: to implement set budget per category
+                    },
+                    currency = walletEditUiState.wallet.currency,
                     modifier = Modifier.padding(4.dp)
                 )
             }
@@ -172,18 +174,19 @@ private fun CategoryBudgetSetter(
 private fun CategoryBoxToSet(
     category: Category,
     budgetCategory: BudgetCategory,
-    onClick: (Category) -> Unit,
+    onClick: (Category,BudgetCategory) -> Unit,
+    currency: Currency,
     modifier: Modifier = Modifier,
 ) {
-    val currencyFormatter: NumberFormat = setCurrencyFormatter(Currency.EUR.abbreviation)
+    val currencyFormatter: NumberFormat = Currency.setCurrencyFormatter(currency.abbreviation)
     val formattedBudget = if (budgetCategory.enabled) {
-        formatCurrency(currencyFormatter,budgetCategory.maxCategoryAmount)
+        Currency.formatCurrency(currencyFormatter,budgetCategory.maxCategoryAmount)
     } else {
         stringResource(id = R.string.WalletEdit_not_set)
     }
 
     OutlinedButton(
-        onClick = { onClick(category) },
+        onClick = { onClick(category,budgetCategory) },
         modifier = modifier,
         contentPadding = PaddingValues(4.dp),
         shape = RoundedCornerShape(4.dp),

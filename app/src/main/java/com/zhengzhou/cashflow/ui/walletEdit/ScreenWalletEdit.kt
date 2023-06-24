@@ -79,7 +79,12 @@ fun WalletEditScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(
+                onClick = {
+                    walletEditViewModel.saveWallet()
+                    navController.popBackStack()
+                }
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_save),
                     contentDescription = null,
@@ -213,7 +218,7 @@ private fun TextWalletCurrencyChooser(
             label = {
                 Text(text = stringResource(id = R.string.currency))
             },
-            value = walletEditUiState.wallet.currency,
+            value = walletEditUiState.wallet.currency.abbreviation,
             onValueChange = { },
             modifier = Modifier
                 .onFocusChanged { focusState ->
