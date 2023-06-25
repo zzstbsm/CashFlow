@@ -102,7 +102,8 @@ fun WalletEditScreen(
                         ?.savedStateHandle
                         ?.set(
                             Screen.WalletOverview.keyWalletUUID(),
-                            walletEditUiState.wallet.id.toString())
+                            walletEditUiState.wallet.id.toString()
+                        )
                     navController.popBackStack(
                         route = Screen.WalletOverview.route,
                         inclusive = false

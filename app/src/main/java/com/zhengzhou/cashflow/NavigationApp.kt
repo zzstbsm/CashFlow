@@ -313,3 +313,24 @@ fun BackHandler(
         }
     }
 }
+
+@Composable
+fun ReloadPageAfterPopBackStack(
+    pageRoute:String,
+    navController: NavController,
+    onPopBackStack: () -> Unit,
+) {
+    val callback = NavController.OnDestinationChangedListener { _, destination, _ ->
+        if (destination.route == pageRoute) {
+            onPopBackStack()
+        }
+    }
+    LaunchedEffect(navController) {
+        navController.addOnDestinationChangedListener(callback)
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            navController.removeOnDestinationChangedListener(callback)
+        }
+    }
+}

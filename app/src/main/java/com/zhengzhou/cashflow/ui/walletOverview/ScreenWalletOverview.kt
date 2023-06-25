@@ -5,6 +5,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,8 +21,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.zhengzhou.cashflow.BackHandler
 import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
@@ -43,6 +47,13 @@ fun WalletOverviewScreen(
     }
     val walletOverviewUiState by walletOverviewViewModel.uiState.collectAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+    ReloadPageAfterPopBackStack(
+        pageRoute = Screen.WalletOverview.route,
+        navController = navController
+    ) {
+        walletOverviewViewModel.reloadScreen(walletUUID)
+    }
 
     ModalNavigationDrawer(
         drawerContent = {
