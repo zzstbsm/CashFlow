@@ -59,21 +59,24 @@ enum class TransactionType (
         text = R.string.expense,
         new_text = R.string.new_expense,
         iconId = R.drawable.ic_remove
-    )
-}
+    );
 
-fun setTransaction(
-    id: Int
-) : TransactionType? {
+    companion object {
+        fun setTransaction(
+            id: Int
+        ): TransactionType? {
 
-    // Return the type of transaction
-    TransactionType.values().forEach { transactionType: TransactionType ->
-        if (transactionType.id == id) {
-            return transactionType
+            // Return the type of transaction
+            TransactionType.values().forEach { transactionType: TransactionType ->
+                if (transactionType.id == id) {
+                    return transactionType
+                }
+            }
+
+            // The id is not valid
+            return null
+
         }
     }
-
-    // The id is not valid
-    return null
-
 }
+

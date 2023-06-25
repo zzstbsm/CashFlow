@@ -11,8 +11,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.ui.balance.BalanceScreen
 import com.zhengzhou.cashflow.ui.profile.ProfileScreen
+import com.zhengzhou.cashflow.ui.transactionEdit.TransactionEditScreen
 import com.zhengzhou.cashflow.ui.walletEdit.WalletEditScreen
 import com.zhengzhou.cashflow.ui.walletOverview.WalletOverviewScreen
 import java.util.UUID
@@ -87,30 +89,31 @@ fun NavigationApp() {
                 navController = navController,
             )
         }
-        /*
-        composable(route = Screen.BalanceOverview.route) {
-            BalanceOverviewScreen(navController = navController)
-        }
-        composable(route = Screen.Operation.route) {backStackEntry ->
+        composable(route = Screen.TransactionEdit.route) {backStackEntry ->
             val walletUUIDStr = backStackEntry.arguments?.getString("walletUUIDStr")
-            val transactionType = backStackEntry.arguments?.getString("transactionType")
+            val transactionTypeId = backStackEntry.arguments?.getInt("transactionType")
             val transactionUUIDStr = backStackEntry.arguments?.getString("transactionUUIDStr")
             requireNotNull(walletUUIDStr) {
                 "Exception: passed walletUUIDStr not valid"
             }
-            requireNotNull(transactionType) {
+            requireNotNull(transactionTypeId) {
                 "Exception: passed transactionType not valid"
             }
             requireNotNull(transactionUUIDStr) {
                 "Exception: passed updateTransaction not valid"
             }
-            OperationScreen(
-                walletUUIDStr = walletUUIDStr,
-                transactionTypeId = transactionType.toInt(),
-                transactionUUIDStr = transactionUUIDStr,
+            TransactionEditScreen(
+                walletUUID = UUID.fromString(walletUUIDStr),
+                transactionType = TransactionType.setTransaction(transactionTypeId)!!,
+                transactionUUID = UUID.fromString(transactionUUIDStr),
                 navController = navController
             )
         }
+        /*
+        composable(route = Screen.BalanceOverview.route) {
+            BalanceOverviewScreen(navController = navController)
+        }
+
         composable(route = Screen.TransactionReport.route) {backStackEntry ->
             val transactionUUIDStr = backStackEntry.arguments?.getString("transactionUUIDStr")
             requireNotNull(transactionUUIDStr) {
@@ -241,23 +244,7 @@ sealed class Screen(
         route = NavigationCurrentScreen.WalletOverview.route,
         screenEnum = NavigationCurrentScreen.Balance,
     ) {
-        private fun createRoute(
-            walletID: UUID,
-        ) : String {
-            return NavigationCurrentScreen.WalletEdit.route +
-                    "/${walletID}"
-        }
         fun keyWalletUUID() : String = "walletUUIDStr"
-        fun navigate(
-            walletID: UUID,
-            navController: NavController,
-        ) {
-            navController.navigate(
-                createRoute(
-                    walletID = walletID
-                )
-            )
-        }
     }
 
     object TransactionEdit: Screen(
@@ -267,11 +254,27 @@ sealed class Screen(
                 "/{transactionUUIDStr}",
         screenEnum = NavigationCurrentScreen.Balance,
     ) {
-        fun createRoute(
-            walletUUIDStr: String,
-            transactionType: Int,
-            transactionUUIDStr: String,
-        ) = "${screenEnum.route}/$walletUUIDStr/$transactionType/$transactionUUIDStr"
+        private fun createRoute(
+            walletUUID: UUID,
+            transactionType: TransactionType,
+            transactionUUID: UUID,
+        ) = NavigationCurrentScreen.TransactionEdit.route +
+                "/$walletUUID/${transactionType.id}/$transactionUUID"
+
+        fun navigate(
+            walletUUID: UUID,
+            transactionType: TransactionType,
+            transactionUUID: UUID,
+            navController: NavController,
+        )  {
+            navController.navigate(
+                createRoute(
+                    walletUUID = walletUUID,
+                    transactionType = transactionType,
+                    transactionUUID = transactionUUID,
+                )
+            )
+        }
     }
     object TransactionReport: Screen(
         route = NavigationCurrentScreen.TransactionReport.route +

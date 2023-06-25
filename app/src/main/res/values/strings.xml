@@ -17,11 +17,13 @@
     <string name="nav_name_wallet_edit">Edit wallet</string>
     <string name="nav_name_wallet_delete">Delete wallet</string>
 
+    <!-- Accessibility strings -->
     <string name="accessibility_menu_navbar">Navigation bar</string>
     <string name="accessibility_menu_navbar_balance">Balance</string>
     <string name="accessibility_menu_navbar_overview">Overview</string>
     <string name="accessibility_menu_navbar_profile">Profile</string>
     <string name="accessibility_menu_action_open">Open menu</string>
+    <string name="accessibility_transaction_new">New transaction</string>
 
     <string name="wallet">Wallet</string>
     <string name="this_month_balance">This month balance</string>
