@@ -1,9 +1,18 @@
 package com.zhengzhou.cashflow.ui
 
 import android.text.format.DateFormat
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -12,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -20,15 +30,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.data.Category
+import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.tools.Calculator
 import com.zhengzhou.cashflow.tools.KeypadDigit
 import com.zhengzhou.cashflow.tools.mapCharToKeypadDigit
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
 import java.util.Date
 
 @Composable
@@ -267,6 +281,90 @@ fun DateSelector(
             }
         ) {
             DatePicker(state = datePickerState)
+        }
+    }
+}
+
+@Composable
+fun SectionTransactionEntry(
+    transaction: Transaction,
+    category: Category,
+    currencyFormatter: NumberFormat,
+    onClickTransaction: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 2.dp)
+            .height(60.dp)
+            .clickable { onClickTransaction() },
+        // shadowElevation = 2.dp,
+        shape = MaterialTheme.shapes.large,
+    ) {
+        val firstLineStyle = MaterialTheme.typography.bodyLarge
+        val secondLineStyle = MaterialTheme.typography.bodySmall
+
+        Row(
+            modifier = modifier
+                .padding(horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                painter = painterResource(
+                    id = category.idIcon
+                ),
+                contentDescription = stringResource(id = category.name), //TODO add description
+                modifier = modifier
+                    .size(54.dp)
+                    .align(Alignment.CenterVertically)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Column(
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Row (
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text = stringResource(id = category.name),
+                        style = firstLineStyle,
+                        textAlign = TextAlign.Start,
+                        modifier = modifier.weight(1f)
+                    )
+                    Text(
+                        text = currencyFormatter.format(transaction.amount),
+                        style = firstLineStyle,
+                        textAlign = TextAlign.End,
+                        color = if (transaction.amount >= 0) {
+                            Color.Green
+                        } else {
+                            Color.Red
+                        }
+                    )
+                }
+                Row {
+                    Text(
+                        text = DateFormat.format(
+                            "MMM dd",
+                            transaction.date
+                        ).toString(),
+                        style = secondLineStyle
+                    )
+                    Spacer(modifier = modifier.width(8.dp))
+                    Text(
+                        text = "-",
+                        style = secondLineStyle
+                    )
+                    Spacer(modifier = modifier.width(8.dp))
+                    Text(
+                        text = transaction.description,
+                        style = secondLineStyle
+                    )
+                }
+            }
         }
     }
 }

@@ -3,7 +3,9 @@ package com.zhengzhou.cashflow.ui.walletOverview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
+import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.EventMessages
@@ -23,6 +25,7 @@ data class WalletOverviewUiState(
     val walletList: List<Wallet> = listOf(),
     val ifZeroWallet: Boolean = false,
     val isLoading: Boolean = true,
+    val transactionList: List<TransactionAndCategory> = listOf()
 ) {
     suspend fun updateWallet(wallet: Wallet): WalletOverviewUiState {
         val repository = DatabaseRepository.get()
@@ -37,6 +40,11 @@ data class WalletOverviewUiState(
     }
 }
 
+data class TransactionAndCategory(
+    val transaction: Transaction,
+    val category: Category
+)
+
 class WalletOverviewViewModel(
     walletUUID: UUID,
     navController: NavController,
@@ -47,7 +55,7 @@ class WalletOverviewViewModel(
 
     private val repository = DatabaseRepository.get()
 
-    private var currencyFormatter: NumberFormat = Currency.setCurrencyFormatter(Currency.EUR.abbreviation)
+    var currencyFormatter: NumberFormat = Currency.setCurrencyFormatter(Currency.EUR.abbreviation)
 
     init {
         viewModelScope.launch(Dispatchers.IO){
@@ -74,6 +82,32 @@ class WalletOverviewViewModel(
                     getWallet(walletUUID)
                 }
                 currencyFormatter = Currency.setCurrencyFormatter(uiState.value.wallet.currency.abbreviation)
+            }
+        }
+
+        viewModelScope.launch {
+            while (uiState.value.isLoading) {
+                delay(20)
+            }
+            repository.getTransactionShortListInWallet(
+                uiState.value.wallet.id,
+                3
+            ).collect { list ->
+                val transactionAndCategoryList = mutableListOf<TransactionAndCategory>()
+
+                list.forEach { transaction ->
+                    val category = repository.getCategory(transaction.idCategory) ?: Category()
+                    transactionAndCategoryList.add(
+                        TransactionAndCategory(
+                            transaction = transaction,
+                            category = category,
+                        )
+                    )
+                }
+
+                _uiState.value = uiState.value.copy(
+                    transactionList = transactionAndCategoryList
+                )
             }
         }
     }

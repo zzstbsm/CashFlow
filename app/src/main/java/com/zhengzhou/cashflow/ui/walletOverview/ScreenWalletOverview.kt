@@ -5,8 +5,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,19 +14,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.BackHandler
 import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.Screen
+import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.ui.SectionTopAppBar
+import com.zhengzhou.cashflow.ui.SectionTransactionEntry
 import java.util.UUID
 
 @Composable
@@ -294,7 +292,7 @@ private fun TransactionListSection(
     ) {
         Text(
             text = stringResource(
-                id = if (walletOverviewUiState.ifZeroWallet) {
+                id = if (walletOverviewUiState.transactionList.isEmpty()) {
                     R.string.WalletOverview_no_transactions
                 } else {
                     R.string.WalletOverview_recent_transactions
@@ -303,6 +301,22 @@ private fun TransactionListSection(
             color = Color.Gray,
             fontWeight = FontWeight.Bold,
         )
+
+        if (walletOverviewUiState.transactionList.isNotEmpty()) {
+            walletOverviewUiState.transactionList.forEach { item ->
+                val transaction = item.transaction
+                val category = item.category
+                SectionTransactionEntry(
+                    transaction = transaction,
+                    category = category,
+                    currencyFormatter = walletOverviewViewModel.currencyFormatter,
+                    onClickTransaction = {
+                        // TODO: navigate into the transaction detail page
+                    },
+                    modifier = modifier,
+                )
+            }
+        }
     }
 }
 

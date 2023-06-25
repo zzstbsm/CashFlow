@@ -122,6 +122,8 @@ class DatabaseRepository private constructor(
     }
     fun getTransactionListInWallet(idWallet: UUID): Flow<List<Transaction>>
             = database.databaseDao().getTransactionListInWallet(idWallet)
+    fun getTransactionShortListInWallet(idWallet: UUID,numberOfEntries: Int): Flow<List<Transaction>>
+        = database.databaseDao().getTransactionShortListInWallet(idWallet,numberOfEntries)
 
     /* Wallet section */
     suspend fun getWallet(walletUUID: UUID): Wallet? = database.databaseDao().getWallet(walletUUID)
