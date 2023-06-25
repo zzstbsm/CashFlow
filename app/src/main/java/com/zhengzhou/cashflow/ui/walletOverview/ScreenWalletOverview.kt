@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,6 +29,7 @@ import java.util.UUID
 
 @Composable
 fun WalletOverviewScreen(
+    walletUUID: UUID = UUID(0L,0L),
     currentScreen: NavigationCurrentScreen,
     setCurrentScreen: (NavigationCurrentScreen) -> Unit,
     navController: NavController
@@ -35,7 +37,8 @@ fun WalletOverviewScreen(
 
     val walletOverviewViewModel: WalletOverviewViewModel = viewModel {
         WalletOverviewViewModel(
-            navController = navController
+            walletUUID = walletUUID,
+            navController = navController,
         )
     }
     val walletOverviewUiState by walletOverviewViewModel.uiState.collectAsState()
@@ -253,6 +256,18 @@ private fun WalletInfoSection(
             color = Color.DarkGray,
             fontWeight = FontWeight.Bold,
         )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(id = R.string.WalletOverview_balance)
+            )
+            Text(
+                // TODO fix
+                text = walletOverviewViewModel.formatCurrency(walletOverviewUiState.wallet.startAmount)
+            )
+        }
     }
 }
 

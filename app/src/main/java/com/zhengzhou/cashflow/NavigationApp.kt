@@ -70,8 +70,16 @@ fun NavigationApp() {
                 navController = navController,
             )
         }
-        composable(route = Screen.WalletOverview.route) {
+        composable(route = Screen.WalletOverview.route) { navBackStackEntry ->
+
+            val walletUUID = UUID.fromString(
+                (navBackStackEntry.savedStateHandle.get<String?>(
+                    Screen.WalletOverview.keyWalletUUID()
+                ) ?: UUID(0L,0L)).toString()
+            )
+
             WalletOverviewScreen(
+                walletUUID = walletUUID,
                 currentScreen = currentScreen,
                 setCurrentScreen = { screen ->
                     currentScreen = screen
@@ -232,7 +240,25 @@ sealed class Screen(
     object WalletOverview: Screen(
         route = NavigationCurrentScreen.WalletOverview.route,
         screenEnum = NavigationCurrentScreen.Balance,
-    )
+    ) {
+        private fun createRoute(
+            walletID: UUID,
+        ) : String {
+            return NavigationCurrentScreen.WalletEdit.route +
+                    "/${walletID}"
+        }
+        fun keyWalletUUID() : String = "walletUUIDStr"
+        fun navigate(
+            walletID: UUID,
+            navController: NavController,
+        ) {
+            navController.navigate(
+                createRoute(
+                    walletID = walletID
+                )
+            )
+        }
+    }
 
     object TransactionEdit: Screen(
         route = NavigationCurrentScreen.TransactionEdit.route +

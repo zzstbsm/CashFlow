@@ -175,11 +175,12 @@ private fun routeClick(
 @Composable
 fun MoneyTextField(
     label: String,
+    amount: Float,
     onValueChange: (Float) -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
-    val calculator: Calculator by remember { mutableStateOf(Calculator()) }
+    val calculator: Calculator by remember { mutableStateOf(Calculator.initialize(amount)) }
     var amountOnScreen by remember { mutableStateOf(calculator.onScreenString()) }
 
     OutlinedTextField(

@@ -17,9 +17,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.zhengzhou.cashflow.BackHandler
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.ui.DateSelector
 import com.zhengzhou.cashflow.ui.MoneyTextField
@@ -64,6 +67,19 @@ fun WalletEditScreen(
     }
     val walletEditUiState by walletEditViewModel.uiState.collectAsState()
 
+    var keepLoadingScreen by remember {
+        mutableStateOf(true)
+    }
+
+    if (walletEditUiState.isLoading && keepLoadingScreen) {
+        Dialog(onDismissRequest = {
+            keepLoadingScreen = false
+            navController.popBackStack()
+        }) {
+            CircularProgressIndicator()
+        }
+    }
+
     Scaffold(
         topBar = {
             WalletEditTopAppBar(
@@ -82,7 +98,15 @@ fun WalletEditScreen(
             FloatingActionButton(
                 onClick = {
                     walletEditViewModel.saveWallet()
-                    navController.popBackStack()
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(
+                            Screen.WalletOverview.keyWalletUUID(),
+                            walletEditUiState.wallet.id.toString())
+                    navController.popBackStack(
+                        route = Screen.WalletOverview.route,
+                        inclusive = false
+                    )
                 }
             ) {
                 Icon(
@@ -130,6 +154,7 @@ fun WalletEditMainBody(
     Column(
         modifier = Modifier.padding(innerPadding),
     ) {
+
         TextWalletName(
             walletEditUiState = walletEditUiState,
             walletEditViewModel = walletEditViewModel,
@@ -137,6 +162,7 @@ fun WalletEditMainBody(
         )
         MoneyTextField(
             label = stringResource(id = R.string.WalletEdit_initial_amount),
+            amount = walletEditUiState.wallet.startAmount,
             onValueChange = { amount ->
                 walletEditViewModel.updateWalletAmount(amount = amount)
             },
@@ -185,7 +211,9 @@ private fun TextWalletName(
         },
         value = walletEditUiState.wallet.name,
         onValueChange = {
-            walletEditViewModel.updateWalletName(it)
+            if (it.last() != '\n') {
+                walletEditViewModel.updateWalletName(it)
+            }
         },
         modifier = modifier,
         maxLines = 1,

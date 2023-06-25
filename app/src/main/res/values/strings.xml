@@ -90,6 +90,7 @@
 
     <!-- WalletOverview page-->
     <string name="WalletOverview_add_wallet">Add wallet</string>
+    <string name="WalletOverview_balance">Balance</string>
     <string name="WalletOverview_edit_wallet">Edit wallet</string>
     <string name="WalletOverview_no_transactions">No transactions</string>
     <string name="WalletOverview_no_wallet">No wallet</string>

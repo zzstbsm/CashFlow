@@ -17,7 +17,7 @@ import java.util.*
 @Entity(tableName = "wallet")
 data class Wallet(
     @PrimaryKey val id: UUID = UUID.randomUUID(),
-    val name: String = "Wallet",
+    val name: String = "",
     @ColumnInfo(name = "start_amount")
     val startAmount: Float = 0f,
     @ColumnInfo(name = "icon_id")
@@ -35,7 +35,6 @@ data class Wallet(
         fun emptyWallet() : Wallet {
             return Wallet().copy(
                 id = UUID(0L,0L),
-                name = "",
                 // TODO: next line to remove after the implementation of EditWalletScreen
                 startAmount = 0f,
                 iconId = R.drawable.ic_wallet,

@@ -1,6 +1,7 @@
 package com.zhengzhou.cashflow.ui.profile
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -60,8 +61,10 @@ fun ProfileScreen(
                     drawerState = drawerState,
                 )
             },
-            content = {
-
+            content = { paddingValues ->
+                ScreenProfileMainBody(
+                    modifier = Modifier.padding(paddingValues)
+                )
             },
             bottomBar = {
                 BottomNavigationBar(
@@ -72,5 +75,11 @@ fun ProfileScreen(
             }
         )
     }
+}
+
+@Composable
+fun ScreenProfileMainBody(
+    modifier: Modifier = Modifier,
+) {
 
 }

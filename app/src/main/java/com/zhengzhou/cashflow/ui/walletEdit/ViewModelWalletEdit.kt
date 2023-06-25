@@ -20,7 +20,8 @@ import java.util.*
 
 
 data class WalletEditUiState(
-    val wallet: Wallet = Wallet.emptyWallet(),
+    val isLoading: Boolean = true,
+    val wallet: Wallet = Wallet.loadingWallet(),
     val budgetPeriod: BudgetPeriod = BudgetPeriod(),
     val groupCategoryAndBudgetList: List<GroupCategoryAndBudget> = listOf(),
 ) {
@@ -126,10 +127,11 @@ class WalletEditViewModel(
 
             _uiState.value = uiState.value.copy(
                 wallet = if (_newWallet) {
-                    Wallet.emptyWallet()
+                    Wallet()
                 } else {
-                    repository.getWallet(walletUUID) ?: Wallet.emptyWallet()
-                }
+                    repository.getWallet(walletUUID) ?: Wallet()
+                },
+                isLoading = false,
             )
             _budgetEnabledWhenLoaded = uiState.value.wallet.budgetEnabled
         }
@@ -186,7 +188,6 @@ class WalletEditViewModel(
                 _uiState.value = uiState.value.copy(
                     groupCategoryAndBudgetList = groupCategoryAndBudgetList
                 )
-
             }
         }
     }

@@ -3,6 +3,7 @@ package com.zhengzhou.cashflow.ui.walletOverview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.EventMessages
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
 import java.util.*
 
 data class WalletOverviewUiState(
@@ -36,6 +38,7 @@ data class WalletOverviewUiState(
 }
 
 class WalletOverviewViewModel(
+    walletUUID: UUID,
     navController: NavController,
 ): ViewModel() {
 
@@ -43,6 +46,8 @@ class WalletOverviewViewModel(
     val uiState: StateFlow<WalletOverviewUiState> = _uiState.asStateFlow()
 
     private val repository = DatabaseRepository.get()
+
+    private var currencyFormatter: NumberFormat = Currency.setCurrencyFormatter(Currency.EUR.abbreviation)
 
     init {
         viewModelScope.launch(Dispatchers.IO){
@@ -58,14 +63,29 @@ class WalletOverviewViewModel(
             }
 
             viewModelScope.launch {
-                while (uiState.value.isLoading) {
-                    delay(20)
+                if (walletUUID == UUID(0L,0L)) {
+                    while (uiState.value.isLoading) {
+                        delay(20)
+                    }
+                    if (!uiState.value.ifZeroWallet) {
+                        loadLastAccessed()
+                    }
+                } else {
+                    getWallet(walletUUID)
                 }
-                if (!uiState.value.ifZeroWallet) {
-                    loadLastAccessed()
-                }
+                currencyFormatter = Currency.setCurrencyFormatter(uiState.value.wallet.currency.abbreviation)
             }
         }
+    }
+
+    fun formatCurrency(amount: Float) : String {
+        return Currency.formatCurrency(currencyFormatter,amount)
+    }
+
+    private suspend fun getWallet(walletUUID: UUID) {
+        _uiState.value = uiState.value.copy(
+            wallet = repository.getWallet(walletUUID) ?: Wallet.emptyWallet()
+        )
     }
 
     private suspend fun loadLastAccessed() {
