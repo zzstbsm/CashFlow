@@ -8,13 +8,116 @@ import com.zhengzhou.cashflow.data.*
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.*
 
+data class BalanceUiState(
+    val isLoading: Boolean = true,
+    val equivalentWallet: Wallet = Wallet(
+        id = UUID(0L,0L),
+        name = "All wallets with Euro",
+        currency = Currency.EUR
+    ),
+    val walletList: List<Wallet> = listOf(),
+    val transactionList: List<Transaction> = listOf(),
+) {
+
+    fun getBalance(): Float {
+
+        var amount: Float = this.updateEquivalentWallet().equivalentWallet.startAmount
+
+        this.transactionList.forEach { transaction ->
+            val transactionType = TransactionType.setTransaction(transaction.movementType)
+            amount += when (transactionType) {
+                TransactionType.Deposit -> transaction.amount
+                TransactionType.Expense -> -transaction.amount
+                else -> 0f
+            }
+        }
+        return amount
+    }
+
+    fun getLastWallet(): Wallet {
+        return this.walletList.maxByOrNull { wallet ->
+            wallet.lastAccess
+        } ?: Wallet()
+    }
+
+    private fun updateEquivalentWallet() : BalanceUiState{
+
+        var startAmount: Float = 0f
+
+        this.walletList.forEach { wallet ->
+            startAmount += wallet.startAmount
+        }
+
+        return this.copy(
+            equivalentWallet = this.equivalentWallet.copy(
+                startAmount = startAmount,
+            )
+        )
+
+    }
+
+    suspend fun updateTransactionList() : BalanceUiState {
+
+        val transactionList: MutableList<Transaction> = mutableListOf()
+
+        val repository = DatabaseRepository.get()
+        this.walletList.forEach { wallet ->
+            repository.getTransactionListInWallet(wallet.id).collect { collectedTransactionList ->
+                transactionList  += collectedTransactionList
+            }
+        }
+
+        return this.copy(
+            transactionList = transactionList
+        )
+
+    }
+
+}
+
+class BalanceViewModel() : ViewModel() {
+
+    private val repository = DatabaseRepository.get()
+
+    // UiState
+    private var _uiState = MutableStateFlow(BalanceUiState())
+    val uiState: StateFlow<BalanceUiState> = _uiState.asStateFlow()
+
+    init {
+
+        var isLoadingWallets = true
+        var walletList: List<Wallet> = listOf()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            // Collect all wallets
+            repository.getWalletList().collect { collectedWalletList ->
+                walletList = collectedWalletList
+                isLoadingWallets = false
+            }
+        }
+
+        viewModelScope.launch {
+            while (isLoadingWallets) {
+                delay(20)
+            }
+            _uiState.value = uiState.value.updateTransactionList()
+
+        }
+
+    }
+
+}
+
+/*
 data class BalanceUiState(
     val balanceGroup: BalanceGroup = BalanceGroup(),
     val equivalentWallet: Wallet = Wallet()
@@ -45,7 +148,7 @@ data class BalanceUiState(
 }
 
 data class BalanceGroup(
-    var name: String = "Group",
+    var name: String = "All wallets",
     var groupId: UUID = UUID.randomUUID(),
     var iconId: Int = R.drawable.ic_wallet,
     var walletSelection: List<WalletSelection> = listOf(WalletSelection()),
@@ -144,3 +247,5 @@ class BalanceViewModel(
         return uiState.value.balanceGroup.transactionList
     }
 }
+
+ */

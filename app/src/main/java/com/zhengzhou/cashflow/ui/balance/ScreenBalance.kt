@@ -16,6 +16,10 @@ import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.Screen
+import com.zhengzhou.cashflow.data.Currency
+import com.zhengzhou.cashflow.data.Transaction
+import com.zhengzhou.cashflow.data.TransactionType
+import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.ui.SectionTopAppBar
@@ -38,9 +42,7 @@ fun BalanceScreen(
 ) {
 
     val balanceViewModel: BalanceViewModel = viewModel {
-        BalanceViewModel(
-            navController = navController
-        )
+        BalanceViewModel()
     }
     val balanceUiState by balanceViewModel.uiState.collectAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -86,7 +88,11 @@ fun BalanceScreen(
                 )
             },
             floatingActionButton = {
-                BalanceFloatingActionButtons()
+                BalanceFloatingActionButtons(
+                    wallet = balanceUiState.getLastWallet(),
+                    transaction = Transaction(),
+                    navController = navController,
+                )
             },
         )
     }
@@ -109,11 +115,13 @@ private fun BalanceMainBody(
             )
         }
 
-        items(balanceUiState.balanceGroup.transactionList.size) {position ->
-            val transaction = balanceUiState.balanceGroup.transactionList[position]
+        items(balanceUiState.transactionList.size) {position ->
+            val transaction = balanceUiState.transactionList[position]
             TransactionEntry(
                 transaction = transaction,
-                currencyFormatter = balanceUiState.balanceGroup.currencyFormatter,
+                currencyFormatter = Currency.setCurrencyFormatter(
+                    balanceUiState.equivalentWallet.currency.abbreviation
+                ),
                 balanceViewModel = balanceViewModel,
                 onClickTransaction = { },
             )
@@ -124,14 +132,18 @@ private fun BalanceMainBody(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun BalanceFloatingActionButtons() {
+private fun BalanceFloatingActionButtons(
+    wallet: Wallet,
+    transaction: Transaction = Transaction(),
+    navController: NavController,
+) {
     
     var showDialog by remember{ mutableStateOf(false) }
 
     FloatingActionButton(onClick = { showDialog = true }) {
         Icon(
             painter = painterResource(id = R.drawable.ic_add),
-            contentDescription = "New transaction", // TODO: Put in strings 
+            contentDescription = stringResource(id = R.string.accessibility_transaction_new),
         )
     }
     
@@ -153,7 +165,12 @@ private fun BalanceFloatingActionButtons() {
                        )
                     },
                     onClick = {
-                        /*TODO*/
+                        Screen.TransactionEdit.navigate(
+                            walletUUID = wallet.id,
+                            transactionType = TransactionType.Deposit,
+                            transactionUUID = transaction.id,
+                            navController = navController,
+                        )
                         showDialog = false
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -170,7 +187,12 @@ private fun BalanceFloatingActionButtons() {
                         )
                     },
                     onClick = {
-                        /*TODO*/
+                        Screen.TransactionEdit.navigate(
+                            walletUUID = wallet.id,
+                            transactionType = TransactionType.Expense,
+                            transactionUUID = transaction.id,
+                            navController = navController,
+                        )
                         showDialog = false
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -187,7 +209,12 @@ private fun BalanceFloatingActionButtons() {
                         )
                     },
                     onClick = {
-                        /*TODO*/
+                        Screen.TransactionEdit.navigate(
+                            walletUUID = wallet.id,
+                            transactionType = TransactionType.Move,
+                            transactionUUID = transaction.id,
+                            navController = navController,
+                        )
                         showDialog = false
                     },
                     modifier = Modifier.fillMaxWidth()

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -77,13 +78,15 @@ private fun CardText(
     modifier: Modifier = Modifier
 ) {
     // TODO: implement function that refreshes the amount
-    val currencyFormatter = balanceViewModel.getCurrencyFormatter()
+    val currencyFormatter = remember {
+        Currency.setCurrencyFormatter(balanceUiState.equivalentWallet.currency.abbreviation)
+    }
 
-    val balance = balanceViewModel.walletGroupBalance()
+    val balance = balanceUiState.getBalance()
     // TODO: Add feature to change the range
     val numberOfDays = 30
     val transactionListFilteredByDate = transactionListFilterPeriod(
-        transactionList = balanceViewModel.getTransactionList(),
+        transactionList = balanceUiState.transactionList,
         startDate = addDaysFromDate(Date(),- numberOfDays),
         endDate = Date()
     )
