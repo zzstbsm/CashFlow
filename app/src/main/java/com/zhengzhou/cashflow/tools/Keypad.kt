@@ -79,7 +79,11 @@ enum class KeypadDigit(
     KeyDivide(
         value = "\u00F7",
         operation = true,
-    )
+    ),
+    KeyBack(
+        value = "\u232B",
+        operation = false
+    ),
 }
 
 @Preview

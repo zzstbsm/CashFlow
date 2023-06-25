@@ -175,13 +175,10 @@ private fun routeClick(
 @Composable
 fun MoneyTextField(
     label: String,
-    amount: Float,
-    onValueChange: (Float) -> Unit,
+    amountOnScreen: String,
+    onKeyPressed: (KeypadDigit) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
-    val calculator: Calculator by remember { mutableStateOf(Calculator.initialize(amount)) }
-    var amountOnScreen by remember { mutableStateOf(calculator.onScreenString()) }
 
     OutlinedTextField(
         label = {
@@ -189,17 +186,15 @@ fun MoneyTextField(
         },
         value = amountOnScreen,
         onValueChange = { newText ->
-            if (newText.length >= calculator.onScreenString().length) {
+            if (newText.length >= amountOnScreen.length) {
                 val newDigit = newText.last()
                 val newKey: KeypadDigit? = mapCharToKeypadDigit(newDigit)
                 if (newKey != null) {
-                    calculator.addKey(newKey)
+                    onKeyPressed(newKey)
                 }
             } else {
-                calculator.dropLastDigit()
+                onKeyPressed(KeypadDigit.KeyBack)
             }
-            amountOnScreen = calculator.onScreenString()
-            onValueChange(amountOnScreen.toFloat())
         },
         modifier = modifier,
         maxLines = 1,

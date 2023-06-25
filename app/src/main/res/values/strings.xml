@@ -87,6 +87,7 @@
     <string name="WalletEdit_last_access">Last access</string>
     <string name="WalletEdit_if_budget_on">Enable budget option</string>
     <string name="WalletEdit_not_set">Not set</string>
+    <string name="WalletEdit_wallet_saved">Wallet saved</string>
 
     <!-- WalletOverview page-->
     <string name="WalletOverview_add_wallet">Add wallet</string>

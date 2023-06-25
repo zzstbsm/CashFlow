@@ -84,13 +84,15 @@ class WalletOverviewViewModel(
 
     private suspend fun getWallet(walletUUID: UUID) {
         _uiState.value = uiState.value.copy(
-            wallet = repository.getWallet(walletUUID) ?: Wallet.emptyWallet()
+            wallet = repository.getWallet(walletUUID) ?: Wallet.emptyWallet(),
+            isLoading = false
         )
     }
 
     private suspend fun loadLastAccessed() {
         _uiState.value = uiState.value.copy(
-            wallet = repository.getWalletLastAccessed() ?: Wallet.emptyWallet()
+            wallet = repository.getWalletLastAccessed() ?: Wallet.emptyWallet(),
+            isLoading = false,
         )
     }
 
@@ -106,6 +108,17 @@ class WalletOverviewViewModel(
                     ifZeroWallet = true
                 )
             }
+        }
+    }
+
+    fun reloadScreen(
+        walletUUID: UUID,
+    ) {
+        viewModelScope.launch {
+            _uiState.value = uiState.value.copy(
+                isLoading = true
+            )
+            loadLastAccessed()
         }
     }
 

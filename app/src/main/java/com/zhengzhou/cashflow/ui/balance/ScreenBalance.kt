@@ -14,6 +14,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.ReloadPageAfterPopBackStack
+import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.ui.SectionTopAppBar
@@ -42,6 +44,13 @@ fun BalanceScreen(
     }
     val balanceUiState by balanceViewModel.uiState.collectAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+    ReloadPageAfterPopBackStack(
+        pageRoute = Screen.Balance.route,
+        navController = navController,
+    ) {
+        setCurrentScreen(NavigationCurrentScreen.Balance)
+    }
 
     ModalNavigationDrawer(
         drawerContent = {

@@ -24,6 +24,7 @@ import com.zhengzhou.cashflow.BackHandler
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.data.Currency
+import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.ui.DateSelector
 import com.zhengzhou.cashflow.ui.MoneyTextField
 import java.util.UUID
@@ -102,7 +103,8 @@ fun WalletEditScreen(
                         ?.savedStateHandle
                         ?.set(
                             Screen.WalletOverview.keyWalletUUID(),
-                            walletEditUiState.wallet.id.toString())
+                            walletEditUiState.wallet.id.toString()
+                        )
                     navController.popBackStack(
                         route = Screen.WalletOverview.route,
                         inclusive = false
@@ -162,11 +164,11 @@ fun WalletEditMainBody(
         )
         MoneyTextField(
             label = stringResource(id = R.string.WalletEdit_initial_amount),
-            amount = walletEditUiState.wallet.startAmount,
-            onValueChange = { amount ->
-                walletEditViewModel.updateWalletAmount(amount = amount)
+            amountOnScreen = walletEditViewModel.getOnScreenString(),
+            onKeyPressed = { pressedKey ->
+                walletEditViewModel.onKeyPressed(pressedKey)
             },
-            modifier = modifier
+            modifier = modifier,
         )
         Row {
             DateSelector(

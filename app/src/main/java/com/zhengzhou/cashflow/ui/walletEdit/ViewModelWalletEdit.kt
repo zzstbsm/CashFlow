@@ -3,6 +3,7 @@ package com.zhengzhou.cashflow.ui.walletEdit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.BudgetCategory
 import com.zhengzhou.cashflow.data.BudgetPeriod
 import com.zhengzhou.cashflow.data.Category
@@ -10,7 +11,10 @@ import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
+import com.zhengzhou.cashflow.tools.Calculator
 import com.zhengzhou.cashflow.tools.ConfigurationFirstStartup
+import com.zhengzhou.cashflow.tools.EventMessages
+import com.zhengzhou.cashflow.tools.KeypadDigit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -119,6 +123,8 @@ class WalletEditViewModel(
 
     private val repository = DatabaseRepository.get()
 
+    private var calculator: Calculator = Calculator()
+
     init {
 
         _newWallet = walletUUID == UUID(0L,0L)
@@ -134,6 +140,9 @@ class WalletEditViewModel(
                 isLoading = false,
             )
             _budgetEnabledWhenLoaded = uiState.value.wallet.budgetEnabled
+
+            calculator = Calculator.initialize(uiState.value.wallet.startAmount)
+
         }
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -190,6 +199,21 @@ class WalletEditViewModel(
                 )
             }
         }
+    }
+
+    fun getOnScreenString() : String {
+        return calculator.onScreenString()
+    }
+
+    fun onKeyPressed(key: KeypadDigit) {
+        if (key == KeypadDigit.KeyBack) {
+            calculator.dropLastDigit()
+        } else {
+            calculator.addKey(key)
+        }
+
+        updateWalletAmount(calculator.onScreenString().toFloat())
+
     }
 
     fun updateWalletName(name: String) {
@@ -256,6 +280,7 @@ class WalletEditViewModel(
 
                 }
             }
+            EventMessages.sendMessageId(R.string.WalletEdit_wallet_saved)
         }
     }
 }
