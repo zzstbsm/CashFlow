@@ -58,13 +58,13 @@
     <string name="new_expense">New expense</string>
     <string name="new_move">New movement</string>
 
-    <!-- EditTransaction page strings -->
+    <!-- TransactionEdit page strings -->
     <string name="amount">Amount</string>
     <string name="description">Description</string>
-    <string name="transaction_saved">Transaction saved</string>
-    <string name="transaction_deleted">Transaction deleted</string>
-    <string name="transaction_report">Transaction report</string>
-    <string name="amount_insert_prompt">Insert the amount</string>
+    <string name="TransactionEdit_transaction_saved">Transaction saved</string>
+    <string name="TransactionEdit_transaction_deleted">Transaction deleted</string>
+    <string name="TransactionEdit_transaction_report">Transaction report</string>
+    <string name="TransactionEdit_amount_insert_prompt">Insert the amount</string>
 
     <string name="tag">Tag</string>
     <string name="tag_no">No tags</string>

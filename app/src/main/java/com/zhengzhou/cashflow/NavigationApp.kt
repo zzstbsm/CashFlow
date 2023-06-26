@@ -91,7 +91,7 @@ fun NavigationApp() {
         }
         composable(route = Screen.TransactionEdit.route) {backStackEntry ->
             val walletUUIDStr = backStackEntry.arguments?.getString("walletUUIDStr")
-            val transactionTypeId = backStackEntry.arguments?.getInt("transactionType")
+            val transactionTypeId = backStackEntry.arguments?.getString("transactionType")
             val transactionUUIDStr = backStackEntry.arguments?.getString("transactionUUIDStr")
             requireNotNull(walletUUIDStr) {
                 "Exception: passed walletUUIDStr not valid"
@@ -104,7 +104,7 @@ fun NavigationApp() {
             }
             TransactionEditScreen(
                 walletUUID = UUID.fromString(walletUUIDStr),
-                transactionType = TransactionType.setTransaction(transactionTypeId)!!,
+                transactionType = TransactionType.setTransaction(transactionTypeId.toInt())!!,
                 transactionUUID = UUID.fromString(transactionUUIDStr),
                 navController = navController
             )

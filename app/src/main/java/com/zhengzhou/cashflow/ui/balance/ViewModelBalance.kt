@@ -95,18 +95,19 @@ class BalanceViewModel() : ViewModel() {
     init {
 
         var isLoadingWallets = true
-        var walletList: List<Wallet> = listOf()
 
         viewModelScope.launch(Dispatchers.IO) {
             // Collect all wallets
             repository.getWalletList().collect { collectedWalletList ->
-                walletList = collectedWalletList
-                isLoadingWallets = false
+                _uiState.value = uiState.value.copy(
+                    walletList = collectedWalletList,
+                    isLoading = false
+                )
             }
         }
 
         viewModelScope.launch {
-            while (isLoadingWallets) {
+            while (uiState.value.isLoading) {
                 delay(20)
             }
             _uiState.value = uiState.value.updateTransactionList()

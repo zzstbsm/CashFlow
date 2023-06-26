@@ -88,11 +88,13 @@ fun BalanceScreen(
                 )
             },
             floatingActionButton = {
-                BalanceFloatingActionButtons(
-                    wallet = balanceUiState.getLastWallet(),
-                    transaction = Transaction(),
-                    navController = navController,
-                )
+                if (!balanceUiState.isLoading) {
+                    BalanceFloatingActionButtons(
+                        wallet = balanceUiState.getLastWallet(),
+                        transaction = Transaction(),
+                        navController = navController,
+                    )
+                }
             },
         )
     }
