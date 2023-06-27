@@ -12,6 +12,7 @@ import com.zhengzhou.cashflow.data.BudgetPeriod
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.Transaction
+import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
@@ -95,6 +96,9 @@ class DatabaseRepository private constructor(
         database.databaseDao().deleteCategory(category)
     }
     fun getCategoryList(): Flow<List<Category>> = database.databaseDao().getCategoryList()
+    fun getCategoryListByTransactionType(transactionType: TransactionType): Flow<List<Category>> {
+        return database.databaseDao().getCategoryListByTransactionType(transactionTypeId = transactionType.id)
+    }
 
     /* Tag section */
     fun getTag(id: UUID): Tag? = database.databaseDao().getTag(id)

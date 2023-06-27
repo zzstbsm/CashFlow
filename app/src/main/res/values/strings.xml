@@ -62,6 +62,7 @@
     <string name="amount">Amount</string>
     <string name="description">Description</string>
     <string name="TransactionEdit_transaction_saved">Transaction saved</string>
+    <string name="TransactionEdit_save_transaction">Save transaction</string>
     <string name="TransactionEdit_transaction_deleted">Transaction deleted</string>
     <string name="TransactionEdit_transaction_report">Transaction report</string>
     <string name="TransactionEdit_amount_insert_prompt">Insert the amount</string>

@@ -48,6 +48,8 @@ interface DatabaseDao {
 
     @Query("SELECT * FROM category")
     fun getCategoryList(): Flow<List<Category>>
+    @Query("SELECT * FROM category WHERE movement_type_id=(:transactionTypeId)")
+    fun getCategoryListByTransactionType(transactionTypeId: Int): Flow<List<Category>>
 
     // Tag section
     @Query("SELECT * FROM tag WHERE id=(:id)")
