@@ -2,8 +2,6 @@ package com.zhengzhou.cashflow.ui.balance
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.*
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.database.DatabaseRepository
@@ -12,9 +10,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.launch
-import java.text.NumberFormat
 import java.util.*
 
 data class BalanceUiState(
@@ -25,14 +21,16 @@ data class BalanceUiState(
         currency = Currency.EUR
     ),
     val walletList: List<Wallet> = listOf(),
-    val transactionList: List<Transaction> = listOf(),
+    val transactionList: List<TransactionCategoryGroup> = listOf(),
 ) {
 
     fun getBalance(): Float {
 
         var amount: Float = this.updateEquivalentWallet().equivalentWallet.startAmount
 
-        this.transactionList.forEach { transaction ->
+        this.transactionList.map {
+            it.transaction
+        }.forEach { transaction ->
             val transactionType = TransactionType.setTransaction(transaction.movementType)
             amount += when (transactionType) {
                 TransactionType.Deposit -> transaction.amount
@@ -51,7 +49,7 @@ data class BalanceUiState(
 
     private fun updateEquivalentWallet() : BalanceUiState{
 
-        var startAmount: Float = 0f
+        var startAmount = 0f
 
         this.walletList.forEach { wallet ->
             startAmount += wallet.startAmount
@@ -64,25 +62,12 @@ data class BalanceUiState(
         )
 
     }
-
-    suspend fun updateTransactionList() : BalanceUiState {
-
-        val transactionList: MutableList<Transaction> = mutableListOf()
-
-        val repository = DatabaseRepository.get()
-        this.walletList.forEach { wallet ->
-            repository.getTransactionListInWallet(wallet.id).collect { collectedTransactionList ->
-                transactionList  += collectedTransactionList
-            }
-        }
-
-        return this.copy(
-            transactionList = transactionList
-        )
-
-    }
-
 }
+
+data class TransactionCategoryGroup(
+    val transaction: Transaction,
+    val category: Category,
+)
 
 class BalanceViewModel() : ViewModel() {
 
@@ -93,8 +78,6 @@ class BalanceViewModel() : ViewModel() {
     val uiState: StateFlow<BalanceUiState> = _uiState.asStateFlow()
 
     init {
-
-        var isLoadingWallets = true
 
         viewModelScope.launch(Dispatchers.IO) {
             // Collect all wallets
@@ -110,7 +93,25 @@ class BalanceViewModel() : ViewModel() {
             while (uiState.value.isLoading) {
                 delay(20)
             }
-            _uiState.value = uiState.value.updateTransactionList()
+
+            repository.getTransactionListInListOfWallet(uiState.value.walletList).collect { transactionList ->
+
+                val transactionCategoryGroup: MutableList<TransactionCategoryGroup> = mutableListOf()
+
+                transactionList.forEach { transaction ->
+                    val category = repository.getCategory(transaction.idCategory) ?: Category()
+                    transactionCategoryGroup.add(
+                        TransactionCategoryGroup(
+                            transaction = transaction,
+                            category = category,
+                        )
+                    )
+                }
+
+                _uiState.value = uiState.value.copy(
+                    transactionList = transactionCategoryGroup
+                )
+            }
 
         }
 

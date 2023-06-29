@@ -1,12 +1,7 @@
 package com.zhengzhou.cashflow.database
 
 import android.content.Context
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
 import androidx.room.Room
-import androidx.room.Update
 import com.zhengzhou.cashflow.data.BudgetCategory
 import com.zhengzhou.cashflow.data.BudgetPeriod
 import com.zhengzhou.cashflow.data.Category
@@ -17,6 +12,7 @@ import com.zhengzhou.cashflow.data.Wallet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import java.util.*
 
 private const val DATABASE_NAME = "Registry_DB"
@@ -124,6 +120,17 @@ class DatabaseRepository private constructor(
     suspend fun deleteTransaction(transaction: Transaction) {
         database.databaseDao().deleteTransaction(transaction)
     }
+    fun getTransactionListInListOfWallet(walletList: List<Wallet>): Flow<List<Transaction>> {
+        val idList: List<String> = walletList.map { it.id.toString() }
+        val textToPass = idList.joinToString(",")
+        return when(idList.size) {
+            0 -> flowOf(listOf())
+            1 -> database.databaseDao().getTransactionListInWallet(UUID.fromString(textToPass))
+            else -> database.databaseDao().getTransactionListInListOfWallet(textToPass)
+        }
+
+    }
+
     fun getTransactionListInWallet(idWallet: UUID): Flow<List<Transaction>>
             = database.databaseDao().getTransactionListInWallet(idWallet)
     fun getTransactionShortListInWallet(idWallet: UUID,numberOfEntries: Int): Flow<List<Transaction>>

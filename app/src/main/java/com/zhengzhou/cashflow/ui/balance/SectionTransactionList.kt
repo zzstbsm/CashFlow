@@ -18,19 +18,26 @@ import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.R
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.text.NumberFormat
+import java.util.UUID
 
 @Composable
 fun TransactionEntry(
-    transaction: Transaction,
+    transactionCategoryGroup: TransactionCategoryGroup,
     currencyFormatter : NumberFormat,
-    balanceViewModel: BalanceViewModel,
     onClickTransaction: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
+    var category: Category = transactionCategoryGroup.category
+    val transaction: Transaction = transactionCategoryGroup.transaction
+
+    if (category.id == UUID(0L,0L)) {
+        category = Category(
+            name = R.string.no_category,
+            idIcon = R.drawable.ic_clear
+        )
+    }
 
     Card(
         modifier = Modifier
@@ -43,16 +50,6 @@ fun TransactionEntry(
 
         val firstLineStyle = MaterialTheme.typography.bodyLarge
         val secondLineStyle = MaterialTheme.typography.bodySmall
-
-        var category by remember{ mutableStateOf(Category()) }
-
-        val coroutineScope = CoroutineScope(Dispatchers.Main)
-
-        coroutineScope.launch {
-            transaction.getCategory().let { item ->
-                category = item ?: Category()
-            }
-        }
 
         Row(
             modifier = modifier

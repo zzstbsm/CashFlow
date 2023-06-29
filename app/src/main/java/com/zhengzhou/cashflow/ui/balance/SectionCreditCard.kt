@@ -86,7 +86,7 @@ private fun CardText(
     // TODO: Add feature to change the range
     val numberOfDays = 30
     val transactionListFilteredByDate = transactionListFilterPeriod(
-        transactionList = balanceUiState.transactionList,
+        transactionList = balanceUiState.transactionList.map { it.transaction },
         startDate = addDaysFromDate(Date(),- numberOfDays),
         endDate = Date()
     )

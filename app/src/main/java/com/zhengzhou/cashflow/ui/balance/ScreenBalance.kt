@@ -118,13 +118,12 @@ private fun BalanceMainBody(
         }
 
         items(balanceUiState.transactionList.size) {position ->
-            val transaction = balanceUiState.transactionList[position]
+            val transactionCategoryGroup = balanceUiState.transactionList[position]
             TransactionEntry(
-                transaction = transaction,
+                transactionCategoryGroup = transactionCategoryGroup,
                 currencyFormatter = Currency.setCurrencyFormatter(
                     balanceUiState.equivalentWallet.currency.abbreviation
                 ),
-                balanceViewModel = balanceViewModel,
                 onClickTransaction = { },
             )
         }
