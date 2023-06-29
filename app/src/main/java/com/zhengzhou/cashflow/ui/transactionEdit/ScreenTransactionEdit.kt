@@ -1,8 +1,13 @@
 package com.zhengzhou.cashflow.ui.transactionEdit
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -11,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -23,13 +29,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.TransactionType
+import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.KeypadDigit
 import java.util.UUID
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionEditScreen(
     walletUUID: UUID,
@@ -47,27 +56,71 @@ fun TransactionEditScreen(
     }
     val transactionEditUiState by transactionEditViewModel.uiState.collectAsState()
 
+    var showBackDialog by remember {
+        mutableStateOf(false)
+    }
+    
     Scaffold(
         topBar = {
             TransactionEditTopAppBar(
                 transactionType = transactionType,
-                navController = navController,
+                onNavigationIconClick = {
+                    showBackDialog = true
+                },
             )
         },
         content = { paddingValues ->
             TransactionEditMainBody(
                 transactionEditUiState = transactionEditUiState,
                 transactionEditViewModel = transactionEditViewModel,
-                transactionType = transactionType,
                 contentPadding = paddingValues,
             )
+            
+            if (showBackDialog) {
+                AlertDialog(onDismissRequest = { showBackDialog = false }) {
+                    Card() {
+                        Text(
+                            text = stringResource(id = R.string.TransactionEdit_prompt_save_transaction),
+                            modifier = Modifier.padding(16.dp)
+                        )
+                        Row(
+                            horizontalArrangement = Arrangement.End,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            TextButton(
+                                onClick = {
+                                    navController.popBackStack()
+                                    showBackDialog = false
+                                }
+                            ) {
+                                Text(
+                                    stringResource(id = R.string.no)
+                                )
+                            }
+                            TextButton(
+                                onClick = {
+                                    val saveTransactionResult = transactionEditViewModel.saveTransaction()
+                                    val saveTransactionSuccessful = saveTransactionCheck(saveTransactionResult)
+                                    if (saveTransactionSuccessful) navController.popBackStack()
+                                    showBackDialog = false
+                                }
+                            ) {
+                                Text(
+                                    stringResource(id = R.string.yes)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         },
         floatingActionButton = {
             if (!transactionEditUiState.isLoading) {
                 FloatingActionButton(
                     onClick = {
-                        transactionEditViewModel.saveTransaction()
-                        navController.popBackStack()
+                        val saveTransactionResult = transactionEditViewModel.saveTransaction()
+                        val saveTransactionSuccessful = saveTransactionCheck(saveTransactionResult)
+                        if (saveTransactionSuccessful) navController.popBackStack()
                     }
                 ) {
                     Icon(
@@ -87,7 +140,7 @@ fun TransactionEditScreen(
 @Composable
 fun TransactionEditTopAppBar(
     transactionType: TransactionType,
-    navController: NavController,
+    onNavigationIconClick: (Boolean) -> Unit,
 ) {
     TopAppBar(
         title = {
@@ -96,7 +149,9 @@ fun TransactionEditTopAppBar(
             )
         },
         navigationIcon = {
-            IconButton(onClick = { navController.popBackStack() }) {
+            IconButton(
+                onClick = { onNavigationIconClick(true) }
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_left),
                     contentDescription = stringResource(id = R.string.nav_back)
@@ -110,7 +165,6 @@ fun TransactionEditTopAppBar(
 fun TransactionEditMainBody(
     transactionEditUiState: TransactionEditUiState,
     transactionEditViewModel: TransactionEditViewModel,
-    transactionType: TransactionType,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
@@ -153,7 +207,6 @@ fun TransactionEditMainBody(
             TransactionMovementTypeTab(
                 transactionEditUiState = transactionEditUiState,
                 transactionEditViewModel = transactionEditViewModel,
-                modifier = modifier,
             )
         }
 
@@ -174,7 +227,6 @@ fun TransactionEditMainBody(
 private fun TransactionMovementTypeTab(
     transactionEditUiState: TransactionEditUiState,
     transactionEditViewModel: TransactionEditViewModel,
-    modifier: Modifier = Modifier
 ) {
 
     var activeTab by remember {
@@ -205,7 +257,6 @@ private fun TransactionMovementTypeTab(
         TransferMovementTypeSection(
             transactionEditUiState = transactionEditUiState,
             transactionEditViewModel = transactionEditViewModel,
-            modifier = Modifier,
         )
     }
 }
@@ -214,7 +265,6 @@ private fun TransactionMovementTypeTab(
 private fun TransferMovementTypeSection(
     transactionEditUiState: TransactionEditUiState,
     transactionEditViewModel: TransactionEditViewModel,
-    modifier: Modifier = Modifier
 ) {
 
     // Choice section
@@ -244,7 +294,11 @@ private fun TransferMovementTypeSection(
                 currentTagText = currentTagText,
                 onChangeText = { currentTagText = it },
                 onTagAdd = { transactionEditViewModel.addTag(it) },
-                onTagRemove = { transactionEditViewModel.removeTag(it) }
+                onTagRemove = {
+                    transactionEditViewModel.removeTag(it)
+                    currentTagText = "a"
+                    currentTagText = ""
+                }
             )
         }
         else -> {
@@ -254,30 +308,6 @@ private fun TransferMovementTypeSection(
 }
 
 /*
-
-@Composable
-private fun ChoiceButton(
-    currentChoice: OperationScreenToShow,
-    viewModel: OperationViewModel,
-    modifier: Modifier = Modifier
-) {
-    Button(
-        onClick = {
-            viewModel.uiSelectToShowSection(currentChoice)
-        },
-        modifier = modifier.padding(horizontal = 2.dp)
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                painter = painterResource(id = currentChoice.icon),
-                contentDescription = null, // TODO: add description
-            )
-            Text(
-                text = stringResource(id = currentChoice.text)
-            )
-        }
-    }
-}
 
 @Composable
 private fun ExpenseOrDepositSubsection(
@@ -364,3 +394,19 @@ private fun MovementSubsection(
 }
 
  */
+
+private fun saveTransactionCheck(status: TransactionSaveResult): Boolean {
+
+    if (status == TransactionSaveResult.SUCCESS) {
+        EventMessages.sendMessageId(R.string.TransactionEdit_transaction_saved)
+        return true
+    }
+    if (status == TransactionSaveResult.NO_AMOUNT) {
+        EventMessages.sendMessageId(R.string.TransactionEdit_no_amount)
+    }
+    if (status == TransactionSaveResult.NO_CATEGORY) {
+        EventMessages.sendMessageId(R.string.TransactionEdit_no_category)
+    }
+    return false
+
+}

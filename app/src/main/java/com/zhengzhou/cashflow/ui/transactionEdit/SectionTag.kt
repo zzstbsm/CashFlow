@@ -1,7 +1,6 @@
 package com.zhengzhou.cashflow.ui.transactionEdit
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
@@ -184,20 +183,4 @@ private fun TagListFilter(
         }
 
     }
-}
-
-@Composable
-private fun SingleTagFilter(
-    tag: String,
-    onSelectTag: () -> Unit
-) {
-    Text(
-        text = tag,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 4.dp)
-            .clickable {
-                onSelectTag()
-            }
-    )
 }

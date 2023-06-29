@@ -17,6 +17,12 @@ import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.UUID
 
+enum class TransactionSaveResult {
+    SUCCESS,
+    NO_CATEGORY,
+    NO_AMOUNT,
+}
+
 data class TransactionEditUiState(
     val isLoading: Boolean = true,
     val amountString: String = "0",
@@ -25,7 +31,7 @@ data class TransactionEditUiState(
     val walletList: List<Wallet> = listOf(),
     val categoryList: List<Category> = listOf(),
     val tagListInDB: List<Tag> = listOf(),
-    val transactionTagList: List<Tag> = listOf(),
+    val transactionTagList: MutableList<Tag> = mutableListOf(),
 
     val transactionSectionToShow: TransactionSectionToShow = TransactionSectionToShow.AMOUNT,
 ) {
@@ -37,23 +43,33 @@ data class TransactionEditUiState(
                 if (tag.name == text) return this
             }
         }
+        val mutableList: MutableList<Tag> = this.transactionTagList
 
-        val newTag: Tag = Tag(
+        var toAddTag = Tag(
             name = text,
             count = 1,
         )
 
+        this.tagListInDB.forEach {
+            if (it.name == text) {
+                toAddTag = it.copy(
+                    count = it.count + 1
+                )
+            }
+        }
+
+        mutableList.add(toAddTag)
+
         return this.copy(
-            transactionTagList = this.transactionTagList + listOf(newTag)
+            transactionTagList = mutableList
         )
     }
     fun removeTag(position: Int): TransactionEditUiState {
 
-        val mutableList = this.transactionTagList as MutableList
+        val mutableList = this.transactionTagList
         mutableList.removeAt(position)
-
         return this.copy(
-            transactionTagList = mutableList as List<Tag>
+            transactionTagList = mutableList
         )
     }
     fun getFullTagList(): List<Tag> {
@@ -71,8 +87,11 @@ data class TransactionEditUiState(
         var equal = false
 
         this.transactionTagList.forEach { tag ->
-            this.tagListInDB.forEach { tagInDB ->
+            this.tagListInDB.forEachIndexed{ index, tagInDB ->
                 if (tag.name == tagInDB.name) {
+                    mutableList[index] = tagInDB.copy(
+                        count = tagInDB.count + 1
+                    )
                     equal = true
                 }
             }
@@ -83,7 +102,6 @@ data class TransactionEditUiState(
 
         return mutableList
     }
-
     fun updateCategory(categoryId: UUID): TransactionEditUiState {
         return this.copy(
             transaction = this.transaction.copy(
@@ -124,13 +142,15 @@ class TransactionEditViewModel(
     private var _uiState = MutableStateFlow(TransactionEditUiState())
     val uiState: StateFlow<TransactionEditUiState> = _uiState.asStateFlow()
 
+    var newTransaction: Boolean = false
+
     private val repository = DatabaseRepository.get()
 
     private var calculator = Calculator()
 
     init {
 
-        val newTransaction = transactionUUID == UUID(0L,0L)
+        newTransaction = transactionUUID == UUID(0L,0L)
 
         viewModelScope.launch {
             if (newTransaction) {
@@ -203,8 +223,41 @@ class TransactionEditViewModel(
         }
     }
 
-    fun saveTransaction() {
-        // TODO: save transaction
+    fun saveTransaction(): TransactionSaveResult {
+
+        val ifCategoryChosen = uiState.value.transaction.idCategory != UUID(0L,0L)
+        val ifAmountChosen = uiState.value.transaction.amount >= 0.01f
+
+        if (!ifAmountChosen) {
+            return TransactionSaveResult.NO_AMOUNT
+        }
+        if (!ifCategoryChosen) {
+            return TransactionSaveResult.NO_CATEGORY
+        }
+
+        viewModelScope.launch {
+            if (newTransaction) {
+
+                val transactionId = UUID.randomUUID()
+                _uiState.value = uiState.value.copy(
+                    transaction = uiState.value.transaction.copy(
+                        id = transactionId
+                    )
+                )
+                repository.addTransaction(uiState.value.transaction)
+            } else {
+                repository.updateTransaction(uiState.value.transaction)
+            }
+
+            uiState.value.transactionTagList.forEach { tag ->
+                if (tag.count > 1) {
+                    repository.updateTag(tag)
+                } else {
+                    repository.addTag(tag)
+                }
+            }
+        }
+        return TransactionSaveResult.SUCCESS
     }
 
     fun setChooseFunctionality(section: TransactionSectionToShow) {

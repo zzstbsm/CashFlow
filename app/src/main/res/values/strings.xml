@@ -2,9 +2,13 @@
     <string name="app_name">Cash Flow</string>
 
     <!-- Navigation pages -->
+    <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="from">From</string>
+    <string name="no">No</string>
+    <string name="save">Save</string>
     <string name="to">To</string>
+    <string name="yes">Yes</string>
     <string name="nav_back">Go back</string>
 
     <string name="nav_name_balance">Balance</string>
@@ -61,7 +65,10 @@
     <!-- TransactionEdit page strings -->
     <string name="amount">Amount</string>
     <string name="description">Description</string>
+    <string name="TransactionEdit_prompt_save_transaction">Do you want to save the transaction?</string>
     <string name="TransactionEdit_transaction_saved">Transaction saved</string>
+    <string name="TransactionEdit_no_amount">No amount inserted, insert amount</string>
+    <string name="TransactionEdit_no_category">No category inserted, insert category</string>
     <string name="TransactionEdit_save_transaction">Save transaction</string>
     <string name="TransactionEdit_transaction_deleted">Transaction deleted</string>
     <string name="TransactionEdit_transaction_report">Transaction report</string>
