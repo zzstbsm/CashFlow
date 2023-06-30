@@ -210,9 +210,17 @@ class TransactionEditViewModel(
                     ),
                 )
             } else {
+
+                val sign = when (uiState.value.transaction.movementType) {
+                    TransactionType.Deposit.id -> 1f
+                    TransactionType.Expense.id -> -1f
+                    else -> 0f // TODO: to fix
+                }
+
+                val toSaveAmount = calculator.onScreenString().toFloat() * sign
                 _uiState.value = uiState.value.copy(
                     transaction = uiState.value.transaction.copy(
-                        amount = calculator.onScreenString().toFloat()
+                        amount = toSaveAmount
                     )
                 )
 
@@ -225,8 +233,10 @@ class TransactionEditViewModel(
 
     fun saveTransaction(): TransactionSaveResult {
 
-        val ifCategoryChosen = uiState.value.transaction.idCategory != UUID(0L,0L)
-        val ifAmountChosen = uiState.value.transaction.amount >= 0.01f
+        val transaction = uiState.value.transaction
+
+        val ifCategoryChosen = transaction.idCategory != UUID(0L,0L)
+        val ifAmountChosen = transaction.amount >= 0.01f || transaction.amount <= -0.01f
 
         if (!ifAmountChosen) {
             return TransactionSaveResult.NO_AMOUNT

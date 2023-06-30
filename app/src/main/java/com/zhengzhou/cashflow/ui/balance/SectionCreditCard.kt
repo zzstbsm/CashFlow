@@ -29,18 +29,16 @@ fun CreditCardSection(
     modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(250.dp)
-            .padding(horizontal = 32.dp, vertical = 4.dp),
+        modifier = modifier
+            .height(250.dp),
         elevation = CardDefaults.elevatedCardElevation(),
         shape = RoundedCornerShape(16.dp)
     ) {
         Column(
-            modifier = modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp)
         ) {
             Row(
-                modifier = modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -65,7 +63,7 @@ fun CreditCardSection(
             CardText(
                 balanceUiState = balanceUiState,
                 balanceViewModel = balanceViewModel,
-                modifier = modifier,
+                modifier = Modifier,
             )
         }
     }

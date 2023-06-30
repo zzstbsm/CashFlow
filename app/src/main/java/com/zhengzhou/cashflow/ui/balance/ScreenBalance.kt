@@ -107,6 +107,11 @@ private fun BalanceMainBody(
     balanceViewModel: BalanceViewModel,
     innerPaddingValues: PaddingValues,
 ) {
+
+    val modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 32.dp, vertical = 4.dp)
+
     LazyColumn(
         contentPadding = innerPaddingValues
     ) {
@@ -114,6 +119,7 @@ private fun BalanceMainBody(
             CreditCardSection(
                 balanceUiState = balanceUiState,
                 balanceViewModel = balanceViewModel,
+                modifier = modifier
             )
         }
 
@@ -125,6 +131,7 @@ private fun BalanceMainBody(
                     balanceUiState.equivalentWallet.currency.abbreviation
                 ),
                 onClickTransaction = { },
+                modifier = modifier
             )
         }
 

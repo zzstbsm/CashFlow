@@ -40,9 +40,7 @@ fun TransactionEntry(
     }
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 2.dp)
+        modifier = modifier
             .height(60.dp)
             .clickable { onClickTransaction() },
         shape = MaterialTheme.shapes.large,
@@ -52,7 +50,7 @@ fun TransactionEntry(
         val secondLineStyle = MaterialTheme.typography.bodySmall
 
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
@@ -66,7 +64,7 @@ fun TransactionEntry(
                     }
                 ),
                 contentDescription = null, //TODO add description
-                modifier = modifier
+                modifier = Modifier
                     .size(54.dp)
                     .align(Alignment.CenterVertically)
             )
@@ -83,7 +81,7 @@ fun TransactionEntry(
                         text = stringResource(id = category.name),
                         style = firstLineStyle,
                         textAlign = TextAlign.Start,
-                        modifier = modifier.weight(1f)
+                        modifier = Modifier.weight(1f)
                     )
                     Text(
                         text = currencyFormatter.format(transaction.amount),
@@ -104,12 +102,12 @@ fun TransactionEntry(
                         ).toString(),
                         style = secondLineStyle
                     )
-                    Spacer(modifier = modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "-",
                         style = secondLineStyle
                     )
-                    Spacer(modifier = modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = transaction.description,
                         style = secondLineStyle
