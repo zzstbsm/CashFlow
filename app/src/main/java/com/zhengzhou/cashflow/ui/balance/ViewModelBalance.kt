@@ -17,11 +17,11 @@ data class BalanceUiState(
     val isLoading: Boolean = true,
     val equivalentWallet: Wallet = Wallet(
         id = UUID(0L,0L),
-        name = "All wallets with Euro",
-        currency = Currency.EUR
+        name = "All wallets",
+        currency = Currency.EUR,
     ),
     val walletList: List<Wallet> = listOf(),
-    val transactionList: List<TransactionCategoryGroup> = listOf(),
+    val transactionList: List<TransactionAndCategory> = listOf(),
 ) {
 
     fun getBalance(): Float {
@@ -64,11 +64,6 @@ data class BalanceUiState(
     }
 }
 
-data class TransactionCategoryGroup(
-    val transaction: Transaction,
-    val category: Category,
-)
-
 class BalanceViewModel() : ViewModel() {
 
     private val repository = DatabaseRepository.get()
@@ -96,12 +91,12 @@ class BalanceViewModel() : ViewModel() {
 
             repository.getTransactionListInListOfWallet(uiState.value.walletList).collect { transactionList ->
 
-                val transactionCategoryGroup: MutableList<TransactionCategoryGroup> = mutableListOf()
+                val transactionCategoryGroup: MutableList<TransactionAndCategory> = mutableListOf()
 
                 transactionList.forEach { transaction ->
                     val category = repository.getCategory(transaction.idCategory) ?: Category()
                     transactionCategoryGroup.add(
-                        TransactionCategoryGroup(
+                        TransactionAndCategory(
                             transaction = transaction,
                             category = category,
                         )

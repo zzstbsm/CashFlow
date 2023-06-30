@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
-import com.zhengzhou.cashflow.data.Transaction
+import com.zhengzhou.cashflow.data.TransactionAndCategory
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import kotlinx.coroutines.Job
@@ -25,11 +25,6 @@ data class WalletOverviewUiState(
     val transactionAndCategoryList: List<TransactionAndCategory> = listOf(),
 
     val showSelectWallet: Boolean = false,
-)
-
-data class TransactionAndCategory(
-    val transaction: Transaction,
-    val category: Category
 )
 
 class WalletOverviewViewModel(

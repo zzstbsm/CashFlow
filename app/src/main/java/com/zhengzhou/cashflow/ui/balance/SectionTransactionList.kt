@@ -18,19 +18,20 @@ import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.data.TransactionAndCategory
 import java.text.NumberFormat
 import java.util.UUID
 
 @Composable
 fun TransactionEntry(
-    transactionCategoryGroup: TransactionCategoryGroup,
+    transactionAndCategory: TransactionAndCategory,
     currencyFormatter : NumberFormat,
     onClickTransaction: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
-    var category: Category = transactionCategoryGroup.category
-    val transaction: Transaction = transactionCategoryGroup.transaction
+    var category: Category = transactionAndCategory.category
+    val transaction: Transaction = transactionAndCategory.transaction
 
     if (category.id == UUID(0L,0L)) {
         category = Category(

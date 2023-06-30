@@ -30,6 +30,11 @@ data class Transaction (
     }
 }
 
+data class TransactionAndCategory(
+    val transaction: Transaction,
+    val category: Category,
+)
+
 enum class TransactionType (
     val id: Int,
     @StringRes val text: Int,

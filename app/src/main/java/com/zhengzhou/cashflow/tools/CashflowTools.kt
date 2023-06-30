@@ -42,8 +42,6 @@ fun transactionListFilterPeriod(
 
 fun balanceFlowIn(transactionList: List<Transaction>): Float {
 
-    // TODO: implement the filter for nDays
-
     var currentAmount = 0f
     transactionList.forEach {transaction ->
         if (transaction.amount > 0f) {
@@ -53,8 +51,6 @@ fun balanceFlowIn(transactionList: List<Transaction>): Float {
     return currentAmount
 }
 fun balanceFlowOut(transactionList: List<Transaction>): Float {
-
-    // TODO: implement the filter for nDays
 
     var currentAmount = 0f
     transactionList.forEach { transaction ->

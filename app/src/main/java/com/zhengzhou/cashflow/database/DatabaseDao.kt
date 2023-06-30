@@ -73,8 +73,8 @@ interface DatabaseDao {
     suspend fun updateTransaction(transaction: Transaction)
     @Delete(entity = Transaction::class)
     suspend fun deleteTransaction(transaction: Transaction)
-    @Query("SELECT * FROM movement WHERE (id_category IN (:idWalletList))")
-    fun getTransactionListInListOfWallet(idWalletList: String): Flow<List<Transaction>>
+    @Query("SELECT * FROM movement WHERE (id_wallet IN (:idWalletList)) ORDER BY date DESC")
+    fun getTransactionListInListOfWallet(idWalletList: List<UUID>): Flow<List<Transaction>>
     @Query("SELECT * FROM movement WHERE id_wallet=(:id_wallet) ORDER BY date DESC")
     fun getTransactionListInWallet(id_wallet: UUID): Flow<List<Transaction>>
     @Query("SELECT * FROM movement WHERE id_wallet=(:id_wallet) ORDER BY date DESC LIMIT :number_of_entries")

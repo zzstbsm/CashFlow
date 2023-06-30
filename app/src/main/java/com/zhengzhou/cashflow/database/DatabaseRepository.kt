@@ -121,12 +121,10 @@ class DatabaseRepository private constructor(
         database.databaseDao().deleteTransaction(transaction)
     }
     fun getTransactionListInListOfWallet(walletList: List<Wallet>): Flow<List<Transaction>> {
-        val idList: List<String> = walletList.map { it.id.toString() }
-        val textToPass = idList.joinToString(",")
+        val idList: List<UUID> = walletList.map { it.id }
         return when(idList.size) {
             0 -> flowOf(listOf())
-            1 -> database.databaseDao().getTransactionListInWallet(UUID.fromString(textToPass))
-            else -> database.databaseDao().getTransactionListInListOfWallet(textToPass)
+            else -> database.databaseDao().getTransactionListInListOfWallet(idList)
         }
 
     }
