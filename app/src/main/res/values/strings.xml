@@ -102,10 +102,12 @@
     <!-- WalletOverview page-->
     <string name="WalletOverview_add_wallet">Add wallet</string>
     <string name="WalletOverview_balance">Balance</string>
+    <string name="WalletOverview_choose_wallet">Choose wallet</string>
     <string name="WalletOverview_edit_wallet">Edit wallet</string>
     <string name="WalletOverview_no_transactions">No transactions</string>
     <string name="WalletOverview_no_wallet">No wallet</string>
     <string name="WalletOverview_recent_transactions">Recent transactions</string>
+    <string name="WalletOverview_select_wallet">Select wallet</string>
 
     <!-- Supported currencies -->
     <string name="currency">Currency</string>
