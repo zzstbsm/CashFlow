@@ -213,7 +213,7 @@ private fun TextWalletName(
         },
         value = walletEditUiState.wallet.name,
         onValueChange = {
-            if (it.last() != '\n') {
+            if (it.isNotEmpty() && it.last() != '\n') {
                 walletEditViewModel.updateWalletName(it)
             }
         },
