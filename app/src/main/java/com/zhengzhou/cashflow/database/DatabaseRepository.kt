@@ -6,6 +6,8 @@ import com.zhengzhou.cashflow.data.BudgetCategory
 import com.zhengzhou.cashflow.data.BudgetPeriod
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Tag
+import com.zhengzhou.cashflow.data.TagLocation
+import com.zhengzhou.cashflow.data.TagTransaction
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
@@ -96,8 +98,20 @@ class DatabaseRepository private constructor(
         return database.databaseDao().getCategoryListByTransactionType(transactionTypeId = transactionType.id)
     }
 
+    /* Location section */
+    suspend fun getLocation(id: UUID): TagLocation? = database.databaseDao().getLocation(id)
+    suspend fun addLocation(tag: Tag) {
+        database.databaseDao().addTag(tag)
+    }
+    suspend fun updateLocation(tag: Tag) {
+        database.databaseDao().updateTag(tag)
+    }
+    suspend fun deleteLocation(tag: Tag) {
+        database.databaseDao().deleteTag(tag)
+    }
+
     /* Tag section */
-    fun getTag(id: UUID): Tag? = database.databaseDao().getTag(id)
+    suspend fun getTag(id: UUID): Tag? = database.databaseDao().getTag(id)
     suspend fun addTag(tag: Tag) {
         database.databaseDao().addTag(tag)
     }
@@ -108,6 +122,21 @@ class DatabaseRepository private constructor(
         database.databaseDao().deleteTag(tag)
     }
     fun getTagList(): Flow<List<Tag>> = database.databaseDao().getTagList()
+
+    /* TagTransaction section */
+    suspend fun getTagTransaction(tagTransactionId: UUID): TagTransaction?
+        = database.databaseDao().getTagTransaction(tagTransactionId)
+    suspend fun addTagTransaction(tagTransaction: TagTransaction) {
+        database.databaseDao().addTagTransaction(tagTransaction)
+    }
+    suspend fun updateTagTransaction(tagTransaction: TagTransaction) {
+        database.databaseDao().updateTagTransaction(tagTransaction)
+    }
+    suspend fun deleteTagTransaction(tagTransaction: TagTransaction) {
+        database.databaseDao().deleteTagTransaction(tagTransaction)
+    }
+    fun getTagTransactionFromTransaction(transactionId: UUID): Flow<List<TagTransaction>>
+        = database.databaseDao().getTagTransactionFromTransaction(transactionId = transactionId)
 
     /* Transaction section */
     suspend fun getTransaction(transactionId: UUID): Transaction? = database.databaseDao().getTransaction(transactionId)

@@ -5,6 +5,8 @@ import com.zhengzhou.cashflow.data.BudgetCategory
 import com.zhengzhou.cashflow.data.BudgetPeriod
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Tag
+import com.zhengzhou.cashflow.data.TagLocation
+import com.zhengzhou.cashflow.data.TagTransaction
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.Wallet
 import kotlinx.coroutines.flow.Flow
@@ -46,6 +48,16 @@ interface DatabaseDao {
     @Delete(entity = Category::class)
     suspend fun deleteCategory(category: Category)
 
+    // Location section
+    @Query("SELECT * FROM tag_location WHERE id=(:tagLocationId)")
+    suspend fun getLocation(tagLocationId: UUID): TagLocation?
+    @Insert(entity = TagLocation::class, onConflict = OnConflictStrategy.ABORT)
+    suspend fun addLocation(tagLocation: TagLocation)
+    @Update(entity = TagLocation::class)
+    suspend fun updateLocation(tagLocation: TagLocation)
+    @Delete(entity = TagLocation::class)
+    suspend fun deleteLocation(tagLocation: TagLocation)
+
     @Query("SELECT * FROM category")
     fun getCategoryList(): Flow<List<Category>>
     @Query("SELECT * FROM category WHERE movement_type_id=(:transactionTypeId)")
@@ -53,7 +65,7 @@ interface DatabaseDao {
 
     // Tag section
     @Query("SELECT * FROM tag WHERE id=(:id)")
-    fun getTag(id: UUID): Tag?
+    suspend fun getTag(id: UUID): Tag?
     @Insert(entity = Tag::class, onConflict = OnConflictStrategy.ABORT)
     suspend fun addTag(tag: Tag)
     @Update(entity = Tag::class)
@@ -63,6 +75,18 @@ interface DatabaseDao {
 
     @Query("SELECT * FROM tag")
     fun getTagList(): Flow<List<Tag>>
+
+    // TagTransaction section
+    @Query("SELECT * FROM tag_transaction WHERE id=(:tagTransactionId)")
+    suspend fun getTagTransaction(tagTransactionId: UUID): TagTransaction?
+    @Insert(entity = TagTransaction::class, onConflict = OnConflictStrategy.ABORT)
+    suspend fun addTagTransaction(tagTransaction: TagTransaction)
+    @Update(entity = TagTransaction::class)
+    suspend fun updateTagTransaction(tagTransaction: TagTransaction)
+    @Delete(entity = TagTransaction::class)
+    suspend fun deleteTagTransaction(tagTransaction: TagTransaction)
+    @Query("SELECT * FROM tag_transaction WHERE id_movement=(:transactionId)")
+    fun getTagTransactionFromTransaction(transactionId: UUID): Flow<List<TagTransaction>>
 
     // Transaction section
     @Query("SELECT * FROM movement WHERE id=(:id)")

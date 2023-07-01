@@ -188,6 +188,7 @@ fun WalletOverviewMainBody(
             OverviewSection(
                 walletOverviewUiState = walletOverviewUiState,
                 walletOverviewViewModel = walletOverviewViewModel,
+                navController = navController,
             )
         }
         item {
@@ -235,6 +236,7 @@ private fun CustomCard(
 private fun OverviewSection(
     walletOverviewUiState: WalletOverviewUiState,
     walletOverviewViewModel: WalletOverviewViewModel,
+    navController: NavController,
     modifier: Modifier = Modifier,
 ) {
     CustomCard {
@@ -247,6 +249,7 @@ private fun OverviewSection(
         TransactionListSection(
             walletOverviewUiState = walletOverviewUiState,
             walletOverviewViewModel = walletOverviewViewModel,
+            navController = navController,
             modifier = modifier,
         )
     }
@@ -289,6 +292,7 @@ private fun WalletInfoSection(
 private fun TransactionListSection(
     walletOverviewUiState: WalletOverviewUiState,
     walletOverviewViewModel: WalletOverviewViewModel,
+    navController: NavController,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -315,7 +319,10 @@ private fun TransactionListSection(
                     category = category,
                     currencyFormatter = walletOverviewViewModel.currencyFormatter,
                     onClickTransaction = {
-                        // TODO: navigate into the transaction detail page
+                        Screen.TransactionReport.navigate(
+                            transactionUUID = transaction.id,
+                            navController = navController,
+                        )
                     },
                     modifier = modifier,
                 )

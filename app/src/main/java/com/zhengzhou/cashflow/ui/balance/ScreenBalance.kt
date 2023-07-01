@@ -78,6 +78,7 @@ fun BalanceScreen(
                     balanceUiState = balanceUiState,
                     balanceViewModel = balanceViewModel,
                     innerPaddingValues = innerPadding,
+                    navController = navController,
                 )
             },
             bottomBar = {
@@ -106,6 +107,7 @@ private fun BalanceMainBody(
     balanceUiState: BalanceUiState,
     balanceViewModel: BalanceViewModel,
     innerPaddingValues: PaddingValues,
+    navController: NavController,
 ) {
 
     val modifier = Modifier
@@ -130,7 +132,12 @@ private fun BalanceMainBody(
                 currencyFormatter = Currency.setCurrencyFormatter(
                     balanceUiState.equivalentWallet.currency.abbreviation
                 ),
-                onClickTransaction = { },
+                onClickTransaction = {
+                    Screen.TransactionReport.navigate(
+                        transactionUUID = transactionCategoryGroup.transaction.id,
+                        navController = navController,
+                    )
+                },
                 modifier = modifier
             )
         }

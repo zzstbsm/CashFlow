@@ -1,6 +1,5 @@
 package com.zhengzhou.cashflow
 
-import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.annotation.DrawableRes
@@ -15,12 +14,10 @@ import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.ui.balance.BalanceScreen
 import com.zhengzhou.cashflow.ui.profile.ProfileScreen
 import com.zhengzhou.cashflow.ui.transactionEdit.TransactionEditScreen
+import com.zhengzhou.cashflow.ui.transactionReport.TransactionReportScreen
 import com.zhengzhou.cashflow.ui.walletEdit.WalletEditScreen
 import com.zhengzhou.cashflow.ui.walletOverview.WalletOverviewScreen
 import java.util.UUID
-
-const val TAG = "NavigationApp"
-const val testing = false
 
 @Composable
 fun NavigationApp() {
@@ -28,13 +25,7 @@ fun NavigationApp() {
     var currentScreen by remember {
         mutableStateOf(NavigationCurrentScreen.Balance)
     }
-    // val startDestination = Screen.Balance.route
-
-    val startDestination = if (testing) {
-        Screen.WalletEdit.route
-    } else {
-        Screen.Balance.route
-    }
+    val startDestination = Screen.Balance.route
 
     // Set the navigation controller
     val navController = rememberNavController()
@@ -58,15 +49,8 @@ fun NavigationApp() {
             )
         }
         composable(route = Screen.WalletEdit.route) { navBackStackEntry ->
-            var walletUUIDStr = navBackStackEntry.arguments?.getString("walletUUIDStr")
+            val walletUUIDStr = navBackStackEntry.arguments?.getString("walletUUIDStr")
 
-            if (testing && walletUUIDStr == null) {
-                walletUUIDStr = UUID(0L,0L).toString()
-            } else if (!testing)  {
-                requireNotNull(walletUUIDStr) {
-                    "Exception: passed walletUUIDStr not valid"
-                }
-            }
             WalletEditScreen(
                 walletUUID = UUID.fromString(walletUUIDStr),
                 navController = navController,
@@ -109,22 +93,16 @@ fun NavigationApp() {
                 navController = navController
             )
         }
-        /*
-        composable(route = Screen.BalanceOverview.route) {
-            BalanceOverviewScreen(navController = navController)
-        }
-
         composable(route = Screen.TransactionReport.route) {backStackEntry ->
             val transactionUUIDStr = backStackEntry.arguments?.getString("transactionUUIDStr")
             requireNotNull(transactionUUIDStr) {
                 "Exception: passed walletUUIDStr not valid"
             }
             TransactionReportScreen(
-                transactionUUIDStr = transactionUUIDStr,
+                transactionUUID = UUID.fromString(transactionUUIDStr),
                 navController = navController
             )
         }
-        */
     }
 }
 
@@ -136,8 +114,11 @@ enum class NavigationCurrentScreen(
     @StringRes
     val accessibilityText: Int? = null,
     val route: String,
+    // Allow the route to be active from the navigation drawer or the navigation bottom bar
     val routeActive: Boolean = true,
+    // Show navigation path on the navigation drawer
     val navBarActive: Boolean = false,
+    // Show navigation path on the navigation bottom bar
     val bottomActive: Boolean = false,
 ) {
     /*
@@ -281,9 +262,20 @@ sealed class Screen(
                 "/{transactionUUIDStr}",
         screenEnum = NavigationCurrentScreen.Balance,
     ) {
-        fun createRoute(
-            transactionUUIDStr: String
-        ) = "{${screenEnum.route}}/$transactionUUIDStr"
+        private fun createRoute(
+            transactionUUID: UUID,
+        ) = NavigationCurrentScreen.TransactionReport.route + "/$transactionUUID"
+
+        fun navigate(
+            transactionUUID: UUID,
+            navController: NavController,
+        ) {
+            navController.navigate(
+                createRoute(
+                    transactionUUID
+                )
+            )
+        }
     }
 }
 

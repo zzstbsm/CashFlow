@@ -7,6 +7,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.database.DatabaseRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 @Entity(tableName = "movement")
@@ -85,3 +90,58 @@ enum class TransactionType (
     }
 }
 
+data class TransactionFullForUI(
+    val transaction: Transaction = Transaction(),
+    val wallet: Wallet = Wallet(),
+    val category: Category = Category(),
+    val tagTransactionList: List<TagTransaction> = listOf(),
+    val tagList: List<Tag> = listOf(),
+    val location: TagLocation = TagLocation(),
+) {
+    companion object {
+        suspend fun load(
+            repository: DatabaseRepository,
+            transactionUUID: UUID
+        ): Pair<TransactionFullForUI, Boolean> {
+
+            var isLoading = true
+            val jobRetrieveTagTransaction = CoroutineScope(Dispatchers.Default)
+
+            val transaction: Transaction = repository.getTransaction(transactionId = transactionUUID) ?: Transaction()
+            val wallet = repository.getWallet(transaction.idWallet) ?: Wallet()
+            val category = repository.getCategory(transaction.idCategory) ?: Category()
+
+            var tagTransactionList: List<TagTransaction> = listOf()
+            jobRetrieveTagTransaction.launch {
+                repository.getTagTransactionFromTransaction(transactionId = transaction.id).collect {
+                    tagTransactionList = it
+                    isLoading = false
+                }
+            }
+
+            while (isLoading) {
+                delay(10)
+            }
+            jobRetrieveTagTransaction.cancel()
+
+            val tagList = tagTransactionList.mapNotNull { tagTransaction ->
+                repository.getTag(tagTransaction.idTransaction)
+            }
+            val location = repository.getLocation(transaction.idLocation) ?: TagLocation()
+
+            val isLoaded = !isLoading
+
+            return Pair(
+                TransactionFullForUI(
+                    wallet = wallet,
+                    transaction = transaction,
+                    category = category,
+                    tagTransactionList = tagTransactionList,
+                    tagList = tagList,
+                    location = location,
+                ),
+                isLoaded
+            )
+        }
+    }
+}
