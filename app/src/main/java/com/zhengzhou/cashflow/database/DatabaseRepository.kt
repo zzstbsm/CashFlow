@@ -146,6 +146,7 @@ class DatabaseRepository private constructor(
         database.databaseDao().updateWallet(wallet)
     }
     fun getWalletList(): Flow<List<Wallet>> = database.databaseDao().getWalletList()
+    fun getWalletListOfNames(): Flow<List<String>> = database.databaseDao().getWalletListOfNames()
     suspend fun getWalletLastAccessed(): Wallet? {
         return database.databaseDao().getWalletLastAccessed()
     }

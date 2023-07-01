@@ -16,15 +16,18 @@ import com.zhengzhou.cashflow.tools.ConfigurationFirstStartup
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.KeypadDigit
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 
 
 data class WalletEditUiState(
     val isLoading: Boolean = true,
+    val isErrorNameOfWallet: Boolean = false,
     val wallet: Wallet = Wallet.loadingWallet(),
     val budgetPeriod: BudgetPeriod = BudgetPeriod(),
     val groupCategoryAndBudgetList: List<GroupCategoryAndBudget> = listOf(),
@@ -112,11 +115,13 @@ data class GroupCategoryAndBudget(
 
 class WalletEditViewModel(
     walletUUID: UUID,
-    navController: NavController,
 ): ViewModel() {
 
     private var _newWallet = true
     private var _budgetEnabledWhenLoaded: Boolean = false
+
+    private var _walletListName = MutableStateFlow(listOf<String>())
+    val walletListName: StateFlow<List<String>> = _walletListName.asStateFlow()
 
     private var _uiState = MutableStateFlow(WalletEditUiState())
     val uiState: StateFlow<WalletEditUiState> = _uiState.asStateFlow()
@@ -125,10 +130,14 @@ class WalletEditViewModel(
 
     private var calculator: Calculator = Calculator()
 
+    private var jobLoadBudget: Job
+    private var jobLoadWalletListName: Job
+
     init {
 
         _newWallet = walletUUID == UUID(0L,0L)
 
+        // Load wallet
         viewModelScope.launch(Dispatchers.IO) {
 
             _uiState.value = uiState.value.copy(
@@ -145,7 +154,7 @@ class WalletEditViewModel(
 
         }
 
-        viewModelScope.launch(Dispatchers.IO) {
+        jobLoadBudget = viewModelScope.launch(Dispatchers.IO) {
 
             // Load data about the budget period
             if (!_newWallet) {
@@ -199,6 +208,11 @@ class WalletEditViewModel(
                 )
             }
         }
+        jobLoadWalletListName = viewModelScope.launch {
+            repository.getWalletListOfNames().collect() {
+                _walletListName.value = it
+            }
+        }
     }
 
     fun getOnScreenString() : String {
@@ -217,6 +231,11 @@ class WalletEditViewModel(
     }
 
     fun updateWalletName(name: String) {
+
+        val checkedName = if (name.isNotEmpty() && name.last() == ' ') name.dropLast(1) else name
+        _uiState.value = uiState.value.copy(
+            isErrorNameOfWallet = checkedName in walletListName.value
+        )
         _uiState.value = uiState.value.updateWalletName(name)
     }
 
@@ -254,11 +273,24 @@ class WalletEditViewModel(
 
     fun saveWallet() {
 
+        if (uiState.value.isErrorNameOfWallet) {
+            EventMessages.sendMessageId(R.string.WalletEdit_error_wallet_name_already_in_use)
+            return
+        }
+
         viewModelScope.launch {
+
+            // Save wallet
+            var wallet = uiState.value.wallet
+            if (wallet.name.last() == ' ') {
+                wallet = wallet.copy(
+                    name = wallet.name.dropLast(1)
+                )
+            }
             if (_newWallet) {
-                repository.addWallet(uiState.value.wallet)
+                repository.addWallet(wallet)
             } else {
-                repository.updateWallet(uiState.value.wallet)
+                repository.updateWallet(wallet)
             }
 
             // Currently (23/06/2023) disabled

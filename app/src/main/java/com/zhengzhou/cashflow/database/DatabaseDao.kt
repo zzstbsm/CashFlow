@@ -92,8 +92,8 @@ interface DatabaseDao {
 
     @Query("SELECT * FROM wallet")
     fun getWalletList(): Flow<List<Wallet>>
-    //@SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    //@Query("SELECT *,MAX(last_access) FROM wallet")
+    @Query("SELECT name FROM wallet")
+    fun getWalletListOfNames(): Flow<List<String>>
     @Query("SELECT * FROM wallet ORDER BY last_access DESC LIMIT 1")
     suspend fun getWalletLastAccessed(): Wallet?
 

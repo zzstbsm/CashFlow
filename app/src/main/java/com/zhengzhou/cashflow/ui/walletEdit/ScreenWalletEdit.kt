@@ -63,7 +63,6 @@ fun WalletEditScreen(
     val walletEditViewModel: WalletEditViewModel = viewModel {
         WalletEditViewModel(
             walletUUID = walletUUID,
-            navController = navController,
         )
     }
     val walletEditUiState by walletEditViewModel.uiState.collectAsState()
@@ -213,12 +212,18 @@ private fun TextWalletName(
         },
         value = walletEditUiState.wallet.name,
         onValueChange = {
-            if (it.isNotEmpty() && it.last() != '\n') {
+            if (!(it.isNotEmpty() && it.last() == '\n')) {
                 walletEditViewModel.updateWalletName(it)
             }
         },
         modifier = modifier,
         maxLines = 1,
+        isError = walletEditUiState.isErrorNameOfWallet,
+        supportingText = {
+            if (walletEditUiState.isErrorNameOfWallet) {
+                Text(stringResource(id = R.string.WalletEdit_error_wallet_name_already_in_use))
+            }
+        }
     )
 }
 
