@@ -41,7 +41,7 @@ class WalletOverviewViewModel(
 
     var currencyFormatter: NumberFormat = Currency.setCurrencyFormatter(Currency.EUR.abbreviation)
 
-    private var retrieveCurrentAmountInWallet: Job
+    private var retrieveCurrentAmountInWalletJob: Job
     private var retrieveTransactionJob: Job
     private var retrieveWalletListJob: Job
 
@@ -64,7 +64,7 @@ class WalletOverviewViewModel(
         }
 
         retrieveTransactionJob = jobUpdateTransaction()
-        retrieveCurrentAmountInWallet = jobUpdateCurrentAmount()
+        retrieveCurrentAmountInWalletJob = jobUpdateCurrentAmount()
     }
 
     fun formatCurrency(amount: Float) : String {
@@ -83,6 +83,7 @@ class WalletOverviewViewModel(
             wallet = repository.getWalletLastAccessed() ?: Wallet.emptyWallet(),
             isLoading = false,
         )
+        retrieveCurrentAmountInWalletJob = jobUpdateCurrentAmount()
     }
 
     fun deleteShownWallet() {
@@ -107,6 +108,8 @@ class WalletOverviewViewModel(
             )
             loadLastAccessed()
         }
+        retrieveCurrentAmountInWalletJob.cancel()
+        retrieveCurrentAmountInWalletJob = jobUpdateCurrentAmount()
     }
 
     fun selectWallet(wallet: Wallet) {
@@ -126,8 +129,8 @@ class WalletOverviewViewModel(
         retrieveTransactionJob = jobUpdateTransaction()
 
         // Update wallet amount
-        retrieveCurrentAmountInWallet.cancel()
-        retrieveCurrentAmountInWallet = jobUpdateCurrentAmount()
+        retrieveCurrentAmountInWalletJob.cancel()
+        retrieveCurrentAmountInWalletJob = jobUpdateCurrentAmount()
     }
     fun showSelectWalletDialog(toShow: Boolean) {
         _uiState.value = uiState.value.copy(
