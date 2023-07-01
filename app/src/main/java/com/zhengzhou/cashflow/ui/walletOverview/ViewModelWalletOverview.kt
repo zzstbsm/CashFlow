@@ -171,6 +171,9 @@ class WalletOverviewViewModel(
         return viewModelScope.launch {
             repository.getWalletList().collect {
                 _walletList.value = it
+                _uiState.value = uiState.value.copy(
+                    ifZeroWallet = it.isEmpty()
+                )
             }
         }
     }
