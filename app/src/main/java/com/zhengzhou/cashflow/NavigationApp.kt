@@ -87,7 +87,6 @@ fun NavigationApp() {
                 "Exception: passed updateTransaction not valid"
             }
             TransactionEditScreen(
-                walletUUID = UUID.fromString(walletUUIDStr),
                 transactionType = TransactionType.setTransaction(transactionTypeId.toInt())!!,
                 transactionUUID = UUID.fromString(transactionUUIDStr),
                 navController = navController

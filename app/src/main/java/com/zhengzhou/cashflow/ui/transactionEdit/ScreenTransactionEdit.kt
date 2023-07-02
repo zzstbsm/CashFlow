@@ -41,7 +41,6 @@ import java.util.UUID
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionEditScreen(
-    walletUUID: UUID,
     transactionType: TransactionType,
     transactionUUID: UUID,
     navController: NavController,
@@ -49,7 +48,6 @@ fun TransactionEditScreen(
 
     val transactionEditViewModel: TransactionEditViewModel = viewModel {
         TransactionEditViewModel(
-            walletUUID = walletUUID,
             transactionUUID = transactionUUID,
             transactionType = transactionType,
         )

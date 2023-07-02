@@ -10,6 +10,7 @@ import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.Calculator
 import com.zhengzhou.cashflow.tools.KeypadDigit
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -134,7 +135,6 @@ data class TransactionEditUiState(
 }
 
 class TransactionEditViewModel(
-    walletUUID: UUID,
     transactionUUID: UUID,
     transactionType: TransactionType,
 ) : ViewModel() {
@@ -148,35 +148,49 @@ class TransactionEditViewModel(
 
     private var calculator = Calculator()
 
+    private var jobCollectWallet: Job
+    private var jobCollectCategory: Job
+
     init {
 
         newTransaction = transactionUUID == UUID(0L,0L)
 
         viewModelScope.launch {
             if (newTransaction) {
+                val wallet = repository.getWalletLastAccessed() ?: Wallet()
                 _uiState.value = uiState.value.copy(
                     transaction = uiState.value.transaction.copy(
                         id = UUID.randomUUID(),
-                        idWallet = walletUUID,
+                        idWallet = wallet.id,
                         movementType = transactionType.id,
                     ),
-                    wallet = repository.getWallet(walletUUID) ?: Wallet(),
-                    isLoading = false
+                    wallet = wallet,
+                    isLoading = false,
                 )
             } else {
                 val transaction = repository.getTransaction(transactionUUID) ?: Transaction()
+                val wallet = repository.getWallet(transaction.idWallet) ?: Wallet()
                 _uiState.value = uiState.value.copy(
                     transaction = transaction,
-                    wallet = repository.getWallet(transaction.idWallet) ?: Wallet(),
+                    wallet = wallet,
                     isLoading = false,
                 )
             }
 
-            calculator = Calculator.initialize(uiState.value.transaction.amount)
+            calculator = Calculator.initialize(
+                when (transactionType) {
+                    TransactionType.Deposit -> uiState.value.transaction.amount
+                    TransactionType.Expense -> -uiState.value.transaction.amount
+                    else -> 0f
+                }
+            )
+            _uiState.value = uiState.value.copy(
+                amountString = calculator.onScreenString()
+            )
 
         }
 
-        viewModelScope.launch {
+        jobCollectCategory = viewModelScope.launch {
             repository.getCategoryListByTransactionType(transactionType = transactionType).collect { categoryList ->
                 _uiState.value = uiState.value.copy(
                     categoryList = categoryList
@@ -184,7 +198,7 @@ class TransactionEditViewModel(
             }
         }
 
-        viewModelScope.launch {
+        jobCollectWallet = viewModelScope.launch {
             repository.getWalletList().collect { walletList ->
                 _uiState.value = uiState.value.copy(
                     walletList = walletList

@@ -5,9 +5,6 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.database.DatabaseRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.UUID
 
 const val TAG = "ConfigurationFirstStartup"
@@ -35,7 +32,7 @@ class ConfigurationFirstStartup {
 
         }
 
-        fun setDefaultExpenseCategories(): MutableList<Category> {
+        private fun setDefaultExpenseCategories(): MutableList<Category> {
 
             return mutableListOf(
                 Category(
@@ -71,7 +68,7 @@ class ConfigurationFirstStartup {
             )
         }
 
-        fun setDefaultDepositCategories(): MutableList<Category>{
+        private fun setDefaultDepositCategories(): MutableList<Category>{
             return mutableListOf(
                 Category(
                     id = UUID(1L,1L),
@@ -82,13 +79,13 @@ class ConfigurationFirstStartup {
             )
         }
 
-        fun setDefaultMovementCategories(): MutableList<Category>{
+        private fun setDefaultMovementCategories(): MutableList<Category>{
             return mutableListOf(
                 Category(
                     id = UUID(2L,1L),
                     name = R.string.move,
                     idIcon = R.drawable.ic_transfer,
-                    transactionTypeId = TransactionType.Deposit.id
+                    transactionTypeId = TransactionType.Move.id
                 ),
             )
         }
