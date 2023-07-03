@@ -297,7 +297,7 @@ private fun TransferMovementTypeSection(
                     if (selectedTag.enabled) {
                         transactionEditViewModel.disableTag(it)
                     } else {
-                        transactionEditUiState.enableTag(it)
+                        transactionEditViewModel.enableTag(it)
                     }
                     currentTagText = "a"
                     currentTagText = ""

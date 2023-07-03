@@ -41,7 +41,7 @@ data class Tag (
             tagEntry: TagEntry
         ): Tag {
 
-            val tagTransaction = TagTransaction(id = transactionUUID)
+            val tagTransaction = TagTransaction(idTransaction = transactionUUID)
             return this.merge(tagTransaction,tagEntry)!!
         }
 

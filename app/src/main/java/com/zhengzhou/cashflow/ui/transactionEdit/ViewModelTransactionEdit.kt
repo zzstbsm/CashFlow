@@ -323,16 +323,16 @@ class TransactionEditViewModel(
             // Save transaction entry
             if (newTransaction) {
                 transaction = repository.addTransaction(transaction)
-                currentTransactionTagList = currentTransactionTagList.map {
-                    it.copy(
-                        idTransaction = transaction.id
-                    )
-                }
             } else {
                 repository.updateTransaction(transaction)
             }
 
             // Save tags
+            currentTransactionTagList = currentTransactionTagList.map {
+                it.copy(
+                    idTransaction = transaction.id
+                )
+            }
             currentTransactionTagList.forEach { tag ->
 
                 val newTag = tag.id == UUID(0L, 0L)

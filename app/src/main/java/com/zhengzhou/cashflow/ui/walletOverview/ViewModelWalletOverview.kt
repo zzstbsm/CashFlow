@@ -83,7 +83,10 @@ class WalletOverviewViewModel(
             wallet = repository.getWalletLastAccessed() ?: Wallet.emptyWallet(),
             isLoading = false,
         )
+        retrieveCurrentAmountInWalletJob.cancel()
         retrieveCurrentAmountInWalletJob = jobUpdateCurrentAmount()
+        retrieveTransactionJob.cancel()
+        retrieveTransactionJob = jobUpdateTransaction()
     }
 
     fun deleteShownWallet() {

@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
@@ -46,6 +47,12 @@ fun TransactionReportScreen(
     }
     val transactionReportUiState by transactionReportViewModel.uiState.collectAsState()
 
+    ReloadPageAfterPopBackStack(
+        pageRoute = Screen.TransactionReport.route,
+        navController = navController
+    ) {
+        transactionReportViewModel.loadTransactionReport(transactionUUID)
+    }
 
     Scaffold(
         topBar = {

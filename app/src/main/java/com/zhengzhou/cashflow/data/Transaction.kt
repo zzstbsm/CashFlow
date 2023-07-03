@@ -110,10 +110,12 @@ data class TransactionFullForUI(
             val wallet = repository.getWallet(transaction.idWallet) ?: Wallet()
             val category = repository.getCategory(transaction.idCategory) ?: Category()
 
-            var  tagTransactionList: List<Tag> = listOf()
+            //var  tagTransactionList: List<Tag> = listOf()
+            var  tagList: List<Tag> = listOf()
             jobRetrieveTagTransaction.launch {
                 repository.getTagListFromTransaction(transactionUUID = transaction.id).collect {
-                    tagTransactionList = it
+                    //tagTransactionList = it
+                    tagList = it
                     isLoading = false
                 }
             }
@@ -123,9 +125,9 @@ data class TransactionFullForUI(
             }
             jobRetrieveTagTransaction.cancel()
 
-            val tagList = tagTransactionList.mapNotNull { tagTransaction ->
-                repository.getTag(tagTransaction.idTransaction)
-            }
+            //val tagList = tagTransactionList.mapNotNull { tagTransaction ->
+            //    repository.getTag(tagTransaction.idTransaction)
+            //}
             val location = repository.getLocation(transaction.idLocation) ?: TagLocation()
 
             val isLoaded = !isLoading

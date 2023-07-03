@@ -7,16 +7,13 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.zhengzhou.cashflow.R
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Parcelize
 @Entity(tableName = "wallet")
 data class Wallet(
-    @PrimaryKey val id: UUID = UUID.randomUUID(),
+    @PrimaryKey val id: UUID = UUID(0L,0L),
     val name: String = "",
     @ColumnInfo(name = "start_amount")
     val startAmount: Float = 0f,

@@ -20,9 +20,11 @@ import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.ui.SectionTopAppBar
+import java.util.UUID
 
 @Preview
 @Composable
@@ -180,12 +182,16 @@ private fun BalanceFloatingActionButtons(
                        )
                     },
                     onClick = {
-                        Screen.TransactionEdit.navigate(
-                            walletUUID = wallet.id,
-                            transactionType = TransactionType.Deposit,
-                            transactionUUID = transaction.id,
-                            navController = navController,
-                        )
+                        if (wallet.id != UUID(0L,0L)) {
+                            Screen.TransactionEdit.navigate(
+                                walletUUID = wallet.id,
+                                transactionType = TransactionType.Deposit,
+                                transactionUUID = transaction.id,
+                                navController = navController,
+                            )
+                        } else {
+                            EventMessages.sendMessageId(R.string.Balance_no_wallet)
+                        }
                         showDialog = false
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -202,12 +208,16 @@ private fun BalanceFloatingActionButtons(
                         )
                     },
                     onClick = {
-                        Screen.TransactionEdit.navigate(
-                            walletUUID = wallet.id,
-                            transactionType = TransactionType.Expense,
-                            transactionUUID = transaction.id,
-                            navController = navController,
-                        )
+                        if (wallet.id != UUID(0L,0L)) {
+                            Screen.TransactionEdit.navigate(
+                                walletUUID = wallet.id,
+                                transactionType = TransactionType.Expense,
+                                transactionUUID = transaction.id,
+                                navController = navController,
+                            )
+                        } else {
+                            EventMessages.sendMessageId(R.string.Balance_no_wallet)
+                        }
                         showDialog = false
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -224,12 +234,16 @@ private fun BalanceFloatingActionButtons(
                         )
                     },
                     onClick = {
-                        Screen.TransactionEdit.navigate(
-                            walletUUID = wallet.id,
-                            transactionType = TransactionType.Move,
-                            transactionUUID = transaction.id,
-                            navController = navController,
-                        )
+                        if (wallet.id != UUID(0L,0L)) {
+                            Screen.TransactionEdit.navigate(
+                                walletUUID = wallet.id,
+                                transactionType = TransactionType.Move,
+                                transactionUUID = transaction.id,
+                                navController = navController,
+                            )
+                        } else {
+                            EventMessages.sendMessageId(R.string.Balance_no_wallet)
+                        }
                         showDialog = false
                     },
                     modifier = Modifier.fillMaxWidth()

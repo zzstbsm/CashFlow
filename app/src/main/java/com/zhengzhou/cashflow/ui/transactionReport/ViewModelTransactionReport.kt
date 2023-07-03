@@ -11,6 +11,7 @@ import com.zhengzhou.cashflow.data.TransactionFullForUI
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -41,9 +42,16 @@ class TransactionReportViewModel(
 
     private val repository = DatabaseRepository.get()
 
+    private var jobLoadTransactionReport: Job
+
+
     init {
 
-        viewModelScope.launch {
+        jobLoadTransactionReport = loadTransactionReport(transactionUUID)
+    }
+
+    fun loadTransactionReport(transactionUUID: UUID): Job {
+        return viewModelScope.launch {
             val (transactionFullForUI, isLoaded) = TransactionFullForUI.load(repository,transactionUUID)
 
             while (!isLoaded) {
@@ -64,8 +72,5 @@ class TransactionReportViewModel(
             )
 
         }
-
     }
-
-
 }

@@ -62,6 +62,9 @@
     <string name="new_expense">New expense</string>
     <string name="new_move">New movement</string>
 
+    <!-- Balance Screen -->
+    <string name="Balance_no_wallet">No wallets present in the system. Please first add a wallet.</string>
+
     <!-- TransactionEdit page strings -->
     <string name="amount">Amount</string>
     <string name="description">Description</string>
