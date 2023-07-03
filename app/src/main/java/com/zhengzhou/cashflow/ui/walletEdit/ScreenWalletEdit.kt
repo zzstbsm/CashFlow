@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.BackHandler
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.data.Currency
@@ -97,17 +96,24 @@ fun WalletEditScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    walletEditViewModel.saveWallet()
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(
-                            Screen.WalletOverview.keyWalletUUID(),
-                            walletEditUiState.wallet.id.toString()
+
+                    if (walletEditUiState.isErrorWalletNameInUse) {
+                        EventMessages.sendMessageId(R.string.WalletEdit_error_wallet_name_already_in_use)
+                    } else if (walletEditUiState.isErrorWalletNameNotValid) {
+                        EventMessages.sendMessageId(R.string.WalletEdit_error_wallet_name_not_valid)
+                    } else {
+                        walletEditViewModel.saveWallet()
+                        navController.previousBackStackEntry
+                            ?.savedStateHandle
+                            ?.set(
+                                Screen.WalletOverview.keyWalletUUID(),
+                                walletEditUiState.wallet.id.toString()
+                            )
+                        navController.popBackStack(
+                            route = Screen.WalletOverview.route,
+                            inclusive = false
                         )
-                    navController.popBackStack(
-                        route = Screen.WalletOverview.route,
-                        inclusive = false
-                    )
+                    }
                 }
             ) {
                 Icon(
@@ -218,9 +224,14 @@ private fun TextWalletName(
         },
         modifier = modifier,
         maxLines = 1,
-        isError = walletEditUiState.isErrorNameOfWallet,
+        isError = (
+            walletEditUiState.isErrorWalletNameInUse ||
+            walletEditUiState.isErrorWalletNameNotValid
+        ),
         supportingText = {
-            if (walletEditUiState.isErrorNameOfWallet) {
+            if (walletEditUiState.isErrorWalletNameNotValid) {
+                Text(stringResource(id = R.string.WalletEdit_error_wallet_name_not_valid))
+            } else if (walletEditUiState.isErrorWalletNameInUse) {
                 Text(stringResource(id = R.string.WalletEdit_error_wallet_name_already_in_use))
             }
         }

@@ -53,7 +53,6 @@ class TransactionReportViewModel(
                 wallet = transactionFullForUI.wallet,
                 transaction = transactionFullForUI.transaction,
                 category = transactionFullForUI.category,
-                tagTransactionList = transactionFullForUI.tagTransactionList,
                 tagList = transactionFullForUI.tagList,
                 location = transactionFullForUI.location,
 

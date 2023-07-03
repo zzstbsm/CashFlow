@@ -2,7 +2,6 @@ package com.zhengzhou.cashflow.ui.walletEdit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.BudgetCategory
 import com.zhengzhou.cashflow.data.BudgetPeriod
@@ -20,14 +19,16 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 
 
 data class WalletEditUiState(
     val isLoading: Boolean = true,
-    val isErrorNameOfWallet: Boolean = false,
+
+    val isErrorWalletNameInUse: Boolean = false,
+    val isErrorWalletNameNotValid: Boolean = false,
+
     val wallet: Wallet = Wallet.loadingWallet(),
     val budgetPeriod: BudgetPeriod = BudgetPeriod(),
     val groupCategoryAndBudgetList: List<GroupCategoryAndBudget> = listOf(),
@@ -233,8 +234,14 @@ class WalletEditViewModel(
     fun updateWalletName(name: String) {
 
         val checkedName = if (name.isNotEmpty() && name.last() == ' ') name.dropLast(1) else name
+        var tempName = name
+        while (tempName.isNotEmpty() && tempName.last() == ' ') {
+            tempName = tempName.dropLast(1)
+        }
+
         _uiState.value = uiState.value.copy(
-            isErrorNameOfWallet = checkedName in walletListName.value
+            isErrorWalletNameInUse = checkedName in walletListName.value,
+            isErrorWalletNameNotValid = tempName.isEmpty()
         )
         _uiState.value = uiState.value.updateWalletName(name)
     }
@@ -273,16 +280,18 @@ class WalletEditViewModel(
 
     fun saveWallet() {
 
-        if (uiState.value.isErrorNameOfWallet) {
+        if (uiState.value.isErrorWalletNameInUse) {
             EventMessages.sendMessageId(R.string.WalletEdit_error_wallet_name_already_in_use)
             return
+        } else if (uiState.value.isErrorWalletNameNotValid) {
+            EventMessages.sendMessageId(R.string.WalletEdit_error_wallet_name_not_valid)
         }
 
         viewModelScope.launch {
 
             // Save wallet
             var wallet = uiState.value.wallet
-            if (wallet.name.last() == ' ') {
+            while (wallet.name.last() == ' ') {
                 wallet = wallet.copy(
                     name = wallet.name.dropLast(1)
                 )

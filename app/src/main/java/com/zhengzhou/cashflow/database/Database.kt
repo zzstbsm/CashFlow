@@ -3,8 +3,6 @@ package com.zhengzhou.cashflow.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.zhengzhou.cashflow.data.*
 
 @Database(
@@ -12,7 +10,7 @@ import com.zhengzhou.cashflow.data.*
         Wallet::class,
         Transaction::class,
         Category::class,
-        Tag::class,
+        TagEntry::class,
         TagTransaction::class,
         TagLocation::class,
         BudgetCategory::class,

@@ -4,7 +4,7 @@ import androidx.room.*
 import com.zhengzhou.cashflow.data.BudgetCategory
 import com.zhengzhou.cashflow.data.BudgetPeriod
 import com.zhengzhou.cashflow.data.Category
-import com.zhengzhou.cashflow.data.Tag
+import com.zhengzhou.cashflow.data.TagEntry
 import com.zhengzhou.cashflow.data.TagLocation
 import com.zhengzhou.cashflow.data.TagTransaction
 import com.zhengzhou.cashflow.data.Transaction
@@ -49,8 +49,8 @@ interface DatabaseDao {
     suspend fun deleteCategory(category: Category)
 
     // Location section
-    @Query("SELECT * FROM tag_location WHERE id=(:tagLocationId)")
-    suspend fun getLocation(tagLocationId: UUID): TagLocation?
+    @Query("SELECT * FROM tag_location WHERE id=(:tagLocationUUID)")
+    suspend fun getLocation(tagLocationUUID: UUID): TagLocation?
     @Insert(entity = TagLocation::class, onConflict = OnConflictStrategy.ABORT)
     suspend fun addLocation(tagLocation: TagLocation)
     @Update(entity = TagLocation::class)
@@ -63,34 +63,34 @@ interface DatabaseDao {
     @Query("SELECT * FROM category WHERE movement_type_id=(:transactionTypeId)")
     fun getCategoryListByTransactionType(transactionTypeId: Int): Flow<List<Category>>
 
-    // Tag section
-    @Query("SELECT * FROM tag WHERE id=(:id)")
-    suspend fun getTag(id: UUID): Tag?
-    @Insert(entity = Tag::class, onConflict = OnConflictStrategy.ABORT)
-    suspend fun addTag(tag: Tag)
-    @Update(entity = Tag::class)
-    suspend fun updateTag(tag: Tag)
-    @Delete(entity = Tag::class)
-    suspend fun deleteTag(tag: Tag)
+    // TagEntry section
+    @Query("SELECT * FROM tag_entry WHERE id=(:tagUUID)")
+    suspend fun getTagEntry(tagUUID: UUID): TagEntry?
+    @Insert(entity = TagEntry::class, onConflict = OnConflictStrategy.ABORT)
+    suspend fun addTagEntry(tag: TagEntry)
+    @Update(entity = TagEntry::class)
+    suspend fun updateTagEntry(tag: TagEntry)
+    @Delete(entity = TagEntry::class)
+    suspend fun deleteTagEntry(tag: TagEntry)
 
-    @Query("SELECT * FROM tag")
-    fun getTagList(): Flow<List<Tag>>
+    @Query("SELECT * FROM tag_entry")
+    fun getTagEntryList(): Flow<List<TagEntry>>
 
     // TagTransaction section
-    @Query("SELECT * FROM tag_transaction WHERE id=(:tagTransactionId)")
-    suspend fun getTagTransaction(tagTransactionId: UUID): TagTransaction?
+    @Query("SELECT * FROM tag_transaction WHERE id=(:tagTransactionUUID)")
+    suspend fun getTagTransaction(tagTransactionUUID: UUID): TagTransaction?
     @Insert(entity = TagTransaction::class, onConflict = OnConflictStrategy.ABORT)
     suspend fun addTagTransaction(tagTransaction: TagTransaction)
     @Update(entity = TagTransaction::class)
     suspend fun updateTagTransaction(tagTransaction: TagTransaction)
     @Delete(entity = TagTransaction::class)
     suspend fun deleteTagTransaction(tagTransaction: TagTransaction)
-    @Query("SELECT * FROM tag_transaction WHERE id_movement=(:transactionId)")
-    fun getTagTransactionFromTransaction(transactionId: UUID): Flow<List<TagTransaction>>
+    @Query("SELECT * FROM tag_transaction WHERE id_movement=(:transactionUUID)")
+    fun getTagTransactionFromTransaction(transactionUUID: UUID): Flow<List<TagTransaction>>
 
     // Transaction section
-    @Query("SELECT * FROM movement WHERE id=(:id)")
-    suspend fun getTransaction(id: UUID): Transaction?
+    @Query("SELECT * FROM movement WHERE id=(:transactionUUID)")
+    suspend fun getTransaction(transactionUUID: UUID): Transaction?
     @Insert(entity = Transaction::class, onConflict = OnConflictStrategy.ABORT)
     suspend fun addTransaction(transaction: Transaction)
     @Update(entity = Transaction::class)
@@ -105,8 +105,8 @@ interface DatabaseDao {
     fun getTransactionShortListInWallet(id_wallet: UUID,number_of_entries: Int): Flow<List<Transaction>>
 
     // Wallet section
-    @Query("SELECT * FROM wallet WHERE id=(:id)")
-    suspend fun getWallet(id: UUID): Wallet?
+    @Query("SELECT * FROM wallet WHERE id=(:walletUUID)")
+    suspend fun getWallet(walletUUID: UUID): Wallet?
     @Insert(entity = Wallet::class, onConflict = OnConflictStrategy.ABORT)
     suspend fun addWallet(wallet: Wallet)
     @Update(entity = Wallet::class)

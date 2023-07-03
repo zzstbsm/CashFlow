@@ -287,13 +287,18 @@ private fun TransferMovementTypeSection(
 
             var currentTagText by remember { mutableStateOf("") }
             TagSection(
-                transactionTagList = transactionEditUiState.transactionTagList,
-                tagList = transactionEditUiState.tagListInDB,
+                currentTagList = transactionEditUiState.currentTagList,
+                completeTagList = transactionEditUiState.tagListInDB,
                 currentTagText = currentTagText,
                 onChangeText = { currentTagText = it },
                 onTagAdd = { transactionEditViewModel.addTag(it) },
-                onTagRemove = {
-                    transactionEditViewModel.removeTag(it)
+                onTagClick = {
+                    val selectedTag = transactionEditUiState.currentTagList[it]
+                    if (selectedTag.enabled) {
+                        transactionEditViewModel.disableTag(it)
+                    } else {
+                        transactionEditUiState.enableTag(it)
+                    }
                     currentTagText = "a"
                     currentTagText = ""
                 }

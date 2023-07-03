@@ -94,7 +94,6 @@ data class TransactionFullForUI(
     val transaction: Transaction = Transaction(),
     val wallet: Wallet = Wallet(),
     val category: Category = Category(),
-    val tagTransactionList: List<TagTransaction> = listOf(),
     val tagList: List<Tag> = listOf(),
     val location: TagLocation = TagLocation(),
 ) {
@@ -111,9 +110,9 @@ data class TransactionFullForUI(
             val wallet = repository.getWallet(transaction.idWallet) ?: Wallet()
             val category = repository.getCategory(transaction.idCategory) ?: Category()
 
-            var tagTransactionList: List<TagTransaction> = listOf()
+            var  tagTransactionList: List<Tag> = listOf()
             jobRetrieveTagTransaction.launch {
-                repository.getTagTransactionFromTransaction(transactionId = transaction.id).collect {
+                repository.getTagListFromTransaction(transactionUUID = transaction.id).collect {
                     tagTransactionList = it
                     isLoading = false
                 }
@@ -136,7 +135,6 @@ data class TransactionFullForUI(
                     wallet = wallet,
                     transaction = transaction,
                     category = category,
-                    tagTransactionList = tagTransactionList,
                     tagList = tagList,
                     location = location,
                 ),

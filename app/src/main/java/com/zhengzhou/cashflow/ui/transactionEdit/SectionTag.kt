@@ -13,15 +13,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Tag
+import com.zhengzhou.cashflow.data.TagEntry
 
 @Composable
 fun TagSection(
-    transactionTagList: List<Tag>,
-    tagList: List<Tag>,
+    currentTagList: List<Tag>,
+    completeTagList: List<TagEntry>,
     currentTagText: String,
     onChangeText: (String) -> Unit,
     onTagAdd: (String) -> Unit,
-    onTagRemove: (Int?) -> Unit,
+    onTagClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -69,7 +70,7 @@ fun TagSection(
             }
         }
         TagListFilter(
-            filteredTagList = Tag.tagListFiltered(currentTagText,tagList),
+            filteredTagList = TagEntry.tagListFiltered(currentTagText,completeTagList),
             onSelectTag = { selectedTag ->
                 showDropdownMenu = false
                 onTagAdd(selectedTag)
@@ -88,8 +89,8 @@ fun TagSection(
             horizontalArrangement = Arrangement.Start,
         ) {
             TagListPart(
-                tagList = transactionTagList,
-                onTagRemove = { onTagRemove(it) }
+                tagList = currentTagList,
+                onTagClick = { onTagClick(it) }
             )
         }
         Spacer(
@@ -103,7 +104,7 @@ fun TagSection(
 @Composable
 private fun TagListPart(
     tagList: List<Tag>,
-    onTagRemove: (Int?) -> Unit
+    onTagClick: (Int) -> Unit,
 ) {
 
     // TODO: Problem with refresh the tagList
@@ -119,14 +120,16 @@ private fun TagListPart(
                 item {
                     SingleTag(
                         tag = "",
-                        onTagRemove = { onTagRemove(null) }
+                        onTagClick = {  },
+                        selected = false
                     )
                 }
             } else {
                 items(tagList.size) { position ->
                     SingleTag(
                         tag = tagList[position].name,
-                        onTagRemove = { onTagRemove(position) }
+                        onTagClick = { onTagClick(position) },
+                        selected = tagList[position].enabled
                     )
                 }
             }
@@ -138,7 +141,8 @@ private fun TagListPart(
 @Composable
 private fun SingleTag(
     tag: String = "",
-    onTagRemove: () -> Unit
+    selected: Boolean,
+    onTagClick: () -> Unit,
 ) {
     Row(
         verticalAlignment = Alignment.Top,
@@ -151,15 +155,22 @@ private fun SingleTag(
                 style = MaterialTheme.typography.bodyMedium
             )
         } else {
-            InputChip(
-                selected = true,
-                onClick = { onTagRemove() },
+            FilterChip(
+                selected = selected,
+                onClick = { onTagClick() },
                 label = { Text(text = tag) },
-                avatar =  {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_clear),
-                        contentDescription = "Delete tag $tag" // TODO: to put in string.xml
-                    )
+                leadingIcon =  {
+                    if (selected) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_check),
+                            contentDescription = null,
+                        )
+                    } else {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_clear),
+                            contentDescription = "Delete tag $tag" // TODO: to put in string.xml
+                        )
+                    }
                 }
             )
         }
@@ -168,7 +179,7 @@ private fun SingleTag(
 
 @Composable
 private fun TagListFilter(
-    filteredTagList: List<Tag>,
+    filteredTagList: List<TagEntry>,
     onSelectTag: (String) -> Unit,
     showDropdownMenu: Boolean,
 ) {

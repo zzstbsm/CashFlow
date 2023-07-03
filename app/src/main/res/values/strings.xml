@@ -96,6 +96,7 @@
     <!-- WalletEdit page -->
     <string name="WalletEdit_creation_date">Creation date</string>
     <string name="WalletEdit_error_wallet_name_already_in_use">Wallet name already in use</string>
+    <string name="WalletEdit_error_wallet_name_not_valid">Wallet name not valid</string>
     <string name="WalletEdit_initial_amount">Initial amount</string>
     <string name="WalletEdit_name">Wallet name</string>
     <string name="WalletEdit_last_access">Last access</string>
