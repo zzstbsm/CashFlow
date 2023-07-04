@@ -20,8 +20,21 @@ import java.util.*
 
 private const val DATABASE_NAME = "Registry_DB"
 
-class DatabaseRepository private constructor(
+fun databaseRepositoryInitializer(
     context: Context,
+): RegisterDatabase {
+    return Room.databaseBuilder(
+        context.applicationContext,
+        RegisterDatabase::class.java,
+        DATABASE_NAME
+    )
+    //.addMigrations(migration_1_2, migration_2_3)
+    //.addMigrations(MIGRATION_1_2)
+    .build()
+}
+
+open class DatabaseRepository(
+    registerDatabase: RegisterDatabase,
     private val coroutineScope: CoroutineScope = GlobalScope,
 ){
 
@@ -29,9 +42,9 @@ class DatabaseRepository private constructor(
 
         private var INSTANCE: DatabaseRepository? = null
 
-        fun initialize(context: Context) {
+        fun initialize(registerDatabase: RegisterDatabase) {
             if (INSTANCE == null) {
-                INSTANCE = DatabaseRepository(context)
+                INSTANCE = DatabaseRepository(registerDatabase)
             }
         }
 
@@ -41,17 +54,9 @@ class DatabaseRepository private constructor(
 
     }
 
-    private val database: RegisterDatabase = Room
-        .databaseBuilder(
-            context.applicationContext,
-            RegisterDatabase::class.java,
-            DATABASE_NAME
-        )
-        //.addMigrations(migration_1_2, migration_2_3)
-        //.addMigrations(MIGRATION_1_2)
-        .build()
+    private val database = registerDatabase
 
-
+    fun getDatabase(): RegisterDatabase = database
 
     /* BudgetCategory Section */
     suspend fun getBudgetCategory(budgetPeriodUUID: UUID, categoryUUID: UUID): BudgetCategory?
