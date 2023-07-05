@@ -93,12 +93,17 @@ class WalletOverviewViewModel(
         viewModelScope.launch {
             repository.deleteWallet(uiState.value.wallet)
             _uiState.value = uiState.value.copy(
-                wallet = Wallet()
+                wallet = Wallet(),
+                isLoading = true
             )
             loadLastAccessed()
+            while (uiState.value.isLoadingWallet) {
+                delay(20)
+            }
             if (uiState.value.wallet.id == UUID(0L,0L)) {
                 _uiState.value = uiState.value.copy(
-                    ifZeroWallet = true
+                    ifZeroWallet = true,
+                    isLoading = false
                 )
             }
         }
