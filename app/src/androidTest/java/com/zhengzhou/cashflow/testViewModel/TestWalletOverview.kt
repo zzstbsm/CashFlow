@@ -137,8 +137,11 @@ class TestWalletOverview {
         val noWalletUUID = UUID(0L,0L)
 
         coroutineScope.launch {
+<<<<<<< HEAD
 
             delay(20)
+=======
+>>>>>>> origin/master
             repository.addWallet(wallet1)
             repository.addWallet(wallet2)
             setExpectedUiState(wallet2)
@@ -299,9 +302,12 @@ class TestWalletOverview {
         val coroutineScope = CoroutineScope(Dispatchers.Default)
 
         coroutineScope.launch {
+<<<<<<< HEAD
 
             delay(1000)
 
+=======
+>>>>>>> origin/master
             repository.addWallet(wallet1)
             repository.addWallet(wallet2)
             repository.addWallet(wallet3)
