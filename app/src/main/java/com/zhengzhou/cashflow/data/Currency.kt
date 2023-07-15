@@ -11,18 +11,19 @@ enum class Currency(
     @StringRes val nameCurrency: Int,
     val iconEmojiUnicode: String,
 ) {
+
+    EUR(
+        locale = Locale.ITALY,
+        abbreviation = "EUR",
+        nameCurrency = R.string.currency_eur_name,
+        iconEmojiUnicode = "\uD83C\uDDEA\uD83C\uDDFA"
+    );
+    /*
     USA(
         locale = Locale.US,
         abbreviation = "USD",
         nameCurrency = R.string.currency_usd_name,
         iconEmojiUnicode = "\uD83C\uDDFA\uD83C\uDDF8",
-    ),
-
-    EUR(
-        locale = Locale.ITALY,
-        abbreviation = "EUR",
-        nameCurrency = R.string.currency_usd_name,
-        iconEmojiUnicode = "\uD83C\uDDEA\uD83C\uDDFA"
     ),
 
     SEK(
@@ -31,6 +32,7 @@ enum class Currency(
         nameCurrency = R.string.currency_sek_name,
         iconEmojiUnicode = "\uD83C\uDDF8\uD83C\uDDEA"
     );
+     */
 
     companion object {
         fun supportedCurrencyList() : List<Currency> {
