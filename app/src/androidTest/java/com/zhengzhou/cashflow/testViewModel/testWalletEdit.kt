@@ -5,7 +5,6 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.zhengzhou.cashflow.DatabaseRepositoryTest
-import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.databaseRepositoryInitializerTest
 import com.zhengzhou.cashflow.ui.walletEdit.WalletEditUiState
@@ -15,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.junit.After
-import org.junit.Assert.assertTrue
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -76,11 +75,10 @@ class TestWalletEdit() {
                 wallet = wallet,
         )
     }
-
-    fun assertSameWallet(expected: Wallet, result: Wallet) {
-        assertTrue(result.name == expected.name)
-        assertTrue(result.startAmount == expected.startAmount)
-        assertTrue(result.currency == expected.currency)
+    private fun assertSameWallet(expected: Wallet, result: Wallet) {
+        assertEquals(expected.name,result.name)
+        assertEquals(expected.startAmount,result.startAmount)
+        assertEquals(expected.currency,result.currency)
     }
 
     @After

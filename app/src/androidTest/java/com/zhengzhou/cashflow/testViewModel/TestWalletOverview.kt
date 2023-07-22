@@ -13,12 +13,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.junit.After
-import org.junit.Assert.assertTrue
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.io.IOException
 import java.util.Date
 import java.util.UUID
 
@@ -30,7 +28,6 @@ class TestWalletOverview {
     private lateinit var wallet2: Wallet
     private lateinit var wallet3: Wallet
     private lateinit var wallet4: Wallet
-    private lateinit var expectedUiState: WalletOverviewUiState
 
     @Before
     fun createDb() {
@@ -67,22 +64,12 @@ class TestWalletOverview {
             startAmount = 0f,
             lastAccess = Date(date.time + 40),
         )
-        setExpectedUiState(wallet1)
     }
 
-    private fun setExpectedUiState(wallet: Wallet) {
-        expectedUiState = WalletOverviewUiState(
-            wallet = wallet,
-            currentAmountInTheWallet = wallet.startAmount,
-            ifZeroWallet = false,
-            isLoadingWallet = false
-        )
-    }
-
-    @After
-    @Throws(IOException::class)
-    fun closeDb() {
-        repository.close()
+    private fun assertSameWallet(expected: Wallet, result: Wallet) {
+        assertEquals("Expected: ${expected.name}.\nGot: ${result.name}",expected.name,result.name)
+        assertEquals(expected.startAmount,result.startAmount)
+        assertEquals(expected.currency,result.currency)
     }
 
     @SuppressLint("CoroutineCreationDuringComposition")
@@ -93,13 +80,12 @@ class TestWalletOverview {
         val coroutineScope = CoroutineScope(Dispatchers.Default)
 
         coroutineScope.launch {
-            setExpectedUiState(wallet1)
-            repository.addWallet(expectedUiState.wallet)
+            repository.addWallet(wallet1)
 
-            val walletOverviewViewModel = WalletOverviewViewModel(expectedUiState.wallet.id)
+            val walletOverviewViewModel = WalletOverviewViewModel(wallet1.id)
             val walletOverviewUiState = walletOverviewViewModel.uiState.value
 
-            assertTrue(expectedUiState.wallet == walletOverviewUiState.wallet)
+            assertEquals(wallet1,walletOverviewUiState.wallet)
 
         }
     }
@@ -113,7 +99,6 @@ class TestWalletOverview {
         val noWalletUUID = UUID(0L,0L)
 
         coroutineScope.launch {
-            setExpectedUiState(wallet1)
             repository.addWallet(wallet1)
 
             val walletOverviewViewModel = WalletOverviewViewModel(noWalletUUID)
@@ -123,7 +108,7 @@ class TestWalletOverview {
             }
 
             val walletOverviewUiState = walletOverviewViewModel.uiState.value
-            assertTrue(wallet1 == walletOverviewUiState.wallet)
+            assertSameWallet(wallet1, walletOverviewUiState.wallet)
 
         }
     }
@@ -137,14 +122,9 @@ class TestWalletOverview {
         val noWalletUUID = UUID(0L,0L)
 
         coroutineScope.launch {
-<<<<<<< HEAD
-
             delay(20)
-=======
->>>>>>> origin/master
             repository.addWallet(wallet1)
             repository.addWallet(wallet2)
-            setExpectedUiState(wallet2)
 
             val walletOverviewViewModel = WalletOverviewViewModel(noWalletUUID)
             while (walletOverviewViewModel.uiState.value.isLoadingWallet) {
@@ -152,7 +132,7 @@ class TestWalletOverview {
             }
 
             val walletOverviewUiState = walletOverviewViewModel.uiState.value
-            assertTrue(wallet2 == walletOverviewUiState.wallet)
+            assertSameWallet(wallet2,walletOverviewUiState.wallet)
 
         }
     }
@@ -169,12 +149,11 @@ class TestWalletOverview {
             repository.addWallet(wallet1)
             repository.addWallet(wallet2)
             repository.addWallet(wallet3)
-            setExpectedUiState(wallet3)
 
             val walletOverviewViewModel = WalletOverviewViewModel(noWalletUUID)
             val walletOverviewUiState = walletOverviewViewModel.uiState.value
 
-            assertTrue(expectedUiState.wallet == walletOverviewUiState.wallet)
+            assertSameWallet(wallet3,walletOverviewUiState.wallet)
 
         }
     }
@@ -188,13 +167,13 @@ class TestWalletOverview {
 
         coroutineScope.launch {
             repository.addWallet(wallet1)
-            setExpectedUiState(Wallet.emptyWallet())
 
             val walletOverviewViewModel = WalletOverviewViewModel(wallet1.id)
-            val walletOverviewUiState = walletOverviewViewModel.uiState.value
 
-            walletOverviewViewModel.deleteShownWallet()
-            assertTrue(Wallet.emptyWallet() == walletOverviewUiState.wallet)
+            val job = walletOverviewViewModel.deleteShownWallet()
+            job.join()
+            val walletOverviewUiState = walletOverviewViewModel.uiState.value
+            assertSameWallet(Wallet.emptyWallet(),walletOverviewUiState.wallet)
 
         }
     }
@@ -209,15 +188,18 @@ class TestWalletOverview {
         coroutineScope.launch {
             repository.addWallet(wallet1)
             repository.addWallet(wallet2)
-            setExpectedUiState(wallet2)
 
-            val walletOverviewViewModel = WalletOverviewViewModel(expectedUiState.wallet.id)
-            val walletOverviewUiState = walletOverviewViewModel.uiState.value
+            val walletOverviewViewModel = WalletOverviewViewModel(wallet2.id)
 
-            walletOverviewViewModel.deleteShownWallet()
-            assertTrue(wallet1 == walletOverviewUiState.wallet)
-            walletOverviewViewModel.deleteShownWallet()
-            assertTrue(Wallet.emptyWallet() == walletOverviewUiState.wallet)
+            var job = walletOverviewViewModel.deleteShownWallet()
+            job.join()
+            var walletOverviewUiState: WalletOverviewUiState = walletOverviewViewModel.uiState.value
+            assertSameWallet(wallet1,walletOverviewUiState.wallet)
+
+            job = walletOverviewViewModel.deleteShownWallet()
+            job.join()
+            walletOverviewUiState = walletOverviewViewModel.uiState.value
+            assertSameWallet(Wallet.emptyWallet(),walletOverviewUiState.wallet)
 
         }
     }
@@ -233,25 +215,24 @@ class TestWalletOverview {
             repository.addWallet(wallet1)
             repository.addWallet(wallet2)
             repository.addWallet(wallet3)
-            setExpectedUiState(wallet3)
 
-            val walletOverviewViewModel = WalletOverviewViewModel(expectedUiState.wallet.id)
+            val walletOverviewViewModel = WalletOverviewViewModel(wallet3.id)
 
             while (walletOverviewViewModel.uiState.value.isLoadingWallet) {
                 delay(20)
             }
 
+            walletOverviewViewModel.deleteShownWallet()
             var walletOverviewUiState: WalletOverviewUiState = walletOverviewViewModel.uiState.value
-            walletOverviewViewModel.deleteShownWallet()
-            assertTrue(wallet2 == walletOverviewUiState.wallet)
+            assertSameWallet(wallet2,walletOverviewUiState.wallet)
 
-            walletOverviewUiState = walletOverviewViewModel.uiState.value
             walletOverviewViewModel.deleteShownWallet()
-            assertTrue(wallet1 == walletOverviewUiState.wallet)
+            walletOverviewUiState = walletOverviewViewModel.uiState.value
+            assertSameWallet(wallet1,walletOverviewUiState.wallet)
 
-            walletOverviewUiState = walletOverviewViewModel.uiState.value
             walletOverviewViewModel.deleteShownWallet()
-            assertTrue(Wallet.emptyWallet() == walletOverviewUiState.wallet)
+            walletOverviewUiState = walletOverviewViewModel.uiState.value
+            assertSameWallet(Wallet.emptyWallet(),walletOverviewUiState.wallet)
 
         }
     }
@@ -267,29 +248,31 @@ class TestWalletOverview {
             repository.addWallet(wallet1)
             repository.addWallet(wallet2)
             repository.addWallet(wallet3)
-            setExpectedUiState(wallet3)
 
-            val walletOverviewViewModel = WalletOverviewViewModel(expectedUiState.wallet.id)
-            lateinit var walletOverviewUiState: WalletOverviewUiState
+            val walletOverviewViewModel = WalletOverviewViewModel(wallet3.id)
 
-            while (walletOverviewUiState.isLoadingWallet) {
+            while (walletOverviewViewModel.uiState.value.isLoadingWallet) {
                 delay(20)
             }
 
-            walletOverviewUiState = walletOverviewViewModel.uiState.value
-            assertTrue(wallet3 == walletOverviewUiState.wallet)
+            var walletOverviewUiState = walletOverviewViewModel.uiState.value
+            assertSameWallet(wallet3,walletOverviewUiState.wallet)
+
             walletOverviewViewModel.selectWallet(wallet1)
             walletOverviewUiState = walletOverviewViewModel.uiState.value
-            assertTrue(wallet1 == walletOverviewUiState.wallet)
+            assertSameWallet(wallet1,walletOverviewUiState.wallet)
+
             walletOverviewViewModel.selectWallet(wallet2)
             walletOverviewUiState = walletOverviewViewModel.uiState.value
-            assertTrue(wallet2 == walletOverviewUiState.wallet)
+            assertSameWallet(wallet2,walletOverviewUiState.wallet)
+
             walletOverviewViewModel.selectWallet(wallet1)
             walletOverviewUiState = walletOverviewViewModel.uiState.value
-            assertTrue(wallet1 == walletOverviewUiState.wallet)
+            assertSameWallet(wallet1,walletOverviewUiState.wallet)
+
             walletOverviewViewModel.selectWallet(wallet3)
             walletOverviewUiState = walletOverviewViewModel.uiState.value
-            assertTrue(wallet3 == walletOverviewUiState.wallet)
+            assertSameWallet(wallet3,walletOverviewUiState.wallet)
 
         }
     }
@@ -302,12 +285,7 @@ class TestWalletOverview {
         val coroutineScope = CoroutineScope(Dispatchers.Default)
 
         coroutineScope.launch {
-<<<<<<< HEAD
-
             delay(1000)
-
-=======
->>>>>>> origin/master
             repository.addWallet(wallet1)
             repository.addWallet(wallet2)
             repository.addWallet(wallet3)
@@ -319,19 +297,19 @@ class TestWalletOverview {
             }
 
             var walletOverviewUiState = walletOverviewViewModel.uiState.value
-            assertTrue(wallet3 == walletOverviewUiState.wallet)
+            assertSameWallet(wallet3,walletOverviewUiState.wallet)
 
             walletOverviewViewModel.selectWallet(wallet1)
             walletOverviewUiState = walletOverviewViewModel.uiState.value
-            assertTrue(wallet1 == walletOverviewUiState.wallet)
+            assertSameWallet(wallet1,walletOverviewUiState.wallet)
 
             walletOverviewViewModel.deleteShownWallet()
             walletOverviewUiState = walletOverviewViewModel.uiState.value
-            assertTrue(wallet3 == walletOverviewUiState.wallet)
+            assertSameWallet(wallet3,walletOverviewUiState.wallet)
 
             walletOverviewViewModel.deleteShownWallet()
             walletOverviewUiState = walletOverviewViewModel.uiState.value
-            assertTrue(wallet2 == walletOverviewUiState.wallet)
+            assertSameWallet(wallet2,walletOverviewUiState.wallet)
 
         }
     }

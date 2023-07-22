@@ -89,8 +89,8 @@ class WalletOverviewViewModel(
         retrieveTransactionJob = jobUpdateTransaction()
     }
 
-    fun deleteShownWallet() {
-        viewModelScope.launch {
+    fun deleteShownWallet(): Job {
+        return viewModelScope.launch {
             repository.deleteWallet(uiState.value.wallet)
             _uiState.value = uiState.value.copy(
                 wallet = Wallet(),
