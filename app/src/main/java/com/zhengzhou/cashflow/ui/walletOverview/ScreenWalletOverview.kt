@@ -179,8 +179,6 @@ fun WalletOverviewMainBody(
     navController: NavController,
 ) {
 
-    val walletList by walletOverviewViewModel.walletList.collectAsState()
-
     LazyColumn(
         modifier = Modifier.padding(innerPadding)
     ) {
@@ -201,7 +199,7 @@ fun WalletOverviewMainBody(
 
     SelectWalletDialog(
         toShow = walletOverviewUiState.showSelectWallet,
-        walletList = walletList,
+        walletList = walletOverviewUiState.walletList,
         onDismissDialog = {
             walletOverviewViewModel.showSelectWalletDialog(false)
         },

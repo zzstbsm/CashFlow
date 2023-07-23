@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.database.RegisterDatabase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers
 
 fun databaseRepositoryInitializerTest(
     context: Context,
@@ -21,7 +21,7 @@ fun databaseRepositoryInitializerTest(
 
 class DatabaseRepositoryTest(
     registerDatabase: RegisterDatabase,
-    private val coroutineScope: CoroutineScope = GlobalScope,
+    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
 ): DatabaseRepository(registerDatabase) {
 
     companion object {

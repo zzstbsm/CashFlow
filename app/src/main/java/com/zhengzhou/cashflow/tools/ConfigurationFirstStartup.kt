@@ -13,9 +13,9 @@ class ConfigurationFirstStartup {
 
     companion object {
 
-        suspend fun configureTableCategory() {
-
-            val repository = DatabaseRepository.get()
+        suspend fun configureTableCategory(
+            repository: DatabaseRepository = DatabaseRepository.get()
+        ) {
 
             setDefaultExpenseCategories().forEach {category: Category ->
                 Log.d(TAG,"Adding ${category.name}")
@@ -32,7 +32,7 @@ class ConfigurationFirstStartup {
 
         }
 
-        private fun setDefaultExpenseCategories(): MutableList<Category> {
+        fun setDefaultExpenseCategories(): MutableList<Category> {
 
             return mutableListOf(
                 Category(
@@ -68,7 +68,7 @@ class ConfigurationFirstStartup {
             )
         }
 
-        private fun setDefaultDepositCategories(): MutableList<Category>{
+        fun setDefaultDepositCategories(): MutableList<Category>{
             return mutableListOf(
                 Category(
                     id = UUID(1L,1L),
@@ -79,7 +79,7 @@ class ConfigurationFirstStartup {
             )
         }
 
-        private fun setDefaultMovementCategories(): MutableList<Category>{
+        fun setDefaultMovementCategories(): MutableList<Category>{
             return mutableListOf(
                 Category(
                     id = UUID(2L,1L),
