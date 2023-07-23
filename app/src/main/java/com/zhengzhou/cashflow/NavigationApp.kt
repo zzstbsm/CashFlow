@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.ui.balance.BalanceScreen
+import com.zhengzhou.cashflow.ui.manageCategories.ManageCategoriesScreen
 import com.zhengzhou.cashflow.ui.profile.ProfileScreen
 import com.zhengzhou.cashflow.ui.transactionEdit.TransactionEditScreen
 import com.zhengzhou.cashflow.ui.transactionReport.TransactionReportScreen
@@ -32,6 +33,15 @@ fun NavigationApp() {
     NavHost(navController, startDestination = startDestination) {
         composable(route = Screen.Balance.route) {
             BalanceScreen(
+                currentScreen = currentScreen,
+                setCurrentScreen = { screen ->
+                    currentScreen = screen
+                },
+                navController = navController,
+            )
+        }
+        composable(route = Screen.ManageCategories.route) {
+            ManageCategoriesScreen(
                 currentScreen = currentScreen,
                 setCurrentScreen = { screen ->
                     currentScreen = screen
@@ -140,6 +150,13 @@ enum class NavigationCurrentScreen(
         navBarActive = true,
         bottomActive = true,
     ),
+    ManageCategories(
+        iconId = R.drawable.ic_category,
+        optionName = R.string.nav_name_manage_categories,
+        accessibilityText = R.string.nav_name_manage_categories,
+        route = "ManageCategories",
+        navBarActive = true,
+    ),
     Profile(
         iconId = R.drawable.ic_account,
         optionName = R.string.nav_name_profile,
@@ -193,6 +210,10 @@ sealed class Screen(
     object Balance: Screen(
         route = NavigationCurrentScreen.Balance.route,
         screenEnum = NavigationCurrentScreen.Balance,
+    )
+    object ManageCategories: Screen(
+        route = NavigationCurrentScreen.ManageCategories.route,
+        screenEnum = NavigationCurrentScreen.ManageCategories,
     )
     object Profile: Screen(
         route = NavigationCurrentScreen.Profile.route,
