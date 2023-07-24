@@ -100,6 +100,7 @@ class TestWalletEdit() {
             repository.addWallet(expectedUiState.wallet)
 
             val walletEditViewModel = WalletEditViewModel(newWallet)
+            while (walletEditViewModel.uiState.value.isLoading) delay(5)
             val walletOverviewUiState = walletEditViewModel.uiState.value
 
             assertSameWallet(Wallet(),walletOverviewUiState.wallet)
@@ -119,10 +120,7 @@ class TestWalletEdit() {
             repository.addWallet(wallet1)
 
             val walletEditViewModel = WalletEditViewModel(wallet1.id)
-
-            while (walletEditViewModel.uiState.value.isLoading) {
-                delay(20)
-            }
+            while (walletEditViewModel.uiState.value.isLoading) delay(5)
 
             val walletOverviewUiState = walletEditViewModel.uiState.value
             assertSameWallet(wallet1,walletOverviewUiState.wallet)
