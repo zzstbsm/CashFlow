@@ -11,7 +11,6 @@ import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.Calculator
-import com.zhengzhou.cashflow.tools.ConfigurationFirstStartup
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.KeypadDigit
 import kotlinx.coroutines.Dispatchers
@@ -169,10 +168,6 @@ class WalletEditViewModel(
             // Handle the initialization of the budget per category
             repository.getCategoryList().collect { categoryList ->
 
-                if (categoryList.isEmpty()) {
-                    // TODO: should be removed in production since it should be handled somewhere else
-                    ConfigurationFirstStartup.configureTableCategory()
-                }
                 val categoryListExpenses = categoryList.filter {category ->
                     category.transactionTypeId == TransactionType.Expense.id
                 }

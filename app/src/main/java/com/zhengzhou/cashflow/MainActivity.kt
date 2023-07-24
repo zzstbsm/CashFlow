@@ -1,5 +1,6 @@
 package com.zhengzhou.cashflow
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -7,15 +8,30 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.Observer
+import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.ApplicationConfigurationService
+import com.zhengzhou.cashflow.tools.ConfigurationFirstStartup
 import com.zhengzhou.cashflow.tools.EventMessages
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent{
+
+            val repository = DatabaseRepository.get()
+            val coroutineScope = CoroutineScope(Dispatchers.Default)
+            coroutineScope.launch {
+                repository.getCategoryList().collect {
+                    if (it.isEmpty())
+                        ConfigurationFirstStartup.configureTableCategory()
+                }
+            }
+
             MaterialTheme {
                 NavigationApp()
             }
