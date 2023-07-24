@@ -37,31 +37,31 @@ class ConfigurationFirstStartup {
             return mutableListOf(
                 Category(
                     id = UUID(0L,1L),
-                    name = R.string.food,
+                    name = "Food",
                     idIcon = R.drawable.ic_food,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID(0L,2L),
-                    name = R.string.health,
+                    name = "Health",
                     idIcon = R.drawable.ic_health,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID(0L,3L),
-                    name = R.string.transportation,
+                    name = "Transportation",
                     idIcon = R.drawable.ic_transportation,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID(0L,4L),
-                    name = R.string.travel,
+                    name = "Travel",
                     idIcon = R.drawable.ic_travel,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID(0L,5L),
-                    name = R.string.home,
+                    name = "Home",
                     idIcon = R.drawable.ic_home,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
@@ -72,7 +72,7 @@ class ConfigurationFirstStartup {
             return mutableListOf(
                 Category(
                     id = UUID(1L,1L),
-                    name = R.string.salary,
+                    name = "Salary",
                     idIcon = R.drawable.ic_arrow_double_up,
                     transactionTypeId = TransactionType.Deposit.id
                 ),
@@ -83,7 +83,7 @@ class ConfigurationFirstStartup {
             return mutableListOf(
                 Category(
                     id = UUID(2L,1L),
-                    name = R.string.move,
+                    name = "Movement",
                     idIcon = R.drawable.ic_transfer,
                     transactionTypeId = TransactionType.Move.id
                 ),

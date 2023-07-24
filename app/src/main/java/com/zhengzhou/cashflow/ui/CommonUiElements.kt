@@ -316,7 +316,7 @@ fun SectionTransactionEntry(
                 painter = painterResource(
                     id = category.idIcon
                 ),
-                contentDescription = stringResource(id = category.name), //TODO add description
+                contentDescription = category.name, //TODO add description
                 modifier = modifier
                     .size(54.dp)
                     .align(Alignment.CenterVertically)
@@ -329,7 +329,7 @@ fun SectionTransactionEntry(
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     Text(
-                        text = stringResource(id = category.name),
+                        text = category.name,
                         style = firstLineStyle,
                         textAlign = TextAlign.Start,
                         modifier = modifier.weight(1f)

@@ -1,12 +1,16 @@
 <resources>
     <string name="app_name">Cash Flow</string>
 
+    <!-- Generic strings -->
+    <string name="name">Name</string>
+    <string name="save">Save</string>
+    <string name="undo">Undo</string>
+
     <!-- Navigation pages -->
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="from">From</string>
     <string name="no">No</string>
-    <string name="save">Save</string>
     <string name="to">To</string>
     <string name="yes">Yes</string>
     <string name="nav_back">Go back</string>
@@ -23,11 +27,14 @@
     <string name="nav_name_wallet_delete">Delete wallet</string>
 
     <!-- Accessibility strings -->
+    <string name="accessibility_add_category">Add category</string>
+    <string name="accessibility_close_category">Close category</string>
     <string name="accessibility_menu_navbar">Navigation bar</string>
     <string name="accessibility_menu_navbar_balance">Balance</string>
     <string name="accessibility_menu_navbar_overview">Overview</string>
     <string name="accessibility_menu_navbar_profile">Profile</string>
     <string name="accessibility_menu_action_open">Open menu</string>
+    <string name="accessibility_open_category">Open category</string>
     <string name="accessibility_transaction_new">New transaction</string>
 
     <string name="wallet">Wallet</string>

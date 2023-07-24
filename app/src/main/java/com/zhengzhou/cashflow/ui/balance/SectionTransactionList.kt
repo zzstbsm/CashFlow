@@ -35,7 +35,7 @@ fun TransactionEntry(
 
     if (category.id == UUID(0L,0L)) {
         category = Category(
-            name = R.string.no_category,
+            name = stringResource(id = R.string.no_category),
             idIcon = R.drawable.ic_clear
         )
     }
@@ -79,7 +79,7 @@ fun TransactionEntry(
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     Text(
-                        text = stringResource(id = category.name),
+                        text = category.name,
                         style = firstLineStyle,
                         textAlign = TextAlign.Start,
                         modifier = Modifier.weight(1f)

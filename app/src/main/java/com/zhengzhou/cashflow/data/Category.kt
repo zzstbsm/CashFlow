@@ -11,7 +11,7 @@ import java.util.*
 @Entity(tableName = "category")
 data class Category (
     @PrimaryKey val id: UUID = UUID(0L,0L),
-    @StringRes var name: Int = R.string.loading,
+    var name: String = "",
     @ColumnInfo(name = "id_icon")
     @DrawableRes val idIcon: Int = R.drawable.ic_error,
     @ColumnInfo(name = "movement_type_id")

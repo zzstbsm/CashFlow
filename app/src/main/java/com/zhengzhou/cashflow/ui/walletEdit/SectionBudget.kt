@@ -201,7 +201,7 @@ private fun CategoryBoxToSet(
                 modifier = Modifier.size(32.dp)
             )
             Text(
-                text = stringResource(id = category.name),
+                text = category.name,
                 style = MaterialTheme.typography.labelSmall,
                 maxLines = 1,
             )
