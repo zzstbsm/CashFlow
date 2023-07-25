@@ -18,7 +18,7 @@ data class Category (
 )
 
 val listIconsId: List<Int> = listOf(
-    R.drawable.ic_food,
+    R.drawable.ic_grocery,
     R.drawable.ic_health,
     R.drawable.ic_sport,
     R.drawable.ic_card,
@@ -30,4 +30,11 @@ val listIconsId: List<Int> = listOf(
     R.drawable.ic_wallet,
     R.drawable.ic_arrow_double_up,
     R.drawable.ic_trending_up,
+    R.drawable.ic_subscriptions,
+    R.drawable.ic_eating_out,
+    R.drawable.ic_phone,
+    R.drawable.ic_entertainment,
+    R.drawable.ic_gift,
+    R.drawable.ic_phone,
+    R.drawable.ic_trash,
 )
