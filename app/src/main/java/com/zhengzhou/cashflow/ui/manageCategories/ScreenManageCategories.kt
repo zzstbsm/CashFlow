@@ -49,7 +49,7 @@ import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
-import com.zhengzhou.cashflow.data.listCategoriesIconsId
+import com.zhengzhou.cashflow.tools.mapIconsFromName
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.ui.SectionTopAppBar
@@ -208,7 +208,7 @@ private fun CategoryEntry(
         mutableStateOf(category.name)
     }
     var newCategoryIcon by remember {
-        mutableIntStateOf(category.idIcon)
+        mutableStateOf(category.iconName)
     }
 
     Card(
@@ -231,7 +231,7 @@ private fun CategoryEntry(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    painter = painterResource(id = category.idIcon),
+                    painter = painterResource(id = mapIconsFromName[category.iconName]!!),
                     contentDescription = category.name,
                     modifier = Modifier
                         .padding(8.dp)
@@ -248,7 +248,7 @@ private fun CategoryEntry(
                     val toReturnCategory = if (ifOpen) null else category
                     onOpenCategory(toReturnCategory)
                     if (toReturnCategory != null) {
-                        newCategoryIcon = toReturnCategory.idIcon
+                        newCategoryIcon = toReturnCategory.iconName
                         newCategoryName = toReturnCategory.name
                     }
                 }
@@ -309,12 +309,12 @@ private fun CategoryEntry(
                     },
                     onUndoClick = {
                         newCategoryName = category.name
-                        newCategoryIcon = category.idIcon
+                        newCategoryIcon = category.iconName
                     },
                     onSaveClick = {
                         val newCategory = category.copy(
                             name = newCategoryName,
-                            idIcon = newCategoryIcon,
+                            iconName = newCategoryIcon,
                         )
                         onSaveNewCategory(newCategory)
                     }
@@ -327,8 +327,8 @@ private fun CategoryEntry(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ChooseCategoryIcon(
-    currentIcon: Int,
-    onChooseIcon: (Int) -> Unit,
+    currentIcon: String,
+    onChooseIcon: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -342,7 +342,7 @@ private fun ChooseCategoryIcon(
         modifier = modifier,
     ) {
         Icon(
-            painter = painterResource(id = currentIcon),
+            painter = painterResource(id = mapIconsFromName[currentIcon]!!),
             contentDescription = null,
             modifier = Modifier.size(40.dp)
         )
@@ -360,24 +360,25 @@ private fun ChooseCategoryIcon(
                 )
 
                 LazyVerticalGrid(columns = GridCells.Fixed(3)) {
-                    items(listCategoriesIconsId.size) { position ->
-                        val currentIconInGrid = listCategoriesIconsId[position]
-                        OutlinedButton(
-                            enabled = currentIconInGrid != currentIcon,
-                            onClick = {
-                                onChooseIcon(currentIconInGrid)
-                                showDialog = false
-                            },
-                            shape = RoundedCornerShape(8.dp),
-                            modifier= Modifier
-                                .fillMaxWidth()
-                                .padding(4.dp),
-                        ) {
-                            Icon(
-                                painter = painterResource(id = currentIconInGrid),
-                                contentDescription = null,
-                                modifier = Modifier.size(32.dp)
-                            )
+                    mapIconsFromName.forEach { (iconName, resourceId) ->
+                        item {
+                            OutlinedButton(
+                                enabled = iconName != currentIcon,
+                                onClick = {
+                                    onChooseIcon(iconName)
+                                    showDialog = false
+                                },
+                                shape = RoundedCornerShape(8.dp),
+                                modifier= Modifier
+                                    .fillMaxWidth()
+                                    .padding(4.dp),
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = resourceId),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(32.dp)
+                                )
+                            }
                         }
                     }
                 }

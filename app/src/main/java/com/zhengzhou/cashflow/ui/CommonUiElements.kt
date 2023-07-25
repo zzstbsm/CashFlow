@@ -1,7 +1,6 @@
 package com.zhengzhou.cashflow.ui
 
 import android.text.format.DateFormat
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,9 +37,9 @@ import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Transaction
-import com.zhengzhou.cashflow.tools.Calculator
 import com.zhengzhou.cashflow.tools.KeypadDigit
 import com.zhengzhou.cashflow.tools.mapCharToKeypadDigit
+import com.zhengzhou.cashflow.tools.mapIconsFromName
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Date
@@ -314,7 +313,7 @@ fun SectionTransactionEntry(
         ) {
             Icon(
                 painter = painterResource(
-                    id = category.idIcon
+                    id = mapIconsFromName[category.iconName]!!
                 ),
                 contentDescription = category.name, //TODO add description
                 modifier = modifier

@@ -255,7 +255,7 @@ class TransactionEditViewModel(
                 currentTagList = currentTagList,
 
                 walletList = walletList,
-                categoryList = categoryList,
+                categoryList = categoryList.sortedBy { it.name },
                 tagListInDB = tagListInDB,
 
                 amountString = calculator.onScreenString()

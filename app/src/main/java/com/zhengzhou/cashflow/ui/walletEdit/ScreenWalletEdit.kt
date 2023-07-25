@@ -2,6 +2,9 @@ package com.zhengzhou.cashflow.ui.walletEdit
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -9,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
@@ -24,6 +28,7 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.tools.EventMessages
+import com.zhengzhou.cashflow.tools.mapIconsFromName
 import com.zhengzhou.cashflow.ui.DateSelector
 import com.zhengzhou.cashflow.ui.MoneyTextField
 import java.util.UUID
@@ -146,7 +151,6 @@ private fun WalletEditTopAppBar(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletEditMainBody(
     walletEditUiState: WalletEditUiState,
@@ -162,11 +166,26 @@ fun WalletEditMainBody(
         modifier = Modifier.padding(innerPadding),
     ) {
 
-        TextWalletName(
-            walletEditUiState = walletEditUiState,
-            walletEditViewModel = walletEditViewModel,
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.Bottom,
             modifier = modifier,
-        )
+        ) {
+            TextWalletIcon(
+                walletEditUiState = walletEditUiState,
+                walletEditViewModel = walletEditViewModel,
+                modifier = Modifier
+                    .padding(horizontal = 4.dp)
+                    .weight(1f)
+            )
+            TextWalletName(
+                walletEditUiState = walletEditUiState,
+                walletEditViewModel = walletEditViewModel,
+                modifier = Modifier
+                    .padding(horizontal = 4.dp)
+                    .weight(3f),
+            )
+        }
         MoneyTextField(
             label = stringResource(id = R.string.WalletEdit_initial_amount),
             amountOnScreen = walletEditViewModel.getOnScreenString(),
@@ -238,6 +257,7 @@ private fun TextWalletName(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TextWalletIcon(
     walletEditUiState: WalletEditUiState,
@@ -245,6 +265,59 @@ private fun TextWalletIcon(
     modifier: Modifier = Modifier,
 ) {
 
+    val currentIcon = walletEditUiState.wallet.iconName
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+
+    OutlinedButton(
+        onClick = { showDialog = true },
+        shape = RoundedCornerShape(4.dp),
+        modifier = modifier,
+    ) {
+        Icon(
+            painter = painterResource(id = mapIconsFromName[currentIcon]!!),
+            contentDescription = null,
+            modifier = Modifier.size(40.dp)
+        )
+    }
+
+    if (showDialog) {
+        AlertDialog(onDismissRequest = { showDialog = false }) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(id = R.string.ManageCategories_choose_category_icon),
+                    modifier = Modifier.padding(8.dp)
+                )
+                LazyVerticalGrid(columns = GridCells.Fixed(3)) {
+                    mapIconsFromName.forEach { (iconName, resourceId) ->
+                        item {
+                            OutlinedButton(
+                                enabled = iconName != currentIcon,
+                                onClick = {
+                                    walletEditViewModel.updateWalletIcon(iconName = iconName)
+                                    showDialog = false
+                                },
+                                shape = RoundedCornerShape(8.dp),
+                                modifier= Modifier
+                                    .fillMaxWidth()
+                                    .padding(4.dp),
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = resourceId),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(32.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable

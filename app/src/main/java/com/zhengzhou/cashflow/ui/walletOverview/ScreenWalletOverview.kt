@@ -24,6 +24,7 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.tools.mapIconsFromName
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.ui.SectionTopAppBar
@@ -429,7 +430,7 @@ private fun SelectWalletDialog(
                                     .padding(8.dp),
                             ) {
                                 Icon(
-                                    painter = painterResource(id = wallet.iconId),
+                                    painter = painterResource(id = mapIconsFromName[wallet.iconName]!!),
                                     contentDescription = null,
                                     modifier = Modifier
                                         .size(32.dp)

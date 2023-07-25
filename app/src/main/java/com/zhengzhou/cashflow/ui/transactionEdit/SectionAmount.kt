@@ -21,6 +21,7 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.tools.KeypadDigit
 import com.zhengzhou.cashflow.tools.KeypadDigitButton
+import com.zhengzhou.cashflow.tools.mapIconsFromName
 
 @Composable
 fun AmountTextSection(
@@ -65,7 +66,7 @@ fun AmountTextSection(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
-                            painter = painterResource(id = wallet.iconId),
+                            painter = painterResource(id = mapIconsFromName[wallet.iconName]!!),
                             contentDescription = null, // TODO: Add content description
                             modifier = modifier.size(24.dp)
                         )
@@ -83,7 +84,7 @@ fun AmountTextSection(
                         DropdownMenuItem(
                             leadingIcon = {
                                 Icon(
-                                    painter = painterResource(id = walletInList.iconId),
+                                    painter = painterResource(id = mapIconsFromName[walletInList.iconName]!!),
                                     contentDescription = walletInList.name
                                 )
                             },

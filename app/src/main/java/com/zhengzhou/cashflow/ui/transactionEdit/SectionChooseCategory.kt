@@ -9,11 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.data.Category
-import com.zhengzhou.cashflow.ui.transactionEdit.TransactionEditUiState
-import com.zhengzhou.cashflow.ui.transactionEdit.TransactionEditViewModel
+import com.zhengzhou.cashflow.tools.mapIconsFromName
 import java.util.UUID
 
 @Composable
@@ -77,7 +75,7 @@ private fun ChooseCategoryButton(
         verticalArrangement = Arrangement.Center,
     ) {
         Icon(
-            painter = painterResource(id = category.idIcon),
+            painter = painterResource(id = mapIconsFromName[category.iconName]!!),
             contentDescription = null, // TODO: add content description
             modifier = Modifier.size(32.dp)
         )

@@ -18,7 +18,7 @@ data class Wallet(
     @ColumnInfo(name = "start_amount")
     val startAmount: Float = 0f,
     @ColumnInfo(name = "icon_id")
-    @DrawableRes val iconId: Int = R.drawable.ic_wallet,
+    val iconName: String = "wallet",
     val currency: Currency = Currency.EUR,
     @ColumnInfo(name = "creation_date")
     val creationDate: Date = Date(),
@@ -34,7 +34,7 @@ data class Wallet(
                 id = UUID(0L,0L),
                 // TODO: next line to remove after the implementation of EditWalletScreen
                 startAmount = 0f,
-                iconId = R.drawable.ic_wallet,
+                iconName = "wallet",
             )
         }
 

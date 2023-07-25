@@ -15,6 +15,7 @@ import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.KeypadDigit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,27 +33,6 @@ data class WalletEditUiState(
     val budgetPeriod: BudgetPeriod = BudgetPeriod(),
     val groupCategoryAndBudgetList: List<GroupCategoryAndBudget> = listOf(),
 ) {
-
-    fun updateWalletName(
-        name : String,
-    ) : WalletEditUiState{
-        return this.copy(
-            wallet = this.wallet.copy(
-                name = name
-            )
-        )
-    }
-
-    fun updateWalletAmount(
-        amount: Float,
-    ) : WalletEditUiState{
-        return this.copy(
-            wallet = this.wallet.copy(
-                startAmount = amount
-            )
-        )
-    }
-
     fun updateWalletCreationDate(
         creationDate: Date,
     ) : WalletEditUiState{
@@ -119,6 +99,8 @@ class WalletEditViewModel(
 
     private var _newWallet = true
     private var _budgetEnabledWhenLoaded: Boolean = false
+
+    private var writingOnUiState: Boolean = false
 
     private var _walletListName = MutableStateFlow(listOf<String>())
     val walletListName: StateFlow<List<String>> = _walletListName.asStateFlow()
@@ -211,6 +193,34 @@ class WalletEditViewModel(
         }
     }
 
+    private fun setUiState(
+        isLoading: Boolean? = null,
+
+        isErrorWalletNameInUse: Boolean? = null,
+        isErrorWalletNameNotValid: Boolean? = null,
+
+        wallet: Wallet? = null,
+        budgetPeriod: BudgetPeriod? = null,
+        groupCategoryAndBudgetList: List<GroupCategoryAndBudget>? = null,
+    ) {
+        viewModelScope.launch {
+            while (writingOnUiState) delay(5)
+            writingOnUiState = true
+
+            _uiState.value = WalletEditUiState(
+                isLoading = isLoading ?: uiState.value.isLoading,
+                isErrorWalletNameInUse = isErrorWalletNameInUse ?: uiState.value.isErrorWalletNameInUse,
+                isErrorWalletNameNotValid = isErrorWalletNameNotValid ?: uiState.value.isErrorWalletNameNotValid,
+                wallet = wallet ?: uiState.value.wallet,
+                budgetPeriod = budgetPeriod ?: uiState.value.budgetPeriod,
+                groupCategoryAndBudgetList = groupCategoryAndBudgetList ?: uiState.value.groupCategoryAndBudgetList
+            )
+
+            writingOnUiState = false
+        }
+    }
+
+
     fun getOnScreenString() : String {
         return calculator.onScreenString()
     }
@@ -234,20 +244,31 @@ class WalletEditViewModel(
             tempName = tempName.dropLast(1)
         }
 
-        _uiState.value = uiState.value.copy(
+        setUiState(
             isErrorWalletNameInUse = checkedName in walletListName.value,
-            isErrorWalletNameNotValid = tempName.isEmpty()
+            isErrorWalletNameNotValid = tempName.isEmpty(),
+
+            wallet = uiState.value.wallet.copy(
+                name = name
+            )
         )
-        _uiState.value = uiState.value.updateWalletName(name)
     }
 
     fun updateWalletAmount(amount: Float) {
-        _uiState.value = uiState.value.updateWalletAmount(amount)
+        setUiState(
+            wallet = uiState.value.wallet.copy(
+                startAmount = amount
+            )
+        )
     }
 
     fun updateWalletCreationDate(millis: Long?) {
         if (millis != null) {
-            _uiState.value = uiState.value.updateWalletCreationDate(Date(millis))
+            setUiState(
+                wallet = uiState.value.wallet.copy(
+                    creationDate = Date(millis)
+                )
+            )
         }
     }
 
@@ -268,8 +289,17 @@ class WalletEditViewModel(
     }
 
     fun updateWalletCurrency(currency: Currency) {
-        _uiState.value = uiState.value.updateWalletCurrency(
-            currency = currency
+        setUiState(
+            wallet = uiState.value.wallet.copy(
+                currency = currency
+            )
+        )
+    }
+    fun updateWalletIcon(iconName: String) {
+        setUiState(
+            wallet = uiState.value.wallet.copy(
+                iconName = iconName
+            )
         )
     }
 

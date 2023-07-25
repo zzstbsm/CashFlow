@@ -1,7 +1,6 @@
 package com.zhengzhou.cashflow.tools
 
 import android.util.Log
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.database.DatabaseRepository
@@ -38,55 +37,55 @@ class ConfigurationFirstStartup {
                 Category(
                     id = UUID.randomUUID(),
                     name = "Groceries",
-                    idIcon = R.drawable.ic_grocery,
+                    iconName = "grocery",
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Eating out",
-                    idIcon = R.drawable.ic_eating_out,
+                    iconName = "eating_out",
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Health",
-                    idIcon = R.drawable.ic_health,
+                    iconName = "health",
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Transportation",
-                    idIcon = R.drawable.ic_transportation,
+                    iconName = "transportation",
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Travel",
-                    idIcon = R.drawable.ic_travel,
+                    iconName = "travel",
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Home",
-                    idIcon = R.drawable.ic_home,
+                    iconName = "home",
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Subscriptions",
-                    idIcon = R.drawable.ic_subscriptions,
+                    iconName = "subscription",
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Entertainment",
-                    idIcon = R.drawable.ic_subscriptions,
+                    iconName = "entertainment",
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Gift",
-                    idIcon = R.drawable.ic_gift,
+                    iconName = "gift",
                     transactionTypeId = TransactionType.Expense.id,
                 ),
             )
@@ -97,13 +96,13 @@ class ConfigurationFirstStartup {
                 Category(
                     id = UUID.randomUUID(),
                     name = "Salary",
-                    idIcon = R.drawable.ic_arrow_double_up,
+                    iconName = "salary",
                     transactionTypeId = TransactionType.Deposit.id
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Deposit",
-                    idIcon = R.drawable.ic_wallet,
+                    iconName = "wallet",
                     transactionTypeId = TransactionType.Deposit.id
                 ),
             )
@@ -114,7 +113,7 @@ class ConfigurationFirstStartup {
                 Category(
                     id = UUID.randomUUID(),
                     name = "Movement",
-                    idIcon = R.drawable.ic_transfer,
+                    iconName = "transfer",
                     transactionTypeId = TransactionType.Move.id
                 ),
             )

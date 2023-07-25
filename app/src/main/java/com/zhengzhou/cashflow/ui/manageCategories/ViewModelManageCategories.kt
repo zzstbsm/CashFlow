@@ -113,7 +113,7 @@ class ManageCategoriesViewModel : ViewModel() {
         val newCategory = Category(
             id = UUID.randomUUID(),
             name = "New category",
-            idIcon = R.drawable.ic_home,
+            iconName = "home",
             transactionTypeId = transactionType.id
         )
         viewModelScope.launch {

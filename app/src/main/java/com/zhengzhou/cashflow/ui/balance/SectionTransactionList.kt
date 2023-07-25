@@ -19,6 +19,7 @@ import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.TransactionAndCategory
+import com.zhengzhou.cashflow.tools.mapIconsFromName
 import java.text.NumberFormat
 import java.util.UUID
 
@@ -36,7 +37,7 @@ fun TransactionEntry(
     if (category.id == UUID(0L,0L)) {
         category = Category(
             name = stringResource(id = R.string.no_category),
-            idIcon = R.drawable.ic_clear
+            iconName = "clear"
         )
     }
 
@@ -58,11 +59,7 @@ fun TransactionEntry(
         ) {
             Image(
                 painter = painterResource(
-                    id = if (category.idIcon == 0) {
-                        R.drawable.ic_trending_up
-                    } else {
-                        category.idIcon
-                    }
+                    id = mapIconsFromName[category.iconName]!!
                 ),
                 contentDescription = null, //TODO add description
                 modifier = Modifier

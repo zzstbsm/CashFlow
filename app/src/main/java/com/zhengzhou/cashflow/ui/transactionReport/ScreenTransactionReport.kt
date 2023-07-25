@@ -33,6 +33,7 @@ import com.zhengzhou.cashflow.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
+import com.zhengzhou.cashflow.tools.mapIconsFromName
 import java.util.UUID
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -163,7 +164,7 @@ private fun TransactionReportMainBody(
                                 .weight(5f)
                         )
                         Icon(
-                            painter = painterResource(id = transactionReportUiState.category.idIcon),
+                            painter = painterResource(id = mapIconsFromName[transactionReportUiState.category.iconName]!!),
                             contentDescription = null,
                             modifier = Modifier
                                 .weight(1f)
