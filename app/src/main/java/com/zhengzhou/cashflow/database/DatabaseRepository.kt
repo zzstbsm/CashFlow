@@ -103,6 +103,8 @@ open class DatabaseRepository(
     fun getCategoryListByTransactionType(transactionType: TransactionType): Flow<List<Category>> {
         return database.databaseDao().getCategoryListByTransactionType(transactionTypeId = transactionType.id)
     }
+    suspend fun getCategoryOccurrences(category: Category)
+        = database.databaseDao().getCategoryOccurrences(categoryUUID = category.id)
 
     /* Location section */
     suspend fun getLocation(locationUUID: UUID): TagLocation? = database.databaseDao().getLocation(locationUUID)

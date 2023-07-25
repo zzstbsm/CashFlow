@@ -1,7 +1,6 @@
 package com.zhengzhou.cashflow.data
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -16,4 +15,19 @@ data class Category (
     @DrawableRes val idIcon: Int = R.drawable.ic_error,
     @ColumnInfo(name = "movement_type_id")
     val transactionTypeId: Int = 0,
+)
+
+val listIconsId: List<Int> = listOf(
+    R.drawable.ic_food,
+    R.drawable.ic_health,
+    R.drawable.ic_sport,
+    R.drawable.ic_card,
+    R.drawable.ic_analyics,
+    R.drawable.ic_home,
+    R.drawable.ic_transfer,
+    R.drawable.ic_transportation,
+    R.drawable.ic_travel,
+    R.drawable.ic_wallet,
+    R.drawable.ic_arrow_double_up,
+    R.drawable.ic_trending_up,
 )

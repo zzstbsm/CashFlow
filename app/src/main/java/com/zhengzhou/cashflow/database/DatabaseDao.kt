@@ -47,6 +47,8 @@ interface DatabaseDao {
     suspend fun updateCategory(category: Category)
     @Delete(entity = Category::class)
     suspend fun deleteCategory(category: Category)
+    @Query("SELECT count(*) FROM movement WHERE id_category=(:categoryUUID)")
+    suspend fun getCategoryOccurrences(categoryUUID: UUID): Int
 
     // Location section
     @Query("SELECT * FROM tag_location WHERE id=(:tagLocationUUID)")

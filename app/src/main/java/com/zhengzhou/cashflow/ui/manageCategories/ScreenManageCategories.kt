@@ -4,17 +4,27 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -39,6 +49,7 @@ import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
+import com.zhengzhou.cashflow.data.listIconsId
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.ui.SectionTopAppBar
@@ -86,7 +97,6 @@ fun ManageCategoriesScreen(
                     manageCategoriesUiState = manageCategoriesUiState,
                     manageCategoriesViewModel = manageCategoriesViewModel,
                     innerPadding = innerPadding,
-                    navController = navController,
                 )
             },
             bottomBar = {
@@ -98,7 +108,10 @@ fun ManageCategoriesScreen(
             },
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { /*TODO*/ }
+                    onClick = {
+                        val transactionType = manageCategoriesUiState.transactionType
+                        manageCategoriesViewModel.createCategory(transactionType)
+                    }
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_add),
@@ -115,7 +128,6 @@ fun ManageCategoriesMainBody(
     manageCategoriesUiState: ManageCategoriesUiState,
     manageCategoriesViewModel: ManageCategoriesViewModel,
     innerPadding: PaddingValues,
-    navController: NavController,
 ) {
     var activeTab by remember {
         mutableIntStateOf(0)
@@ -150,20 +162,27 @@ fun ManageCategoriesMainBody(
             }
         }
 
+        Spacer(modifier = Modifier.height(4.dp))
+
         LazyColumn {
             val listCategories = manageCategoriesUiState.listCategories.filter { category ->
                 category.transactionTypeId == manageCategoriesUiState.transactionType.id
             }
             items(listCategories.size) { position ->
                 val category = listCategories[position]
+                val categoryOccurrences = manageCategoriesUiState.openCategoryOccurrences
                 val ifOpenCategory = category == manageCategoriesUiState.openCategory
                 CategoryEntry(
                     category = category,
+                    categoryOccurrences = categoryOccurrences,
                     onOpenCategory = { toOpenCategory ->
                         if (ifOpenCategory) manageCategoriesViewModel.setOpenCategory(null)
                         else manageCategoriesViewModel.setOpenCategory(toOpenCategory)
                     },
                     ifOpen = ifOpenCategory,
+                    onDeleteCategory = { categoryToDelete: Category ->
+                        manageCategoriesViewModel.deleteCategory(category = categoryToDelete)
+                    },
                     onSaveNewCategory = { categoryToSave: Category ->
                         manageCategoriesViewModel.editCategory(category = categoryToSave)
                     }
@@ -178,8 +197,10 @@ fun ManageCategoriesMainBody(
 @Composable
 private fun CategoryEntry(
     category: Category,
+    categoryOccurrences: Int,
     onOpenCategory: (Category?) -> Unit,
     ifOpen: Boolean,
+    onDeleteCategory: (Category) -> Unit,
     onSaveNewCategory: (Category) -> Unit,
 ) {
 
@@ -197,13 +218,13 @@ private fun CategoryEntry(
                 vertical = 4.dp
             ),
     ) {
-        val padding = 16.dp
+        val horizontalPadding = 16.dp
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(padding),
+                .padding(horizontal = horizontalPadding),
         ) {
             Row(
                 horizontalArrangement = Arrangement.Start,
@@ -212,16 +233,24 @@ private fun CategoryEntry(
                 Icon(
                     painter = painterResource(id = category.idIcon),
                     contentDescription = category.name,
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .size(32.dp)
                 )
                 Text(text = category.name)
             }
+
+            // Close and open category edit part
             val icon = if (ifOpen) painterResource(id = R.drawable.ic_up) else painterResource(id = R.drawable.ic_down)
             val contentDescription = if (ifOpen) stringResource(id = R.string.accessibility_close_category) else stringResource(id = R.string.accessibility_open_category)
             IconButton(
                 onClick = {
                     val toReturnCategory = if (ifOpen) null else category
                     onOpenCategory(toReturnCategory)
+                    if (toReturnCategory != null) {
+                        newCategoryIcon = toReturnCategory.idIcon
+                        newCategoryName = toReturnCategory.name
+                    }
                 }
             ) {
                 Icon(
@@ -235,46 +264,179 @@ private fun CategoryEntry(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(padding)
-            ) {
-                OutlinedTextField(
-                    value = newCategoryName,
-                    onValueChange = {
-                        newCategoryName = it
-                    },
-                    label = { Text(text = stringResource(R.string.name)) },
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_description),
-                            contentDescription = null
-                        )
-                    }
+                modifier = Modifier.padding(
+                    horizontal = horizontalPadding,
+                    vertical = 8.dp,
                 )
-                // TODO: add change category icon
-            }
-            Row(
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier.fillMaxWidth(.5f)
             ) {
-                Button(
-                    onClick = { 
+                Divider()
+                Text(
+                    text = stringResource(id = R.string.ManageCategories_occurrences) + ": $categoryOccurrences",
+                    modifier = Modifier.padding(4.dp)
+                )
+
+                Divider()
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.Bottom,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp)
+                ) {
+                    ChooseCategoryIcon(
+                        currentIcon = newCategoryIcon,
+                        onChooseIcon ={ categoryIcon ->
+                            newCategoryIcon = categoryIcon
+                        } ,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(4.dp)
+                    )
+                    ChooseCategoryName(
+                        categoryName = newCategoryName,
+                        onCategoryNameChange = {
+                            newCategoryName = it
+                        },
+                        modifier = Modifier
+                            .weight(3f)
+                            .padding(4.dp)
+                    )
+                }
+
+                ActionButtons(
+                    onDeleteClick = {
+                        onDeleteCategory(category)
+                    },
+                    onUndoClick = {
                         newCategoryName = category.name
                         newCategoryIcon = category.idIcon
-                    }
-                ) {
-                    Text(text = stringResource(id = R.string.undo))
-                }
-                Button(
-                    onClick = {
+                    },
+                    onSaveClick = {
                         val newCategory = category.copy(
                             name = newCategoryName,
                             idIcon = newCategoryIcon,
                         )
                         onSaveNewCategory(newCategory)
                     }
-                ) {
-                    Text(text = stringResource(id = R.string.save))
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ChooseCategoryIcon(
+    currentIcon: Int,
+    onChooseIcon: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+
+    OutlinedButton(
+        onClick = { showDialog = true },
+        shape = RoundedCornerShape(4.dp),
+        modifier = modifier,
+    ) {
+        Icon(
+            painter = painterResource(id = currentIcon),
+            contentDescription = null,
+            modifier = Modifier.size(40.dp)
+        )
+    }
+    
+    if (showDialog) {
+        AlertDialog(onDismissRequest = { showDialog = false }) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(id = R.string.ManageCategories_choose_category_icon),
+                    modifier = Modifier.padding(8.dp)
+                )
+
+                LazyVerticalGrid(columns = GridCells.Fixed(3)) {
+                    items(listIconsId.size) { position ->
+                        val currentIconInGrid = listIconsId[position]
+                        OutlinedButton(
+                            enabled = currentIconInGrid != currentIcon,
+                            onClick = {
+                                onChooseIcon(currentIconInGrid)
+                                showDialog = false
+                            },
+                            shape = RoundedCornerShape(8.dp),
+                            modifier= Modifier
+                                .fillMaxWidth()
+                                .padding(4.dp),
+                        ) {
+                            Icon(
+                                painter = painterResource(id = currentIconInGrid),
+                                contentDescription = null,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+                    }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ChooseCategoryName(
+    categoryName: String,
+    onCategoryNameChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OutlinedTextField(
+        value = categoryName,
+        onValueChange = onCategoryNameChange,
+        label = { Text(text = stringResource(R.string.name)) },
+        leadingIcon = {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_description),
+                contentDescription = null
+            )
+        },
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun ActionButtons(
+    onDeleteClick: () -> Unit,
+    onUndoClick: () -> Unit,
+    onSaveClick: () -> Unit,
+){
+    Row(
+        horizontalArrangement = Arrangement.SpaceAround,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Button(
+            onClick = onDeleteClick
+        ) {
+            Text(text = stringResource(id = R.string.delete))
+        }
+        Row(
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Button(
+                onClick = onUndoClick
+            ) {
+                Text(text = stringResource(id = R.string.undo))
+            }
+
+            Spacer(modifier = Modifier.width(4.dp))
+
+            Button(
+                onClick = onSaveClick
+            ) {
+                Text(text = stringResource(id = R.string.save))
             }
         }
     }
