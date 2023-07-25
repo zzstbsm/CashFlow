@@ -17,7 +17,7 @@ data class Category (
     val transactionTypeId: Int = 0,
 )
 
-val listIconsId: List<Int> = listOf(
+val listCategoriesIconsId: List<Int> = listOf(
     R.drawable.ic_grocery,
     R.drawable.ic_health,
     R.drawable.ic_sport,

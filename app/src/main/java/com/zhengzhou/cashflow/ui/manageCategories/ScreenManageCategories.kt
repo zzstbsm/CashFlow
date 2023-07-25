@@ -49,7 +49,7 @@ import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
-import com.zhengzhou.cashflow.data.listIconsId
+import com.zhengzhou.cashflow.data.listCategoriesIconsId
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.ui.SectionTopAppBar
@@ -360,8 +360,8 @@ private fun ChooseCategoryIcon(
                 )
 
                 LazyVerticalGrid(columns = GridCells.Fixed(3)) {
-                    items(listIconsId.size) { position ->
-                        val currentIconInGrid = listIconsId[position]
+                    items(listCategoriesIconsId.size) { position ->
+                        val currentIconInGrid = listCategoriesIconsId[position]
                         OutlinedButton(
                             enabled = currentIconInGrid != currentIcon,
                             onClick = {
