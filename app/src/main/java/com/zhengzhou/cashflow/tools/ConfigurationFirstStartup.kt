@@ -36,33 +36,45 @@ class ConfigurationFirstStartup {
 
             return mutableListOf(
                 Category(
-                    id = UUID(0L,1L),
-                    name = "Food",
-                    idIcon = R.drawable.ic_food,
+                    id = UUID.randomUUID(),
+                    name = "Groceries",
+                    idIcon = R.drawable.ic_grocery,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
-                    id = UUID(0L,2L),
+                    id = UUID.randomUUID(),
+                    name = "Eating out",
+                    idIcon = R.drawable.ic_eating_out,
+                    transactionTypeId = TransactionType.Expense.id,
+                ),
+                Category(
+                    id = UUID.randomUUID(),
                     name = "Health",
                     idIcon = R.drawable.ic_health,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
-                    id = UUID(0L,3L),
+                    id = UUID.randomUUID(),
                     name = "Transportation",
                     idIcon = R.drawable.ic_transportation,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
-                    id = UUID(0L,4L),
+                    id = UUID.randomUUID(),
                     name = "Travel",
                     idIcon = R.drawable.ic_travel,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
-                    id = UUID(0L,5L),
+                    id = UUID.randomUUID(),
                     name = "Home",
                     idIcon = R.drawable.ic_home,
+                    transactionTypeId = TransactionType.Expense.id,
+                ),
+                Category(
+                    id = UUID.randomUUID(),
+                    name = "Subscriptions",
+                    idIcon = R.drawable.ic_subscriptions,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
             )
@@ -71,9 +83,15 @@ class ConfigurationFirstStartup {
         fun setDefaultDepositCategories(): MutableList<Category>{
             return mutableListOf(
                 Category(
-                    id = UUID(1L,1L),
+                    id = UUID.randomUUID(),
                     name = "Salary",
                     idIcon = R.drawable.ic_arrow_double_up,
+                    transactionTypeId = TransactionType.Deposit.id
+                ),
+                Category(
+                    id = UUID.randomUUID(),
+                    name = "Deposit",
+                    idIcon = R.drawable.ic_wallet,
                     transactionTypeId = TransactionType.Deposit.id
                 ),
             )
@@ -82,7 +100,7 @@ class ConfigurationFirstStartup {
         fun setDefaultMovementCategories(): MutableList<Category>{
             return mutableListOf(
                 Category(
-                    id = UUID(2L,1L),
+                    id = UUID.randomUUID(),
                     name = "Movement",
                     idIcon = R.drawable.ic_transfer,
                     transactionTypeId = TransactionType.Move.id
