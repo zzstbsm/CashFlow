@@ -13,6 +13,7 @@ import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.Calculator
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.KeypadDigit
+import com.zhengzhou.cashflow.tools.removeEndSpaces
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -316,11 +317,9 @@ class WalletEditViewModel(
 
             // Save wallet
             var wallet = uiState.value.wallet
-            while (wallet.name.last() == ' ') {
-                wallet = wallet.copy(
-                    name = wallet.name.dropLast(1)
-                )
-            }
+            wallet = wallet.copy(
+                name = removeEndSpaces(wallet.name)
+            )
             if (_newWallet) {
                 repository.addWallet(wallet)
             } else {
