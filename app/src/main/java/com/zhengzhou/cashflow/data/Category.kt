@@ -10,7 +10,7 @@ data class Category (
     @PrimaryKey val id: UUID = UUID(0L,0L),
     var name: String = "",
     @ColumnInfo(name = "id_icon")
-    val iconName: String = "error",
+    val iconName: String = "loading",
     @ColumnInfo(name = "movement_type_id")
     val transactionTypeId: Int = 0,
 )

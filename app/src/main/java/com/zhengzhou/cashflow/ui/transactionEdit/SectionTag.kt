@@ -73,8 +73,8 @@ fun TagSection(
             filteredTagList = TagEntry.tagListFiltered(currentTagText,completeTagList),
             onSelectTag = { selectedTag ->
                 showDropdownMenu = false
-                onTagAdd(selectedTag)
-                onChangeText("")
+                //onTagAdd(selectedTag)
+                onChangeText(selectedTag)
             },
             showDropdownMenu = showDropdownMenu,
         )

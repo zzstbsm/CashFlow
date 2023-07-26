@@ -7,7 +7,7 @@ import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.EventMessages
-import com.zhengzhou.cashflow.tools.removeEndSpaces
+import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -125,10 +125,10 @@ class ManageCategoriesViewModel : ViewModel() {
 
     fun editCategory(category: Category) {
         viewModelScope.launch {
-            val toSaveCategory = category.copy(
-                name = removeEndSpaces(category.name)
+            val tempCategory = category.copy(
+                name = removeSpaceFromStringEnd(category.name)
             )
-            repository.updateCategory(category = toSaveCategory)
+            repository.updateCategory(category = tempCategory)
             loadCategories()
         }
     }

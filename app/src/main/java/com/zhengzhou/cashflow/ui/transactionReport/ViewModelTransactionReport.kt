@@ -46,7 +46,6 @@ class TransactionReportViewModel(
 
 
     init {
-
         jobLoadTransactionReport = loadTransactionReport(transactionUUID)
     }
 
@@ -70,7 +69,6 @@ class TransactionReportViewModel(
 
                 isLoading = false,
             )
-
         }
     }
 }

@@ -32,11 +32,7 @@ data class BalanceUiState(
             it.transaction
         }.forEach { transaction ->
             val transactionType = TransactionType.setTransaction(transaction.movementType)
-            amount += when (transactionType) {
-                TransactionType.Deposit -> transaction.amount
-                TransactionType.Expense -> -transaction.amount
-                else -> 0f
-            }
+            amount += transaction.amount
         }
         return amount
     }

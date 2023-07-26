@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -163,12 +164,19 @@ private fun TransactionReportMainBody(
                             modifier = Modifier
                                 .weight(5f)
                         )
-                        Icon(
-                            painter = painterResource(id = mapIconsFromName[transactionReportUiState.category.iconName]!!),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .weight(1f)
-                        )
+                        if (transactionReportUiState.category.iconName == "loading") {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .weight(1f)
+                            )
+                        } else {
+                            Icon(
+                                painter = painterResource(id = mapIconsFromName[transactionReportUiState.category.iconName]!!),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .weight(1f)
+                            )
+                        }
                     }
                     Text(
                         text = transactionReportUiState.transaction.description,

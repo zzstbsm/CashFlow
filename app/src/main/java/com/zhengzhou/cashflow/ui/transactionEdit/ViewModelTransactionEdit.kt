@@ -57,108 +57,7 @@ data class TransactionEditUiState(
 
     val amountString: String = "0",
     val transactionSectionToShow: TransactionSectionToShow = TransactionSectionToShow.AMOUNT,
-) {
-
-    fun addTag(text: String): TransactionEditUiState {
-
-        // Clean text
-        var cleanText = text
-        while (cleanText.isNotEmpty() && cleanText.last() == ' ') {
-            cleanText = cleanText.dropLast(1)
-        }
-        if (cleanText.isEmpty()) return this
-
-        // Ignore the add tag if the tag is already added
-        if (this.currentTagList.isNotEmpty()) {
-            this.currentTagList.forEach { tag ->
-                if (tag.name == cleanText) return this
-            }
-        }
-
-        // Check if it exists in tagListInDB
-        val filteredDB = this.tagListInDB.filter {
-            it.name == cleanText
-        }
-        val tagAlreadyExist = filteredDB.isNotEmpty()
-        val tagEntry = if (tagAlreadyExist) {
-            filteredDB.first().copy(
-                count = filteredDB.first().count + 1
-            )
-        } else {
-            TagEntry(
-                id = UUID.randomUUID(),
-                name = cleanText,
-                count = 1
-            )
-        }
-        val tag = Tag.newFromTagEntry(
-            transactionUUID = transaction.id,
-            tagEntry = tagEntry
-        )
-
-        val newCurrentTagList = this.currentTagList + listOf(tag)
-
-        return this.copy(
-            currentTagList = newCurrentTagList
-        )
-    }
-    fun disableTag(position: Int): TransactionEditUiState {
-
-        val tempTagList = this.currentTagList as MutableList
-
-        tempTagList[position] = tempTagList[position].copy(
-            count = tempTagList[position].count - 1,
-            enabled = false
-        )
-
-        return this.copy(
-            currentTagList = tempTagList
-        )
-
-    }
-    fun enableTag(position: Int) : TransactionEditUiState {
-        val tempTagList = this.currentTagList as MutableList
-
-        tempTagList[position] = tempTagList[position].copy(
-            count = tempTagList[position].count + 1,
-            enabled = true
-        )
-
-        return this.copy(
-            currentTagList = tempTagList
-        )
-    }
-
-    fun updateCategory(categoryId: UUID): TransactionEditUiState {
-        return this.copy(
-            transaction = this.transaction.copy(
-                idCategory = categoryId
-            ),
-        )
-    }
-    fun updateDescription(description: String): TransactionEditUiState {
-        return this.copy(
-            transaction = this.transaction.copy(
-                description = description
-            )
-        )
-    }
-    fun updateTransactionDate(date: Date): TransactionEditUiState {
-        return this.copy(
-            transaction = this.transaction.copy(
-                date = date
-            )
-        )
-    }
-    fun updateWallet(wallet: Wallet): TransactionEditUiState {
-        return this.copy(
-            wallet = wallet,
-            transaction = this.transaction.copy(
-                idWallet = wallet.id
-            )
-        )
-    }
-}
+)
 
 class TransactionEditViewModel(
     transactionUUID: UUID,
@@ -171,6 +70,8 @@ class TransactionEditViewModel(
     private var newTransaction: Boolean = false
 
     private val repository = DatabaseRepository.get()
+
+    private var writingOnUiState: Boolean = false
 
     private var calculator = Calculator()
 
@@ -264,6 +165,45 @@ class TransactionEditViewModel(
 
     }
 
+    private fun setUiState(
+        isLoading: Boolean? = null,
+
+        wallet: Wallet? = null,
+        transaction: Transaction? = null,
+        currentTagList: List<Tag>? = null,
+
+        walletList: List<Wallet>? = null,
+        categoryList: List<Category>? = null,
+        tagListInDB: List<TagEntry>? = null,
+
+        amountString: String? = null,
+        transactionSectionToShow: TransactionSectionToShow? = null,
+    ) {
+        viewModelScope.launch {
+            while (writingOnUiState) delay(5)
+
+            writingOnUiState = true
+
+            _uiState.value = TransactionEditUiState(
+                isLoading = isLoading ?: uiState.value.isLoading,
+
+                wallet = wallet ?: uiState.value.wallet,
+                transaction = transaction ?: uiState.value.transaction,
+                currentTagList = currentTagList ?: uiState.value.currentTagList,
+
+                walletList = walletList ?: uiState.value.walletList,
+                categoryList = categoryList ?: uiState.value.categoryList,
+                tagListInDB = tagListInDB ?: uiState.value.tagListInDB,
+
+                amountString = amountString ?: uiState.value.amountString,
+                transactionSectionToShow = transactionSectionToShow ?: uiState.value.transactionSectionToShow,
+            )
+
+            writingOnUiState = false
+
+        }
+    }
+
     fun amountKeyPress(key: KeypadDigit) {
 
         if (key == KeypadDigit.KeyBack) {
@@ -274,7 +214,7 @@ class TransactionEditViewModel(
 
         viewModelScope.launch {
             if (calculator.onScreenString() in listOf("0.","0",".")) {
-                _uiState.value = uiState.value.copy(
+                setUiState(
                     transaction = uiState.value.transaction.copy(
                         amount = 0f
                     ),
@@ -288,14 +228,14 @@ class TransactionEditViewModel(
                 }
 
                 val toSaveAmount = calculator.onScreenString().toFloat() * sign
-                _uiState.value = uiState.value.copy(
+                setUiState(
                     transaction = uiState.value.transaction.copy(
                         amount = toSaveAmount
                     )
                 )
 
             }
-            _uiState.value = uiState.value.copy(
+            setUiState(
                 amountString = calculator.onScreenString(),
             )
         }
@@ -353,36 +293,111 @@ class TransactionEditViewModel(
     }
 
     fun setChooseFunctionality(section: TransactionSectionToShow) {
-        _uiState.value = uiState.value.copy(
+        setUiState(
             transactionSectionToShow = section
         )
     }
 
     fun addTag(tagName: String) {
-        _uiState.value = uiState.value.addTag(tagName)
+        // Clean text
+        var cleanText = tagName
+        while (cleanText.isNotEmpty() && cleanText.last() == ' ') {
+            cleanText = cleanText.dropLast(1)
+        }
+        if (cleanText.isEmpty()) return
+
+        // Ignore the add tag if the tag is already added
+        if (uiState.value.currentTagList.isNotEmpty()) {
+            uiState.value.currentTagList.forEach { tag ->
+                if (tag.name == cleanText) return
+            }
+        }
+
+        // Check if it exists in tagListInDB
+        val filteredDB = uiState.value.tagListInDB.filter {
+            it.name == cleanText
+        }
+        val tagAlreadyExist = filteredDB.isNotEmpty()
+        val tagEntry = if (tagAlreadyExist) {
+            filteredDB.first().copy(
+                count = filteredDB.first().count + 1
+            )
+        } else {
+            TagEntry(
+                id = UUID.randomUUID(),
+                name = cleanText,
+                count = 1
+            )
+        }
+        val tag = Tag.newFromTagEntry(
+            transactionUUID = uiState.value.transaction.id,
+            tagEntry = tagEntry
+        )
+
+        val newCurrentTagList = uiState.value.currentTagList + listOf(tag)
+
+        setUiState(
+            currentTagList = newCurrentTagList
+        )
     }
     fun disableTag(tagIndex: Int?) {
         if (tagIndex != null) {
-            _uiState.value = uiState.value.disableTag(tagIndex)
+
+            val tempTagList = uiState.value.currentTagList as MutableList
+
+            tempTagList[tagIndex] = tempTagList[tagIndex].copy(
+                count = tempTagList[tagIndex].count - 1,
+                enabled = false
+            )
+
+            setUiState(
+                currentTagList = tempTagList
+            )
         }
     }
     fun enableTag(tagIndex: Int?) {
         if (tagIndex != null) {
-            _uiState.value = uiState.value.enableTag(tagIndex)
+            val tempTagList = uiState.value.currentTagList as MutableList
+
+            tempTagList[tagIndex] = tempTagList[tagIndex].copy(
+                count = tempTagList[tagIndex].count + 1,
+                enabled = true
+            )
+
+            setUiState(
+                currentTagList = tempTagList
+            )
         }
     }
     fun updateCategory(category: Category) {
-        _uiState.value = uiState.value.updateCategory(category.id)
+
+        setUiState(
+            transaction = uiState.value.transaction.copy(
+                idCategory = category.id
+            ),
+        )
     }
     fun updateDescription(description: String) {
-        _uiState.value = uiState.value.updateDescription(description)
+        setUiState(
+            transaction = uiState.value.transaction.copy(
+                description = description
+            )
+        )
     }
     fun updateTransactionDate(date: Date) {
-        _uiState.value = uiState.value.updateTransactionDate(date)
+        setUiState(
+            transaction = uiState.value.transaction.copy(
+                date = date
+            )
+        )
     }
 
     fun updateWallet(wallet: Wallet) {
-        _uiState.value = uiState.value.updateWallet(wallet)
+        setUiState(
+            transaction = uiState.value.transaction.copy(
+                idWallet = wallet.id
+            )
+        )
     }
 
 }

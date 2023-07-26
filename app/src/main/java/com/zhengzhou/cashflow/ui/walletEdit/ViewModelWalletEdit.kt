@@ -13,7 +13,7 @@ import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.Calculator
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.KeypadDigit
-import com.zhengzhou.cashflow.tools.removeEndSpaces
+import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -34,16 +34,6 @@ data class WalletEditUiState(
     val budgetPeriod: BudgetPeriod = BudgetPeriod(),
     val groupCategoryAndBudgetList: List<GroupCategoryAndBudget> = listOf(),
 ) {
-    fun updateWalletCreationDate(
-        creationDate: Date,
-    ) : WalletEditUiState{
-        return this.copy(
-            wallet = this.wallet.copy(
-                creationDate = creationDate
-            )
-        )
-    }
-
     fun updateWalletBudgetEnabled(
         budgetEnabled: Boolean
     ) : WalletEditUiState {
@@ -74,16 +64,6 @@ data class WalletEditUiState(
         return this.copy(
             budgetPeriod = this.budgetPeriod.copy(
                 endDate = creationDate
-            )
-        )
-    }
-
-    fun updateWalletCurrency(
-        currency: Currency,
-    ) : WalletEditUiState{
-        return this.copy(
-            wallet = this.wallet.copy(
-                currency = currency
             )
         )
     }
@@ -239,15 +219,11 @@ class WalletEditViewModel(
 
     fun updateWalletName(name: String) {
 
-        val checkedName = if (name.isNotEmpty() && name.last() == ' ') name.dropLast(1) else name
-        var tempName = name
-        while (tempName.isNotEmpty() && tempName.last() == ' ') {
-            tempName = tempName.dropLast(1)
-        }
+        val checkedName = removeSpaceFromStringEnd(name)
 
         setUiState(
             isErrorWalletNameInUse = checkedName in walletListName.value,
-            isErrorWalletNameNotValid = tempName.isEmpty(),
+            isErrorWalletNameNotValid = checkedName.isEmpty(),
 
             wallet = uiState.value.wallet.copy(
                 name = name
@@ -317,9 +293,11 @@ class WalletEditViewModel(
 
             // Save wallet
             var wallet = uiState.value.wallet
-            wallet = wallet.copy(
-                name = removeEndSpaces(wallet.name)
-            )
+            while (wallet.name.last() == ' ') {
+                wallet = wallet.copy(
+                    name = wallet.name.dropLast(1)
+                )
+            }
             if (_newWallet) {
                 repository.addWallet(wallet)
             } else {
