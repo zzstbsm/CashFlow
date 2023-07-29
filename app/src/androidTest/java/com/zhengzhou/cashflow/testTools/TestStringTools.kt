@@ -1,6 +1,6 @@
 package com.zhengzhou.cashflow.testTools
 
-import com.zhengzhou.cashflow.tools.removeEndSpaces
+import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
 import org.junit.Assert.*
 
 import org.junit.Test
@@ -16,11 +16,11 @@ class TestStringTools {
         val text4 = "Ciao"
         val text5 = " Ciao   "
 
-        assertEquals("Ciao",removeEndSpaces(text1))
-        assertEquals("Ciao",removeEndSpaces(text2))
-        assertEquals(" Ciao",removeEndSpaces(text3))
-        assertEquals("Ciao",removeEndSpaces(text4))
-        assertEquals(" Ciao",removeEndSpaces(text5))
+        assertEquals("Ciao",removeSpaceFromStringEnd(text1))
+        assertEquals("Ciao",removeSpaceFromStringEnd(text2))
+        assertEquals(" Ciao",removeSpaceFromStringEnd(text3))
+        assertEquals("Ciao",removeSpaceFromStringEnd(text4))
+        assertEquals(" Ciao",removeSpaceFromStringEnd(text5))
 
     }
 }
