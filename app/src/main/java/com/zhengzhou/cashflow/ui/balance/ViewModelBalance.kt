@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
 import java.util.*
 
 data class BalanceUiState(
@@ -23,6 +24,7 @@ data class BalanceUiState(
         currency = Currency.EUR,
     ),
     val walletList: List<Wallet> = listOf(),
+    val currencyList: List<Currency> = listOf(),
     val transactionList: List<TransactionAndCategory> = listOf(),
     val transactionListToShow: List<TransactionAndCategory> = listOf(),
 
@@ -75,22 +77,19 @@ class BalanceViewModel() : ViewModel() {
     private var _uiState = MutableStateFlow(BalanceUiState())
     val uiState: StateFlow<BalanceUiState> = _uiState.asStateFlow()
 
+    private var currencyFormatter: NumberFormat
+
     private var writingOnUiState: Boolean = false
 
+    private var jobGetCurrency: Job
     private var jobGetTransactionList: Job
+    private var jobGetWalletList: Job
 
     init {
 
-        viewModelScope.launch(Dispatchers.IO) {
-            // Collect all wallets
-            repository.getWalletList().collect { collectedWalletList ->
-                setUiState(
-                    walletList = collectedWalletList,
-                    isLoading = false
-                )
-            }
-        }
-
+        jobGetCurrency = getCurrencyList()
+        jobGetWalletList = getWalletList(uiState.value.equivalentWallet.currency)
+        currencyFormatter = Currency.setCurrencyFormatter(uiState.value.equivalentWallet.currency.abbreviation)
         jobGetTransactionList = getTransactionList()
 
     }
@@ -101,6 +100,7 @@ class BalanceViewModel() : ViewModel() {
         equivalentWallet: Wallet? = null,
 
         walletList: List<Wallet>? = null,
+        currencyList: List<Currency>? = null,
 
         transactionList: List<TransactionAndCategory>? = null,
         transactionListToShow: List<TransactionAndCategory>? = null,
@@ -123,6 +123,7 @@ class BalanceViewModel() : ViewModel() {
                 equivalentWallet = equivalentWallet ?: uiState.value.equivalentWallet,
 
                 walletList = walletList ?: uiState.value.walletList,
+                currencyList = currencyList ?: uiState.value.currencyList,
 
                 transactionList = transactionList ?: uiState.value.transactionList,
                 transactionListToShow = transactionListToShow ?: uiState.value.transactionListToShow,
@@ -136,9 +137,34 @@ class BalanceViewModel() : ViewModel() {
         }
     }
 
+
+    fun getCurrencyFormatter(): NumberFormat = currencyFormatter
+    private fun getCurrencyList(): Job {
+        return viewModelScope.launch(Dispatchers.IO) {
+            // Collect all wallets
+            repository.getWalletCurrencyList().collect { currencyList ->
+                setUiState(
+                    currencyList = currencyList,
+                    isLoading = false
+                )
+            }
+        }
+    }
+    private fun getFilteredTransactionList(
+        startDate: Date = uiState.value.filterStartDate,
+        endDate: Date = uiState.value.filterEndDate,
+    ): List<TransactionAndCategory> {
+        return uiState.value.transactionList.filter { transactionAndCategory ->
+            transactionAndCategory.transaction.date in startDate..endDate
+        }
+    }
     private fun getTransactionList(): Job {
         return viewModelScope.launch {
             while (uiState.value.isLoading) delay(5)
+
+            setUiState(
+                transactionList = listOf()
+            )
 
             repository.getTransactionListInListOfWallet(uiState.value.walletList).collect { transactionList ->
 
@@ -164,6 +190,22 @@ class BalanceViewModel() : ViewModel() {
 
         }
     }
+    private fun getWalletList(currency: Currency): Job {
+        return viewModelScope.launch(Dispatchers.IO) {
+            currencyFormatter = Currency.setCurrencyFormatter(currency.abbreviation)
+            setUiState(
+                isLoading = true
+            )
+            // Collect all wallets
+            repository.getWalletListByCurrency(currency).collect { collectedWalletList ->
+                setUiState(
+                    walletList = collectedWalletList,
+                    isLoading = false
+                )
+            }
+        }
+    }
+
 
     fun setTimeFilter(
         timeFilter: TimeFilterForSegmentedButton?,
@@ -191,15 +233,15 @@ class BalanceViewModel() : ViewModel() {
             setTimeFilter = true,
         )
     }
+    fun setWalletListByCurrency(currency: Currency) {
+        setUiState(
+            isLoading = true
+        )
+        jobGetWalletList.cancel()
+        jobGetWalletList = getWalletList(currency = currency)
 
-    private fun getFilteredTransactionList(
-        startDate: Date = uiState.value.filterStartDate,
-        endDate: Date = uiState.value.filterEndDate,
-    ): List<TransactionAndCategory> {
-        return uiState.value.transactionList.filter { transactionAndCategory ->
-
-            transactionAndCategory.transaction.date in startDate..endDate
-
+        viewModelScope.launch {
+            jobGetTransactionList = getTransactionList()
         }
     }
 }
@@ -290,136 +332,3 @@ enum class TimeFilterForSegmentedButton(
         return endDateCalendar.time
     }
 }
-
-/*
-data class BalanceUiState(
-    val balanceGroup: BalanceGroup = BalanceGroup(),
-    val equivalentWallet: Wallet = Wallet()
-) {
-
-    suspend fun selectWalletInGroup(walletPositionInArray: Int) : BalanceUiState {
-
-        val tempGroup = this.balanceGroup.checkSingleWalletInGroup(walletPositionInArray = walletPositionInArray)
-        return this.copy(
-            balanceGroup = tempGroup
-        )
-    }
-
-    suspend fun setWalletList(walletList: List<Wallet>) : BalanceUiState {
-
-        val tempGroup = BalanceGroup()
-        val tempWalletSelection: MutableList<WalletSelection> = mutableListOf()
-        for (wallet in walletList) {
-            tempWalletSelection += WalletSelection(wallet = wallet, toShow = true) // TODO: set toShow based on the config file
-        }
-        tempGroup.setWalletsInGroup(tempWalletSelection)
-        tempGroup.refreshTransactionList()
-
-        return this.copy(
-            balanceGroup = tempGroup
-        )
-    }
-}
-
-data class BalanceGroup(
-    var name: String = "All wallets",
-    var groupId: UUID = UUID.randomUUID(),
-    var iconId: Int = R.drawable.ic_wallet,
-    var walletSelection: List<WalletSelection> = listOf(WalletSelection()),
-    val transactionList: List<Transaction> = listOf(),
-    var lastAccess: Date = Date(),
-    val currencyFormatter: NumberFormat = Currency.setCurrencyFormatter(Currency.EUR.abbreviation),
-) {
-    suspend fun checkSingleWalletInGroup(
-        walletPositionInArray: Int
-    ) : BalanceGroup {
-        val tempBalanceGroup = this.copy()
-
-        tempBalanceGroup.walletSelection[walletPositionInArray].invertToShow()
-        tempBalanceGroup.refreshTransactionList()
-
-        return tempBalanceGroup
-    }
-
-    suspend fun refreshTransactionList(): BalanceGroup {
-        val tempTransactionList = mutableListOf<Transaction>()
-        if (walletSelection.isEmpty()) {
-            return this.copy(
-                name = "No wallets",
-                lastAccess = Date(),
-                transactionList = listOf(),
-            )
-        }
-
-        walletSelection.forEach { walletSelection ->
-            if (walletSelection.toShow)
-                tempTransactionList += getTransactionList(walletSelection.wallet.id)
-        }
-        return this.copy(
-            transactionList = tempTransactionList,
-            lastAccess = Date(),
-        )
-    }
-
-    fun setWalletsInGroup(listOfWalletSelection: List<WalletSelection>) {
-        this.walletSelection = listOfWalletSelection
-    }
-
-    private suspend fun getTransactionList(walletId: UUID) : List<Transaction> {
-        val repository = DatabaseRepository.get()
-        var transactionList = listOf<Transaction>()
-        repository.getTransactionListInWallet(walletId).collect { transactionListPerWallet ->
-            transactionList = transactionListPerWallet
-        }
-        return transactionList
-    }
-
-    fun getGroupInitialBalance() : Float {
-        var tempTotalInWallets = 0f
-        walletSelection.forEach { walletSelection ->
-            if (walletSelection.toShow)
-                tempTotalInWallets += walletSelection.wallet.startAmount
-        }
-        return tempTotalInWallets
-    }
-
-    private fun updateEquivalentWallet() {
-        // TODO
-    }
-
-}
-
-class BalanceViewModel(
-    navController: NavController,
-) : ViewModel() {
-
-    private val repository = DatabaseRepository.get()
-
-    // UiState
-    private var _uiState = MutableStateFlow(BalanceUiState())
-    val uiState: StateFlow<BalanceUiState> = _uiState.asStateFlow()
-
-    private var _navController: NavController
-
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.getWalletList().collect { walletList ->
-                _uiState.value = uiState.value.setWalletList(walletList)
-            }
-        }
-        _navController = navController
-    }
-
-    fun walletGroupBalance(): Float {
-        return uiState.value.balanceGroup.getGroupInitialBalance()
-    }
-
-    fun getCurrencyFormatter() : NumberFormat {
-        return uiState.value.balanceGroup.currencyFormatter
-    }
-    fun getTransactionList() : List<Transaction> {
-        return uiState.value.balanceGroup.transactionList
-    }
-}
-
- */

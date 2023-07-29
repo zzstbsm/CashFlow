@@ -4,6 +4,7 @@ import androidx.room.*
 import com.zhengzhou.cashflow.data.BudgetCategory
 import com.zhengzhou.cashflow.data.BudgetPeriod
 import com.zhengzhou.cashflow.data.Category
+import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TagEntry
 import com.zhengzhou.cashflow.data.TagLocation
 import com.zhengzhou.cashflow.data.TagTransaction
@@ -116,8 +117,12 @@ interface DatabaseDao {
     @Delete(entity = Wallet::class)
     suspend fun deleteWallet(wallet: Wallet)
 
+    @Query("SELECT DISTINCT currency FROM wallet")
+    fun getWalletCurrencyList(): Flow<List<Currency>>
     @Query("SELECT * FROM wallet")
     fun getWalletList(): Flow<List<Wallet>>
+    @Query("SELECT * FROM wallet WHERE currency=(:currency)")
+    fun getWalletListByCurrency(currency: Currency): Flow<List<Wallet>>
     @Query("SELECT name FROM wallet")
     fun getWalletListOfNames(): Flow<List<String>>
     @Query("SELECT * FROM wallet ORDER BY last_access DESC LIMIT 1")

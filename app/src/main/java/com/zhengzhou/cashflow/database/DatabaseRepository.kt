@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.zhengzhou.cashflow.data.BudgetCategory
 import com.zhengzhou.cashflow.data.BudgetPeriod
 import com.zhengzhou.cashflow.data.Category
+import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.TagEntry
 import com.zhengzhou.cashflow.data.TagLocation
@@ -228,7 +229,11 @@ open class DatabaseRepository(
     suspend fun updateWallet(wallet: Wallet) {
         database.databaseDao().updateWallet(wallet)
     }
+    fun getWalletCurrencyList(): Flow<List<Currency>>
+        = database.databaseDao().getWalletCurrencyList()
     fun getWalletList(): Flow<List<Wallet>> = database.databaseDao().getWalletList()
+    fun getWalletListByCurrency(currency: Currency): Flow<List<Wallet>>
+        = database.databaseDao().getWalletListByCurrency(currency = currency)
     fun getWalletListOfNames(): Flow<List<String>> = database.databaseDao().getWalletListOfNames()
     suspend fun getWalletLastAccessed(): Wallet? {
         return database.databaseDao().getWalletLastAccessed()

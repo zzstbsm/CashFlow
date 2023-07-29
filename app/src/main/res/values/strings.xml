@@ -73,6 +73,7 @@
 
     <!-- Balance Screen -->
     <string name="Balance_all">All</string>
+    <string name="Balance_choose_currency">Choose currency</string>
     <string name="Balance_no_wallet">No wallets present in the system. Please first add a wallet.</string>
     <string name="Balance_month">Month</string>
     <string name="Balance_personalized">Personalized</string>

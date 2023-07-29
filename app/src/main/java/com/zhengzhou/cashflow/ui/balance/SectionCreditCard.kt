@@ -3,10 +3,14 @@ package com.zhengzhou.cashflow.ui.balance
 import android.text.format.DateFormat
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,13 +23,17 @@ import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.tools.balanceFlowIn
 import com.zhengzhou.cashflow.tools.balanceFlowOut
+import java.text.NumberFormat
 import java.util.*
 
 @Composable
 fun CreditCardSection(
     balanceUiState: BalanceUiState,
+    balanceViewModel: BalanceViewModel,
     modifier: Modifier = Modifier,
 ) {
+    var showCurrencySelectorDialog by remember { mutableStateOf(false) }
+
     Card(
         modifier = modifier
             .height(250.dp),
@@ -48,7 +56,7 @@ fun CreditCardSection(
                 Text(
                     text = dateString
                 )
-                IconButton(onClick = { /*TODO: Navigate in the edit group part */ }) {
+                IconButton(onClick = { showCurrencySelectorDialog = true }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_edit),
                         contentDescription = stringResource(id = R.string.wallet_edit)
@@ -61,11 +69,73 @@ fun CreditCardSection(
             CardText(
                 balance = balanceUiState.getBalance(),
                 currency = balanceUiState.equivalentWallet.currency,
+                currencyFormatter = balanceViewModel.getCurrencyFormatter(),
                 transactionList = balanceUiState.transactionListToShow.map {
                         transactionAndCategory -> transactionAndCategory.transaction
                 },
                 modifier = Modifier,
             )
+        }
+    }
+
+    SelectGroupCurrency(
+        toShow = showCurrencySelectorDialog,
+        currencyList = balanceUiState.currencyList,
+        onDismissDialog = { showCurrencySelectorDialog = false },
+        onSelectCurrency = { currency ->
+            balanceViewModel.setWalletListByCurrency(currency)
+            showCurrencySelectorDialog = false
+        },
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SelectGroupCurrency(
+    toShow: Boolean,
+    currencyList: List<Currency>,
+    onDismissDialog: () -> Unit,
+    onSelectCurrency: (Currency) -> Unit,
+) {
+
+    if (toShow) {
+        AlertDialog(onDismissRequest = onDismissDialog) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(.5f)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.Balance_choose_currency),
+                    modifier = Modifier
+                        .padding(8.dp)
+                )
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    items(currencyList.size) { pos ->
+                        val currency = currencyList[pos]
+
+                        Card(
+                            onClick = { onSelectCurrency(currency) },
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp),
+                            ) {
+                                Text(text = currency.iconEmojiUnicode)
+                                Spacer(modifier = Modifier
+                                    .width(16.dp))
+                                Text(text = stringResource(currency.nameCurrency))
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -74,13 +144,10 @@ fun CreditCardSection(
 private fun CardText(
     balance: Float,
     currency: Currency,
+    currencyFormatter: NumberFormat,
     transactionList: List<Transaction>,
     modifier: Modifier = Modifier
 ) {
-    // TODO: implement function that refreshes the amount
-    val currencyFormatter = remember {
-        Currency.setCurrencyFormatter(currency.abbreviation)
-    }
 
     val balanceIn = balanceFlowIn(transactionList)
     val balanceOut = balanceFlowOut(transactionList)

@@ -17,7 +17,7 @@ enum class Currency(
         abbreviation = "EUR",
         nameCurrency = R.string.currency_eur_name,
         iconEmojiUnicode = "\uD83C\uDDEA\uD83C\uDDFA"
-    );
+    ),
     /*
     USA(
         locale = Locale.US,
@@ -25,6 +25,7 @@ enum class Currency(
         nameCurrency = R.string.currency_usd_name,
         iconEmojiUnicode = "\uD83C\uDDFA\uD83C\uDDF8",
     ),
+     */
 
     SEK(
         locale = Locale("sv","se"),
@@ -32,7 +33,6 @@ enum class Currency(
         nameCurrency = R.string.currency_sek_name,
         iconEmojiUnicode = "\uD83C\uDDF8\uD83C\uDDEA"
     );
-     */
 
     companion object {
         fun supportedCurrencyList() : List<Currency> {

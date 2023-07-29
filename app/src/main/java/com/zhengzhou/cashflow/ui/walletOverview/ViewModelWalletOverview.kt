@@ -97,6 +97,9 @@ class WalletOverviewViewModel(
                 transactionAndCategoryList = transactionAndCategoryList ?: uiState.value.transactionAndCategoryList,
                 showSelectWallet = showSelectWallet ?: uiState.value.showSelectWallet
             )
+            if (wallet != null) {
+                currencyFormatter = Currency.setCurrencyFormatter(wallet.currency.abbreviation)
+            }
             writingOnUiState = false
         }
     }

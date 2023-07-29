@@ -16,7 +16,6 @@ import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.Screen
-import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
@@ -114,6 +113,7 @@ private fun BalanceMainBody(
         item {
             CreditCardSection(
                 balanceUiState = balanceUiState,
+                balanceViewModel = balanceViewModel,
                 modifier = modifier
             )
         }
@@ -147,9 +147,7 @@ private fun BalanceMainBody(
             TransactionEntry(
                 transaction = transactionCategoryGroup.transaction,
                 category = transactionCategoryGroup.category,
-                currencyFormatter = Currency.setCurrencyFormatter(
-                    balanceUiState.equivalentWallet.currency.abbreviation
-                ),
+                currencyFormatter = balanceViewModel.getCurrencyFormatter(),
                 onClickTransaction = {
                     Screen.TransactionReport.navigate(
                         transactionUUID = transactionCategoryGroup.transaction.id,

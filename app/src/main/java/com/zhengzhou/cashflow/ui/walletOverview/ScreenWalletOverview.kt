@@ -244,7 +244,7 @@ private fun OverviewSection(
             walletOverviewViewModel = walletOverviewViewModel,
             modifier = modifier,
         )
-        Divider()
+        HorizontalDivider()
         TransactionListSection(
             walletOverviewUiState = walletOverviewUiState,
             walletOverviewViewModel = walletOverviewViewModel,
