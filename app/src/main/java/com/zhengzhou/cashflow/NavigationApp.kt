@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.ui.balance.BalanceScreen
+import com.zhengzhou.cashflow.ui.commonTransactions.CommonTransactionsScreen
 import com.zhengzhou.cashflow.ui.manageCategories.ManageCategoriesScreen
 import com.zhengzhou.cashflow.ui.profile.ProfileScreen
 import com.zhengzhou.cashflow.ui.transactionEdit.TransactionEditScreen
@@ -33,6 +34,15 @@ fun NavigationApp() {
     NavHost(navController, startDestination = startDestination) {
         composable(route = Screen.Balance.route) {
             BalanceScreen(
+                currentScreen = currentScreen,
+                setCurrentScreen = { screen ->
+                    currentScreen = screen
+                },
+                navController = navController,
+            )
+        }
+        composable(route = Screen.CommonTransactions.route) {
+            CommonTransactionsScreen(
                 currentScreen = currentScreen,
                 setCurrentScreen = { screen ->
                     currentScreen = screen
@@ -119,6 +129,8 @@ enum class NavigationCurrentScreen(
     @DrawableRes
     val iconId: Int = 0,
     @StringRes
+    val optionNameShort: Int = 0,
+    @StringRes
     val optionName: Int,
     @StringRes
     val accessibilityText: Int? = null,
@@ -137,6 +149,7 @@ enum class NavigationCurrentScreen(
     Balance(
         iconId = R.drawable.ic_home,
         optionName = R.string.nav_name_balance,
+        optionNameShort = R.string.nav_name_balance,
         accessibilityText = R.string.accessibility_menu_navbar_balance,
         route = "Balance",
         navBarActive = true,
@@ -145,14 +158,25 @@ enum class NavigationCurrentScreen(
     WalletOverview(
         iconId = R.drawable.ic_wallet,
         optionName = R.string.nav_name_wallet,
+        optionNameShort = R.string.nav_name_wallet,
         accessibilityText = R.string.accessibility_menu_navbar_overview,
         route = "Wallet",
+        navBarActive = true,
+        bottomActive = true,
+    ),
+    CommonTransactions(
+        iconId = R.drawable.ic_send,
+        optionName = R.string.nav_name_common_transactions,
+        optionNameShort = R.string.nav_name_common_transactions_short,
+        accessibilityText = R.string.accessibility_menu_navbar_common_transactions,
+        route = "CommonTransactions",
         navBarActive = true,
         bottomActive = true,
     ),
     ManageCategories(
         iconId = R.drawable.ic_category,
         optionName = R.string.nav_name_manage_categories,
+        optionNameShort = R.string.nav_name_manage_categories,
         accessibilityText = R.string.nav_name_manage_categories,
         route = "ManageCategories",
         navBarActive = true,
@@ -160,6 +184,7 @@ enum class NavigationCurrentScreen(
     Profile(
         iconId = R.drawable.ic_account,
         optionName = R.string.nav_name_profile,
+        optionNameShort = R.string.nav_name_profile,
         accessibilityText = R.string.accessibility_menu_navbar_profile,
         route = "Profile",
         navBarActive = true,
@@ -210,6 +235,10 @@ sealed class Screen(
     object Balance: Screen(
         route = NavigationCurrentScreen.Balance.route,
         screenEnum = NavigationCurrentScreen.Balance,
+    )
+    object CommonTransactions: Screen(
+        route = NavigationCurrentScreen.CommonTransactions.route,
+        screenEnum = NavigationCurrentScreen.CommonTransactions,
     )
     object ManageCategories: Screen(
         route = NavigationCurrentScreen.ManageCategories.route,

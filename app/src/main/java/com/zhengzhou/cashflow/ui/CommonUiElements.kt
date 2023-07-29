@@ -61,7 +61,7 @@ fun BottomNavigationBar(
                         RouteIcon(navigationCurrentScreen = item)
                     },
                     label = {
-                        Text(stringResource(item.optionName))
+                        Text(stringResource(item.optionNameShort))
                     },
                     selected = (currentScreen == item),
                     onClick = {

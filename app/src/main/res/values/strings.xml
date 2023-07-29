@@ -17,6 +17,8 @@
     <string name="nav_back">Go back</string>
 
     <string name="nav_name_balance">Balance</string>
+    <string name="nav_name_common_transactions_short">Common</string>
+    <string name="nav_name_common_transactions">Common transactions</string>
     <string name="nav_name_manage_categories">Manage categories</string>
     <string name="nav_name_overview">Overview</string>
     <string name="nav_name_profile">Profile</string>
@@ -32,6 +34,7 @@
     <string name="accessibility_close_category">Close category</string>
     <string name="accessibility_menu_navbar">Navigation bar</string>
     <string name="accessibility_menu_navbar_balance">Balance</string>
+    <string name="accessibility_menu_navbar_common_transactions">Common transactions</string>
     <string name="accessibility_menu_navbar_overview">Overview</string>
     <string name="accessibility_menu_navbar_profile">Profile</string>
     <string name="accessibility_menu_action_open">Open menu</string>
