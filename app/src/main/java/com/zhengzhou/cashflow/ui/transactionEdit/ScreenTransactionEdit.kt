@@ -143,7 +143,7 @@ fun TransactionEditTopAppBar(
     TopAppBar(
         title = {
             Text(
-                stringResource(id = transactionType.new_text)
+                stringResource(id = transactionType.newText)
             )
         },
         navigationIcon = {

@@ -13,7 +13,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -69,7 +69,7 @@ fun SectionWalletBudget(
         if (walletEditUiState.wallet.budgetEnabled) {
 
             Spacer(modifier = Modifier.height(8.dp))
-            Divider()
+            HorizontalDivider()
 
             SectionWalletSetBudget(
                 walletEditUiState = walletEditUiState,
@@ -78,7 +78,7 @@ fun SectionWalletBudget(
             )
 
             Spacer(modifier = Modifier.height(8.dp))
-            Divider()
+            HorizontalDivider()
 
             CategoryBudgetSetter(
                 walletEditUiState = walletEditUiState,

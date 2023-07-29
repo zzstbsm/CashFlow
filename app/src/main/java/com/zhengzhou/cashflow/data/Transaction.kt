@@ -33,6 +33,10 @@ data class Transaction (
         val repository = DatabaseRepository.get()
         return repository.getCategory(idCategory)
     }
+
+    fun isNewTransaction(): Boolean {
+        return this.id == UUID(0L,0L)
+    }
 }
 
 data class TransactionAndCategory(
@@ -43,31 +47,31 @@ data class TransactionAndCategory(
 enum class TransactionType (
     val id: Int,
     @StringRes val text: Int,
-    @StringRes val new_text: Int,
+    @StringRes val newText: Int,
     @DrawableRes val iconId: Int,
 ) {
     Loading(
         id = 0,
         text = R.string.loading,
-        new_text = R.string.loading,
+        newText = R.string.loading,
         iconId = R.drawable.ic_error,
     ),
     Move(
         id = 1,
         text = R.string.move,
-        new_text = R.string.new_move,
+        newText = R.string.new_move,
         iconId = R.drawable.ic_transfer
     ),
     Deposit(
         id = 2,
         text = R.string.deposit,
-        new_text = R.string.new_deposit,
+        newText = R.string.new_deposit,
         iconId = R.drawable.ic_add
     ),
     Expense(
         id = 3,
         text = R.string.expense,
-        new_text = R.string.new_expense,
+        newText = R.string.new_expense,
         iconId = R.drawable.ic_remove
     );
 

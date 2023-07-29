@@ -2,10 +2,12 @@ package com.zhengzhou.cashflow.ui.balance
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.*
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +24,12 @@ data class BalanceUiState(
     ),
     val walletList: List<Wallet> = listOf(),
     val transactionList: List<TransactionAndCategory> = listOf(),
+    val transactionListToShow: List<TransactionAndCategory> = listOf(),
+
+    val filterStartDate: Date = TimeFilterForSegmentedButton.Month.getStartDate(),
+    val filterEndDate: Date = TimeFilterForSegmentedButton.Month.getEndDate(),
+    val timeFilter: TimeFilterForSegmentedButton? = TimeFilterForSegmentedButton.Month,
+
 ) {
 
     fun getBalance(): Float {
@@ -31,7 +39,6 @@ data class BalanceUiState(
         this.transactionList.map {
             it.transaction
         }.forEach { transaction ->
-            val transactionType = TransactionType.setTransaction(transaction.movementType)
             amount += transaction.amount
         }
         return amount
@@ -68,22 +75,70 @@ class BalanceViewModel() : ViewModel() {
     private var _uiState = MutableStateFlow(BalanceUiState())
     val uiState: StateFlow<BalanceUiState> = _uiState.asStateFlow()
 
+    private var writingOnUiState: Boolean = false
+
+    private var jobGetTransactionList: Job
+
     init {
 
         viewModelScope.launch(Dispatchers.IO) {
             // Collect all wallets
             repository.getWalletList().collect { collectedWalletList ->
-                _uiState.value = uiState.value.copy(
+                setUiState(
                     walletList = collectedWalletList,
                     isLoading = false
                 )
             }
         }
 
+        jobGetTransactionList = getTransactionList()
+
+    }
+
+    private fun setUiState(
+        isLoading: Boolean? = null,
+
+        equivalentWallet: Wallet? = null,
+
+        walletList: List<Wallet>? = null,
+
+        transactionList: List<TransactionAndCategory>? = null,
+        transactionListToShow: List<TransactionAndCategory>? = null,
+
+        filterStartDate: Date? = null,
+        filterEndDate: Date? = null,
+        timeFilter: TimeFilterForSegmentedButton? = null,
+        setTimeFilter: Boolean = false
+    ) {
         viewModelScope.launch {
-            while (uiState.value.isLoading) {
-                delay(20)
-            }
+            while (writingOnUiState) delay(5)
+
+            writingOnUiState = true
+
+            val timeFilterValue = if (setTimeFilter && timeFilter == null) null else timeFilter ?: uiState.value.timeFilter
+
+            _uiState.value = BalanceUiState(
+                isLoading= isLoading ?: uiState.value.isLoading,
+
+                equivalentWallet = equivalentWallet ?: uiState.value.equivalentWallet,
+
+                walletList = walletList ?: uiState.value.walletList,
+
+                transactionList = transactionList ?: uiState.value.transactionList,
+                transactionListToShow = transactionListToShow ?: uiState.value.transactionListToShow,
+
+                filterStartDate = filterStartDate ?: uiState.value.filterStartDate,
+                filterEndDate = filterEndDate ?: uiState.value.filterEndDate,
+                timeFilter = timeFilterValue,
+            )
+
+            writingOnUiState = false
+        }
+    }
+
+    private fun getTransactionList(): Job {
+        return viewModelScope.launch {
+            while (uiState.value.isLoading) delay(5)
 
             repository.getTransactionListInListOfWallet(uiState.value.walletList).collect { transactionList ->
 
@@ -99,15 +154,141 @@ class BalanceViewModel() : ViewModel() {
                     )
                 }
 
-                _uiState.value = uiState.value.copy(
-                    transactionList = transactionCategoryGroup
+                setUiState(
+                    transactionList = transactionCategoryGroup,
+                )
+                setTimeFilter(
+                    timeFilter = uiState.value.timeFilter
                 )
             }
 
         }
-
     }
 
+    fun setTimeFilter(
+        timeFilter: TimeFilterForSegmentedButton?,
+        startDate: Date = Date(),
+        endDate: Date = Date(),
+    ) {
+
+        val toSaveStartDate: Date
+        val toSaveEndDate: Date
+
+        if (timeFilter == null) {
+            toSaveStartDate = startDate
+            toSaveEndDate = endDate
+        } else {
+            toSaveStartDate = timeFilter.getStartDate()
+            toSaveEndDate = timeFilter.getEndDate()
+        }
+        setUiState(
+            transactionListToShow = getFilteredTransactionList(
+                toSaveStartDate,toSaveEndDate
+            ),
+            filterStartDate = toSaveStartDate,
+            filterEndDate = toSaveEndDate,
+            timeFilter = timeFilter,
+            setTimeFilter = true,
+        )
+    }
+
+    private fun getFilteredTransactionList(
+        startDate: Date = uiState.value.filterStartDate,
+        endDate: Date = uiState.value.filterEndDate,
+    ): List<TransactionAndCategory> {
+        return uiState.value.transactionList.filter { transactionAndCategory ->
+
+            transactionAndCategory.transaction.date in startDate..endDate
+
+        }
+    }
+}
+
+enum class TimeFilterForSegmentedButton(
+    val textId: Int,
+) {
+    Week(
+        textId = R.string.Balance_week,
+    ),
+    Month(
+        textId = R.string.Balance_month
+    ),
+    Year(
+        textId = R.string.Balance_year
+    ),
+    All(
+        textId = R.string.Balance_all
+    );
+
+    fun getStartDate(): Date {
+
+        val startDateCalendar = Calendar.getInstance()
+        startDateCalendar.time = Date()
+
+        startDateCalendar.set(
+            Calendar.HOUR_OF_DAY,0
+        )
+        startDateCalendar.set(
+            Calendar.MINUTE,0
+        )
+        startDateCalendar.set(
+            Calendar.SECOND,0
+        )
+        startDateCalendar.set(
+            Calendar.MILLISECOND,0
+        )
+
+        when(this) {
+
+            Week -> startDateCalendar.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY)
+            Month -> startDateCalendar.set(Calendar.DAY_OF_MONTH,1)
+            Year -> startDateCalendar.set(Calendar.DAY_OF_YEAR,1)
+            All -> {
+                val zeroTime = Date()
+                zeroTime.time = 0L
+                startDateCalendar.time = zeroTime
+            }
+        }
+
+        return startDateCalendar.time
+    }
+    fun getEndDate(): Date {
+
+        val endDateCalendar = Calendar.getInstance()
+        endDateCalendar.time = Date()
+
+        endDateCalendar.set(
+            Calendar.HOUR_OF_DAY,0
+        )
+        endDateCalendar.set(
+            Calendar.MINUTE,0
+        )
+        endDateCalendar.set(
+            Calendar.SECOND,0
+        )
+        endDateCalendar.set(
+            Calendar.MILLISECOND,0
+        )
+
+        when(this) {
+
+            Week -> endDateCalendar.set(
+                Calendar.DAY_OF_WEEK,
+                Calendar.SUNDAY
+            )
+            Month -> endDateCalendar.set(
+                Calendar.DAY_OF_MONTH,
+                endDateCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+            )
+            Year -> endDateCalendar.set(
+                Calendar.DAY_OF_YEAR,
+                endDateCalendar.getActualMaximum(Calendar.DAY_OF_YEAR)
+            )
+            All -> { }
+        }
+
+        return endDateCalendar.time
+    }
 }
 
 /*

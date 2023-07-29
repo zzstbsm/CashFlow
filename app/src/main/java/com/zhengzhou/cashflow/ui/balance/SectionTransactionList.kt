@@ -12,34 +12,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Transaction
-import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.data.TransactionAndCategory
 import com.zhengzhou.cashflow.tools.mapIconsFromName
 import java.text.NumberFormat
-import java.util.UUID
 
 @Composable
 fun TransactionEntry(
-    transactionAndCategory: TransactionAndCategory,
+    transaction: Transaction,
+    category: Category,
     currencyFormatter : NumberFormat,
     onClickTransaction: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
-    var category: Category = transactionAndCategory.category
-    val transaction: Transaction = transactionAndCategory.transaction
-
-    if (category.id == UUID(0L,0L)) {
-        category = Category(
-            name = stringResource(id = R.string.no_category),
-            iconName = "clear"
-        )
-    }
 
     Card(
         modifier = modifier

@@ -72,7 +72,13 @@
     <string name="new_move">New movement</string>
 
     <!-- Balance Screen -->
+    <string name="Balance_all">All</string>
     <string name="Balance_no_wallet">No wallets present in the system. Please first add a wallet.</string>
+    <string name="Balance_month">Month</string>
+    <string name="Balance_personalized">Personalized</string>
+    <string name="Balance_wallet_name_currency">%1s wallets</string>
+    <string name="Balance_week">Week</string>
+    <string name="Balance_year">Year</string>
 
     <!-- ManageCategories-->
     <string name="ManageCategories_cannot_delete">Cannot delete the category: there are transactions using this category</string>

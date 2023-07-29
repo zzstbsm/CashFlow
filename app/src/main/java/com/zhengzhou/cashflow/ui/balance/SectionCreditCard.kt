@@ -16,16 +16,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Currency
-import com.zhengzhou.cashflow.tools.addDaysFromDate
+import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.tools.balanceFlowIn
 import com.zhengzhou.cashflow.tools.balanceFlowOut
-import com.zhengzhou.cashflow.tools.transactionListFilterPeriod
 import java.util.*
 
 @Composable
 fun CreditCardSection(
     balanceUiState: BalanceUiState,
-    balanceViewModel: BalanceViewModel,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -61,8 +59,11 @@ fun CreditCardSection(
             Spacer(modifier = Modifier.height(4.dp))
 
             CardText(
-                balanceUiState = balanceUiState,
-                balanceViewModel = balanceViewModel,
+                balance = balanceUiState.getBalance(),
+                currency = balanceUiState.equivalentWallet.currency,
+                transactionList = balanceUiState.transactionListToShow.map {
+                        transactionAndCategory -> transactionAndCategory.transaction
+                },
                 modifier = Modifier,
             )
         }
@@ -71,34 +72,25 @@ fun CreditCardSection(
 
 @Composable
 private fun CardText(
-    balanceUiState: BalanceUiState,
-    balanceViewModel: BalanceViewModel,
+    balance: Float,
+    currency: Currency,
+    transactionList: List<Transaction>,
     modifier: Modifier = Modifier
 ) {
     // TODO: implement function that refreshes the amount
     val currencyFormatter = remember {
-        Currency.setCurrencyFormatter(balanceUiState.equivalentWallet.currency.abbreviation)
+        Currency.setCurrencyFormatter(currency.abbreviation)
     }
 
-    val balance = balanceUiState.getBalance()
-    // TODO: Add feature to change the range
-    val numberOfDays = 30
-    val transactionListFilteredByDate = transactionListFilterPeriod(
-        transactionList = balanceUiState.transactionList.map { it.transaction },
-        startDate = addDaysFromDate(Date(),- numberOfDays),
-        endDate = Date()
-    )
-    val balanceIn = balanceFlowIn(transactionListFilteredByDate)
-    val balanceOut = balanceFlowOut(transactionListFilteredByDate)
+    val balanceIn = balanceFlowIn(transactionList)
+    val balanceOut = balanceFlowOut(transactionList)
 
     val formattedBalance = Currency.formatCurrency(currencyFormatter, balance)
     val formattedIn = Currency.formatCurrency(currencyFormatter,balanceIn)
     val formattedOut = Currency.formatCurrency(currencyFormatter,balanceOut)
 
-    val wallet = balanceUiState.equivalentWallet
-
     Text(
-        text = wallet.name,
+        text = stringResource(id = R.string.Balance_wallet_name_currency,stringResource(currency.nameCurrency)),
         modifier = modifier
             .padding(vertical = 8.dp),
         style = MaterialTheme.typography.headlineMedium
