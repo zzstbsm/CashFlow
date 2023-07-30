@@ -3,8 +3,7 @@ package com.zhengzhou.cashflow.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.zhengzhou.cashflow.tools.getFirstDayOfCurrentMonth
-import com.zhengzhou.cashflow.tools.getLastDayOfCurrentMonth
+import com.zhengzhou.cashflow.tools.TimeTools
 import java.util.*
 
 /*
@@ -47,9 +46,9 @@ data class BudgetPeriod(
     @ColumnInfo(name = "id_wallet")
     val walletId: UUID = UUID(0L,0L),
     @ColumnInfo(name = "start_date")
-    val startDate: Date = getFirstDayOfCurrentMonth(),
+    val startDate: Date = TimeTools.getFirstDayOfCurrentMonth(),
     @ColumnInfo(name = "end_date")
-    val endDate: Date = getLastDayOfCurrentMonth(),
+    val endDate: Date = TimeTools.getLastDayOfCurrentMonth(),
     @ColumnInfo(name = "max_period_amount")
     val maxPeriodAmount: Float = 0f,
 )

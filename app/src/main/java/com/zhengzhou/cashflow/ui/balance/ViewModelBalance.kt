@@ -6,8 +6,7 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.*
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.database.DatabaseRepository
-import com.zhengzhou.cashflow.tools.timeSetBeginningOfDay
-import com.zhengzhou.cashflow.tools.timeSetEndOfDay
+import com.zhengzhou.cashflow.tools.TimeTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -216,19 +215,19 @@ class BalanceViewModel : ViewModel() {
         }
     }
 
-
     fun setTimeFilter(
         timeFilter: TimeFilterForSegmentedButton?,
-        startDate: Date = Date(),
-        endDate: Date = Date(),
+        startDate: Date = uiState.value.filterStartDate,
+        endDate: Date = uiState.value.filterEndDate,
+        navigation: Boolean = false,
     ) {
 
         val toSaveStartDate: Date
         val toSaveEndDate: Date
 
-        if (timeFilter == null) {
-            toSaveStartDate = timeSetBeginningOfDay(startDate)
-            toSaveEndDate = timeSetEndOfDay(endDate)
+        if (timeFilter == null || navigation) {
+            toSaveStartDate = TimeTools.timeSetBeginningOfDay(startDate)
+            toSaveEndDate = TimeTools.timeSetEndOfDay(endDate)
         } else {
             toSaveStartDate = timeFilter.getStartDate()
             toSaveEndDate = timeFilter.getEndDate()
@@ -258,24 +257,29 @@ class BalanceViewModel : ViewModel() {
 
 enum class TimeFilterForSegmentedButton(
     val textId: Int,
+    val dateFormat: String,
 ) {
     Week(
         textId = R.string.Balance_week,
+        dateFormat = "EE, dd MMM",
     ),
     Month(
-        textId = R.string.Balance_month
+        textId = R.string.Balance_month,
+        dateFormat = "MMMM yyyy",
     ),
     Year(
-        textId = R.string.Balance_year
+        textId = R.string.Balance_year,
+        dateFormat = "yyyy",
     ),
     All(
-        textId = R.string.Balance_all
+        textId = R.string.Balance_all,
+        dateFormat = "dd/MM/yyyy"
     );
 
     fun getStartDate(): Date {
 
         val startDateCalendar = Calendar.getInstance()
-        startDateCalendar.time = timeSetBeginningOfDay(Date())
+        startDateCalendar.time = TimeTools.timeSetBeginningOfDay(Date())
 
         when(this) {
 

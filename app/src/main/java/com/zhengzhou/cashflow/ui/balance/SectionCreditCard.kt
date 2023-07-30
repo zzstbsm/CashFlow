@@ -71,7 +71,7 @@ fun CreditCardSection(
                 currency = balanceUiState.equivalentWallet.currency,
                 currencyFormatter = balanceViewModel.getCurrencyFormatter(),
                 transactionList = balanceUiState.transactionListToShow.map {
-                        transactionAndCategory -> transactionAndCategory.transaction
+                    transactionAndCategory -> transactionAndCategory.transaction
                 },
                 modifier = Modifier,
             )
@@ -183,7 +183,7 @@ private fun MonthlyBalance(
         modifier = modifier.fillMaxHeight()
     ) {
         Text(
-            text = stringResource(id = R.string.this_month_balance)
+            text = stringResource(id = R.string.Balance_selected_period_balance)
         )
         Row {
             Image(

@@ -1,6 +1,7 @@
 package com.zhengzhou.cashflow.ui.balance
 
 import android.annotation.SuppressLint
+import android.text.format.DateFormat
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
@@ -20,6 +21,7 @@ import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.tools.EventMessages
+import com.zhengzhou.cashflow.tools.TimeTools
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
 import com.zhengzhou.cashflow.ui.DateSelector
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
@@ -128,6 +130,21 @@ private fun BalanceMainBody(
                 },
                 modifier = modifier,
             )
+            SelectedPeriodShow(
+                startDate = balanceUiState.filterStartDate,
+                endDate = balanceUiState.filterEndDate,
+                timeFilter = balanceUiState.timeFilter,
+                onSelectTimePeriod = { startDate, endDate ->
+                    balanceViewModel.setTimeFilter(
+                        timeFilter = balanceUiState.timeFilter,
+                        startDate = startDate,
+                        endDate = endDate,
+                        navigation = true,
+                    )
+                },
+                modifier = modifier,
+            )
+            /*
             PeriodSelectorInBalance(
                 startDate = balanceUiState.filterStartDate,
                 endDate = balanceUiState.filterEndDate,
@@ -140,9 +157,22 @@ private fun BalanceMainBody(
                 },
                 modifier = modifier
             )
+             */
         }
 
-        items(balanceUiState.transactionListToShow.size) {position ->
+        if (balanceUiState.transactionListToShow.isEmpty()) {
+            item {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = modifier
+                ) {
+                    Text(text = stringResource(id = R.string.Balance_no_transactions))
+                }
+            }
+        }
+        
+        items(balanceUiState.transactionListToShow.size) { position ->
             val transactionCategoryGroup = balanceUiState.transactionListToShow[position]
             TransactionEntry(
                 transaction = transactionCategoryGroup.transaction,
@@ -168,8 +198,8 @@ private fun BalanceFloatingActionButtons(
     transaction: Transaction = Transaction(),
     navController: NavController,
 ) {
-    
-    var showDialog by remember{ mutableStateOf(false) }
+
+    var showDialog by remember { mutableStateOf(false) }
 
     FloatingActionButton(onClick = { showDialog = true }) {
         Icon(
@@ -177,26 +207,26 @@ private fun BalanceFloatingActionButtons(
             contentDescription = stringResource(id = R.string.accessibility_transaction_new),
         )
     }
-    
+
     if (showDialog) {
-                
+
         AlertDialog(onDismissRequest = { showDialog = false }) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 ExtendedFloatingActionButton(
-                    text = { 
+                    text = {
                         Text(text = stringResource(id = R.string.new_deposit))
                     },
-                    icon = { 
-                       Icon(
-                           painter = painterResource(id = R.drawable.ic_add),
-                           contentDescription = stringResource(id = R.string.new_deposit),
-                       )
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_add),
+                            contentDescription = stringResource(id = R.string.new_deposit),
+                        )
                     },
                     onClick = {
-                        if (wallet.id != UUID(0L,0L)) {
+                        if (wallet.id != UUID(0L, 0L)) {
                             Screen.TransactionEdit.navigate(
                                 transactionType = TransactionType.Deposit,
                                 transactionUUID = transaction.id,
@@ -223,7 +253,7 @@ private fun BalanceFloatingActionButtons(
                         )
                     },
                     onClick = {
-                        if (wallet.id != UUID(0L,0L)) {
+                        if (wallet.id != UUID(0L, 0L)) {
                             Screen.TransactionEdit.navigate(
                                 transactionType = TransactionType.Expense,
                                 transactionUUID = transaction.id,
@@ -250,7 +280,7 @@ private fun BalanceFloatingActionButtons(
                         )
                     },
                     onClick = {
-                        if (wallet.id != UUID(0L,0L)) {
+                        if (wallet.id != UUID(0L, 0L)) {
                             Screen.TransactionEdit.navigate(
                                 transactionType = TransactionType.Move,
                                 transactionUUID = transaction.id,
@@ -307,7 +337,7 @@ private fun SelectTimeFilter(
 fun PeriodSelectorInBalance(
     startDate: Date,
     endDate: Date,
-    onSelectTimePeriod: (Date,Date) -> Unit = { _, _ -> },
+    onSelectTimePeriod: (Date, Date) -> Unit = { _, _ -> },
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
     Row(
@@ -351,5 +381,107 @@ fun PeriodSelectorInBalance(
                 utcTimeMillis >= startDate.time
             },
         )
+    }
+}
+
+@Composable
+private fun SelectedPeriodShow(
+    startDate: Date,
+    endDate: Date,
+    onSelectTimePeriod: (Date, Date) -> Unit = { _, _ -> },
+    timeFilter: TimeFilterForSegmentedButton?,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
+) {
+
+    val arrowButtonEnabled = (timeFilter != TimeFilterForSegmentedButton.All) && (timeFilter != null)
+
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth(),
+    ) {
+
+        IconButton(
+            onClick = {
+                when (timeFilter) {
+                    TimeFilterForSegmentedButton.Week -> {
+                        onSelectTimePeriod(
+                            TimeTools.getPreviousWeek(startDate),
+                            TimeTools.getPreviousWeek(endDate)
+                        )
+                    }
+                    TimeFilterForSegmentedButton.Month -> {
+                        onSelectTimePeriod(
+                            TimeTools.getPreviousMonth(startDate),
+                            TimeTools.getPreviousMonth(endDate)
+                        )
+                    }
+                    TimeFilterForSegmentedButton.Year -> {
+                        onSelectTimePeriod(
+                            TimeTools.getPreviousYear(startDate),
+                            TimeTools.getPreviousYear(endDate)
+                        )
+                    }
+                    else -> { }
+                }
+            },
+            enabled = arrowButtonEnabled
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_arrow_double_left),
+                contentDescription = null,
+            )
+        }
+
+        val personalizedDateFormat = "dd/MM/yyy"
+        val startDateFormat =
+            DateFormat.format(timeFilter?.dateFormat ?: personalizedDateFormat, startDate)
+                .toString()
+        val endDateFormat =
+            DateFormat.format(timeFilter?.dateFormat ?: personalizedDateFormat, endDate)
+                .toString()
+
+        Text(
+            text = when (timeFilter) {
+                TimeFilterForSegmentedButton.Month -> endDateFormat
+                TimeFilterForSegmentedButton.Year -> endDateFormat
+                TimeFilterForSegmentedButton.All -> stringResource(id = R.string.Balance_all)
+                else -> "$startDateFormat - $endDateFormat"
+            }
+        )
+
+        IconButton(
+            onClick = {
+                when (timeFilter) {
+                    TimeFilterForSegmentedButton.Week -> {
+                        onSelectTimePeriod(
+                            TimeTools.getNextWeek(startDate),
+                            TimeTools.getNextWeek(endDate)
+                        )
+                    }
+                    TimeFilterForSegmentedButton.Month -> {
+                        onSelectTimePeriod(
+                            TimeTools.getNextMonth(startDate),
+                            TimeTools.getNextMonth(endDate)
+                        )
+                    }
+                    TimeFilterForSegmentedButton.Year -> {
+                        onSelectTimePeriod(
+                            TimeTools.getNextYear(startDate),
+                            TimeTools.getNextYear(endDate)
+                        )
+                    }
+                    else -> { }
+                }
+            },
+            enabled = arrowButtonEnabled,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_arrow_double_right),
+                contentDescription = null,
+            )
+        }
+
     }
 }
