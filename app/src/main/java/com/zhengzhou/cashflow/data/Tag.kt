@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.*
+import kotlin.math.min
 
 data class Tag (
     val id: UUID = UUID(0L,0L),
@@ -15,9 +16,6 @@ data class Tag (
 ) {
 
     companion object {
-        fun separate(tag: Tag): Pair<TagTransaction,TagEntry> {
-            return tag.separate()
-        }
 
         fun merge(
             tagTransaction: TagTransaction?,
@@ -107,7 +105,11 @@ data class TagEntry(
                 }
 
             }
-            return tempList.toList()
+
+            val toIndex = min(tempList.size,3)
+            return if (tempList.isEmpty()) tempList.toList() else tempList.toList().sortedBy {
+                it.name
+            }.subList(fromIndex = 0, toIndex = toIndex)
         }
     }
 }

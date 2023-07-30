@@ -1,6 +1,7 @@
 package com.zhengzhou.cashflow.ui.transactionEdit
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
@@ -43,7 +44,7 @@ fun TagSection(
                 singleLine = true,
                 onValueChange = {
                     onChangeText(it)
-                    if (it.length > 2) showDropdownMenu = true
+                    showDropdownMenu = it.length > 2
                 },
                 label = {
                     Text(text = stringResource(id = R.string.tag))
@@ -73,7 +74,6 @@ fun TagSection(
             filteredTagList = TagEntry.tagListFiltered(currentTagText,completeTagList),
             onSelectTag = { selectedTag ->
                 showDropdownMenu = false
-                //onTagAdd(selectedTag)
                 onChangeText(selectedTag)
             },
             showDropdownMenu = showDropdownMenu,
@@ -144,14 +144,34 @@ private fun TagListFilter(
     showDropdownMenu: Boolean,
 ) {
 
-    DropdownMenu(
-        expanded = showDropdownMenu && filteredTagList.isNotEmpty(),
-        onDismissRequest = {  }
-    ) {
+    if (showDropdownMenu && filteredTagList.isNotEmpty()) {
+        Box {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                LazyColumn(
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    items(filteredTagList.size) { position ->
+                        val tag = filteredTagList[position]
+                        Text(
+                            text = tag.name,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onSelectTag(tag.name)
+                                }
+                                .padding(8.dp)
+                        )
+                    }
+                }
 
-        filteredTagList.forEach { tag ->
-            DropdownMenuItem(text = { Text(tag.name) }, onClick = { onSelectTag(tag.name) })
+            }
+
         }
-
     }
 }
