@@ -259,42 +259,6 @@ class TransactionEditViewModel(
             return TransactionSaveResult.NO_CATEGORY
         }
 
-        // Save transaction
-        /*
-        viewModelScope.launch {
-
-            // Save transaction entry
-            if (newTransaction) {
-                transaction = repository.addTransaction(transaction)
-            } else {
-                repository.updateTransaction(transaction)
-            }
-
-            // Save tags
-            currentTransactionTagList = currentTransactionTagList.map {
-                it.copy(
-                    idTransaction = transaction.id
-                )
-            }
-            currentTransactionTagList.forEach { tag ->
-
-                val newTag = tag.id == UUID(0L, 0L)
-
-                if (newTag && tag.enabled) {
-                    repository.addTag(tag)
-                }
-                // Tag has been deleted during the edit
-                else if (!tag.enabled) {
-                    repository.deleteTag(tag)
-                } else {
-                    repository.updateTag(tag)
-                }
-            }
-            // TODO: Save location
-        }
-
-         */
-
         val transactionFullForUI = TransactionFullForUI(
             transaction = uiState.value.transaction,
             wallet = uiState.value.wallet,

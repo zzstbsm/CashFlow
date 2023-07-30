@@ -6,6 +6,8 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.*
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.database.DatabaseRepository
+import com.zhengzhou.cashflow.tools.timeSetBeginningOfDay
+import com.zhengzhou.cashflow.tools.timeSetEndOfDay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -217,8 +219,8 @@ class BalanceViewModel() : ViewModel() {
         val toSaveEndDate: Date
 
         if (timeFilter == null) {
-            toSaveStartDate = startDate
-            toSaveEndDate = endDate
+            toSaveStartDate = timeSetBeginningOfDay(startDate)
+            toSaveEndDate = timeSetEndOfDay(endDate)
         } else {
             toSaveStartDate = timeFilter.getStartDate()
             toSaveEndDate = timeFilter.getEndDate()
@@ -265,20 +267,7 @@ enum class TimeFilterForSegmentedButton(
     fun getStartDate(): Date {
 
         val startDateCalendar = Calendar.getInstance()
-        startDateCalendar.time = Date()
-
-        startDateCalendar.set(
-            Calendar.HOUR_OF_DAY,0
-        )
-        startDateCalendar.set(
-            Calendar.MINUTE,0
-        )
-        startDateCalendar.set(
-            Calendar.SECOND,0
-        )
-        startDateCalendar.set(
-            Calendar.MILLISECOND,0
-        )
+        startDateCalendar.time = timeSetBeginningOfDay(Date())
 
         when(this) {
 
@@ -286,9 +275,9 @@ enum class TimeFilterForSegmentedButton(
             Month -> startDateCalendar.set(Calendar.DAY_OF_MONTH,1)
             Year -> startDateCalendar.set(Calendar.DAY_OF_YEAR,1)
             All -> {
-                val zeroTime = Date()
-                zeroTime.time = 0L
-                startDateCalendar.time = zeroTime
+                val epochTime = Date()
+                epochTime.time = 0L
+                startDateCalendar.time = epochTime
             }
         }
 
@@ -300,16 +289,16 @@ enum class TimeFilterForSegmentedButton(
         endDateCalendar.time = Date()
 
         endDateCalendar.set(
-            Calendar.HOUR_OF_DAY,0
+            Calendar.HOUR_OF_DAY,23
         )
         endDateCalendar.set(
-            Calendar.MINUTE,0
+            Calendar.MINUTE,59
         )
         endDateCalendar.set(
-            Calendar.SECOND,0
+            Calendar.SECOND,59
         )
         endDateCalendar.set(
-            Calendar.MILLISECOND,0
+            Calendar.MILLISECOND,999
         )
 
         when(this) {

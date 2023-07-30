@@ -332,7 +332,7 @@ fun PeriodSelectorInBalance(
         )
 
         DateSelector(
-            label = stringResource(id = R.string.from),
+            label = stringResource(id = R.string.to),
             dateFormat = "dd/MM/yyyy",
             date = endDate,
             onSelectDate = { millis ->
