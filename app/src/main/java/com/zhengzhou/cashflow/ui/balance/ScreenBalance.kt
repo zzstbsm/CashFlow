@@ -198,9 +198,9 @@ private fun BalanceFloatingActionButtons(
                     onClick = {
                         if (wallet.id != UUID(0L,0L)) {
                             Screen.TransactionEdit.navigate(
-                                walletUUID = wallet.id,
                                 transactionType = TransactionType.Deposit,
                                 transactionUUID = transaction.id,
+                                isBlueprint = false,
                                 navController = navController,
                             )
                         } else {
@@ -224,9 +224,9 @@ private fun BalanceFloatingActionButtons(
                     onClick = {
                         if (wallet.id != UUID(0L,0L)) {
                             Screen.TransactionEdit.navigate(
-                                walletUUID = wallet.id,
                                 transactionType = TransactionType.Expense,
                                 transactionUUID = transaction.id,
+                                isBlueprint = false,
                                 navController = navController,
                             )
                         } else {
@@ -250,9 +250,9 @@ private fun BalanceFloatingActionButtons(
                     onClick = {
                         if (wallet.id != UUID(0L,0L)) {
                             Screen.TransactionEdit.navigate(
-                                walletUUID = wallet.id,
                                 transactionType = TransactionType.Move,
                                 transactionUUID = transaction.id,
+                                isBlueprint = false,
                                 navController = navController,
                             )
                         } else {

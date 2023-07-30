@@ -43,6 +43,7 @@ import java.util.UUID
 fun TransactionEditScreen(
     transactionType: TransactionType,
     transactionUUID: UUID,
+    isBlueprint: Boolean,
     navController: NavController,
 ) {
 
@@ -50,6 +51,7 @@ fun TransactionEditScreen(
         TransactionEditViewModel(
             transactionUUID = transactionUUID,
             transactionType = transactionType,
+            isBlueprint = isBlueprint,
         )
     }
     val transactionEditUiState by transactionEditViewModel.uiState.collectAsState()

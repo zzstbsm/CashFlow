@@ -47,6 +47,8 @@ data class Tag (
 
     }
 
+    fun isNewTag(): Boolean = id == UUID(0L, 0L)
+
     fun separate(): Pair<TagTransaction,TagEntry> {
 
         val tagTransaction = TagTransaction(

@@ -14,8 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -30,6 +28,7 @@ import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.mapIconsFromName
 import com.zhengzhou.cashflow.ui.DateSelector
+import com.zhengzhou.cashflow.ui.DropdownTextFieldMenu
 import com.zhengzhou.cashflow.ui.MoneyTextField
 import java.util.UUID
 
@@ -328,34 +327,15 @@ private fun TextWalletCurrencyChooser(
 ) {
 
     var showDropDownMenu by remember { mutableStateOf(false) }
-    val focusManager = LocalFocusManager.current
 
-    Box(
-        modifier = modifier
-    ) {
-        OutlinedTextField(
-            label = {
-                Text(text = stringResource(id = R.string.currency))
-            },
-            value = walletEditUiState.wallet.currency.abbreviation,
-            onValueChange = { },
-            modifier = Modifier
-                .onFocusChanged { focusState ->
-                    if (focusState.isFocused) {
-                        showDropDownMenu = true
-                        focusManager.clearFocus()
-                    }
-                }
-            ,
-            maxLines = 1,
-        )
-
-        DropdownMenu(
-            expanded = showDropDownMenu,
-            onDismissRequest = {
-                showDropDownMenu = false
-            },
-        ) {
+    DropdownTextFieldMenu(
+        label = stringResource(id = R.string.currency),
+        value = walletEditUiState.wallet.currency.abbreviation,
+        expanded = showDropDownMenu,
+        onChangeExpanded = { ifShow ->
+            showDropDownMenu = ifShow
+        },
+        dropdownMenuContent = {
             Currency.supportedCurrencyList().forEach { currency ->
 
                 DropdownMenuItem(
@@ -376,8 +356,7 @@ private fun TextWalletCurrencyChooser(
                     }
                 )
             }
-        }
-    }
-
-
+        },
+        modifier = modifier,
+    )
 }

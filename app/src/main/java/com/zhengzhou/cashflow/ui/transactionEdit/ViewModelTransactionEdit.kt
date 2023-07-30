@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.TagEntry
+import com.zhengzhou.cashflow.data.TagLocation
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.TransactionFullForUI
 import com.zhengzhou.cashflow.data.TransactionType
@@ -62,6 +63,7 @@ data class TransactionEditUiState(
 class TransactionEditViewModel(
     transactionUUID: UUID,
     transactionType: TransactionType,
+    isBlueprint: Boolean,
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(TransactionEditUiState())
@@ -123,7 +125,8 @@ class TransactionEditViewModel(
                 wallet = repository.getWalletLastAccessed() ?: Wallet()
                 transaction = Transaction(
                     idWallet = wallet.id,
-                    movementType = transactionType.id
+                    movementType = transactionType.id,
+                    isBlueprint = isBlueprint,
                 )
                 isLoadedTransactionFull = true
 
@@ -243,9 +246,8 @@ class TransactionEditViewModel(
 
     fun saveTransaction(): TransactionSaveResult {
 
-
-        var transaction: Transaction = uiState.value.transaction
-        var currentTransactionTagList: List<Tag> = uiState.value.currentTagList
+        val transaction: Transaction = uiState.value.transaction
+        val currentTransactionTagList: List<Tag> = uiState.value.currentTagList
 
         val ifCategoryChosen = transaction.idCategory != UUID(0L,0L)
         val ifAmountChosen = transaction.amount >= 0.01f || transaction.amount <= -0.01f
@@ -258,6 +260,7 @@ class TransactionEditViewModel(
         }
 
         // Save transaction
+        /*
         viewModelScope.launch {
 
             // Save transaction entry
@@ -288,6 +291,24 @@ class TransactionEditViewModel(
                 }
             }
             // TODO: Save location
+        }
+
+         */
+
+        val transactionFullForUI = TransactionFullForUI(
+            transaction = uiState.value.transaction,
+            wallet = uiState.value.wallet,
+            category = uiState.value.categoryList.first {
+                it.id == uiState.value.transaction.idCategory
+            },
+            tagList = currentTransactionTagList,
+            location = TagLocation(),
+        )
+        viewModelScope.launch {
+            transactionFullForUI.save(
+                repository = repository,
+                newTransaction = newTransaction,
+            )
         }
         return TransactionSaveResult.SUCCESS
     }

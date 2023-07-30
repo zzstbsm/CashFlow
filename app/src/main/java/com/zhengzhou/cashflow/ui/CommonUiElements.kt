@@ -1,9 +1,12 @@
 package com.zhengzhou.cashflow.ui
 
+import android.annotation.SuppressLint
 import android.text.format.DateFormat
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -365,5 +368,62 @@ fun SectionTransactionEntry(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun CategoryIcon(
+    iconName: String,
+    contentDescription: String?,
+    modifier: Modifier = Modifier,
+) {
+    Icon(
+        painter = painterResource(id = mapIconsFromName[iconName] ?: R.drawable.ic_clear),
+        contentDescription = contentDescription,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun DropdownTextFieldMenu(
+    label: String,
+    value: String,
+    enabled: Boolean = true,
+    expanded: Boolean,
+    onChangeExpanded: (Boolean) -> Unit,
+    dropdownMenuContent: @Composable() (ColumnScope.() -> Unit),
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
+) {
+
+    val focusManager = LocalFocusManager.current
+
+    Box(
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            label = {
+                Text(text = label)
+            },
+            value = value,
+            onValueChange = { },
+            enabled = enabled,
+            modifier = Modifier
+                .onFocusChanged { focusState ->
+                    if (focusState.isFocused) {
+                        onChangeExpanded(true)
+                        focusManager.clearFocus()
+                    }
+                }
+            ,
+            maxLines = 1,
+        )
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = {
+                onChangeExpanded(false)
+            },
+            content = dropdownMenuContent
+        )
     }
 }

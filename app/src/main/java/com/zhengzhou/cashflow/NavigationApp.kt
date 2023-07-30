@@ -94,12 +94,9 @@ fun NavigationApp() {
             )
         }
         composable(route = Screen.TransactionEdit.route) {backStackEntry ->
-            val walletUUIDStr = backStackEntry.arguments?.getString("walletUUIDStr")
             val transactionTypeId = backStackEntry.arguments?.getString("transactionType")
             val transactionUUIDStr = backStackEntry.arguments?.getString("transactionUUIDStr")
-            requireNotNull(walletUUIDStr) {
-                "Exception: passed walletUUIDStr not valid"
-            }
+            val isBlueprint = backStackEntry.arguments?.getString("isBlueprint").toBoolean()
             requireNotNull(transactionTypeId) {
                 "Exception: passed transactionType not valid"
             }
@@ -109,6 +106,7 @@ fun NavigationApp() {
             TransactionEditScreen(
                 transactionType = TransactionType.setTransaction(transactionTypeId.toInt())!!,
                 transactionUUID = UUID.fromString(transactionUUIDStr),
+                isBlueprint = isBlueprint,
                 navController = navController
             )
         }
@@ -279,29 +277,29 @@ sealed class Screen(
 
     object TransactionEdit: Screen(
         route = NavigationCurrentScreen.TransactionEdit.route +
-                "/{walletUUIDStr}" +
                 "/{transactionType}" +
-                "/{transactionUUIDStr}",
+                "/{transactionUUIDStr}" +
+                "/{isBlueprint}",
         screenEnum = NavigationCurrentScreen.Balance,
     ) {
         private fun createRoute(
-            walletUUID: UUID,
             transactionType: TransactionType,
             transactionUUID: UUID,
+            isBlueprint: Boolean,
         ) = NavigationCurrentScreen.TransactionEdit.route +
-                "/$walletUUID/${transactionType.id}/$transactionUUID"
+                "/${transactionType.id}/$transactionUUID/$isBlueprint"
 
         fun navigate(
-            walletUUID: UUID,
             transactionType: TransactionType,
             transactionUUID: UUID,
+            isBlueprint: Boolean,
             navController: NavController,
         )  {
             navController.navigate(
                 createRoute(
-                    walletUUID = walletUUID,
                     transactionType = transactionType,
                     transactionUUID = transactionUUID,
+                    isBlueprint = isBlueprint,
                 )
             )
         }

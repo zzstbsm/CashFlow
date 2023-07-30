@@ -30,7 +30,7 @@ fun databaseRepositoryInitializer(
         DATABASE_NAME
     )
     //.addMigrations(migration_1_2, migration_2_3)
-    //.addMigrations(MIGRATION_1_2)
+    .addMigrations(MIGRATION_1_2)
     .build()
 }
 
@@ -213,9 +213,11 @@ open class DatabaseRepository(
     }
 
     fun getTransactionListInWallet(idWallet: UUID): Flow<List<Transaction>>
-            = database.databaseDao().getTransactionListInWallet(idWallet)
+        = database.databaseDao().getTransactionListInWallet(idWallet)
     fun getTransactionShortListInWallet(idWallet: UUID,numberOfEntries: Int): Flow<List<Transaction>>
         = database.databaseDao().getTransactionShortListInWallet(idWallet,numberOfEntries)
+    fun getTransactionIsBlueprint(): Flow<List<Transaction>>
+        = database.databaseDao().getTransactionIsBlueprint()
 
     /* Wallet section */
     suspend fun getWallet(walletUUID: UUID): Wallet? = database.databaseDao().getWallet(walletUUID)

@@ -7,6 +7,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.database.DatabaseRepository
+import com.zhengzhou.cashflow.ui.transactionEdit.TransactionSaveResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -27,7 +28,9 @@ data class Transaction (
     @ColumnInfo(name = "id_location")
     val idLocation: UUID = UUID(0L,0L),
     @ColumnInfo(name = "movement_type")
-    val movementType: Int = TransactionType.Loading.id
+    val movementType: Int = TransactionType.Loading.id,
+    @ColumnInfo(name = "is_blueprint")
+    val isBlueprint: Boolean = false,
 ) {
     suspend fun getCategory() : Category? {
         val repository = DatabaseRepository.get()
@@ -114,11 +117,9 @@ data class TransactionFullForUI(
             val wallet = repository.getWallet(transaction.idWallet) ?: Wallet()
             val category = repository.getCategory(transaction.idCategory) ?: Category()
 
-            //var  tagTransactionList: List<Tag> = listOf()
             var  tagList: List<Tag> = listOf()
             jobRetrieveTagTransaction.launch {
                 repository.getTagListFromTransaction(transactionUUID = transaction.id).collect {
-                    //tagTransactionList = it
                     tagList = it
                     isLoading = false
                 }
@@ -129,9 +130,6 @@ data class TransactionFullForUI(
             }
             jobRetrieveTagTransaction.cancel()
 
-            //val tagList = tagTransactionList.mapNotNull { tagTransaction ->
-            //    repository.getTag(tagTransaction.idTransaction)
-            //}
             val location = repository.getLocation(transaction.idLocation) ?: TagLocation()
 
             val isLoaded = !isLoading
@@ -147,5 +145,57 @@ data class TransactionFullForUI(
                 isLoaded
             )
         }
+    }
+
+    suspend fun save(
+        repository: DatabaseRepository,
+        newTransaction: Boolean,
+    ): TransactionSaveResult {
+
+        var currentTransaction: Transaction = transaction.copy(
+            date = if (newTransaction) Date() else transaction.date,
+            isBlueprint = false,
+        )
+        var currentTagList: List<Tag> = tagList
+
+        // Save transaction entry
+        if (newTransaction) {
+            currentTransaction = repository.addTransaction(currentTransaction)
+        } else {
+            repository.updateTransaction(currentTransaction)
+        }
+
+        // Update last access in wallet
+        repository.updateWallet(wallet.copy(lastAccess = Date()))
+
+        // Save tags
+        currentTagList = currentTagList.map {
+            it.copy(
+                idTransaction = currentTransaction.id,
+            )
+        }
+        currentTagList.forEach { tag ->
+
+            val newTag = tag.isNewTag()
+
+            if (newTag && tag.enabled) {
+                repository.addTag(tag)
+            }
+            // Tag has been deleted during the edit
+            else if (!tag.enabled) {
+                repository.deleteTag(tag)
+            } else {
+                repository.updateTag(tag)
+            }
+        }
+        // TODO: Save location
+
+        return TransactionSaveResult.SUCCESS
+    }
+
+    suspend fun delete(
+        repository: DatabaseRepository,
+    ) {
+
     }
 }

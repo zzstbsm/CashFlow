@@ -65,9 +65,9 @@ fun TransactionReportScreen(
                  },
                  onEditClick = {
                      Screen.TransactionEdit.navigate(
-                         walletUUID = transactionReportUiState.wallet.id,
                          transactionType = transactionReportUiState.transactionType,
                          transactionUUID = transactionUUID,
+                         isBlueprint = false,
                          navController = navController,
                      )
                  },
