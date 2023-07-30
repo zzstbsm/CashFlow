@@ -152,9 +152,14 @@ data class TransactionFullForUI(
         newTransaction: Boolean,
     ): TransactionSaveResult {
 
+        /*
+         *
+         * Remember to update the count of the tags before saving
+         *
+         */
+
         var currentTransaction: Transaction = transaction.copy(
             date = if (newTransaction) Date() else transaction.date,
-            isBlueprint = false,
         )
         var currentTagList: List<Tag> = tagList
 
@@ -177,8 +182,7 @@ data class TransactionFullForUI(
         currentTagList.forEach { tag ->
 
             val newTag = tag.isNewTag()
-
-            if (newTag && tag.enabled) {
+            if ((newTag || newTransaction) && tag.enabled) {
                 repository.addTag(tag)
             }
             // Tag has been deleted during the edit
@@ -196,6 +200,15 @@ data class TransactionFullForUI(
     suspend fun delete(
         repository: DatabaseRepository,
     ) {
+        repository.deleteTransaction(transaction = transaction)
+        tagList.map { tag ->
+            tag.copy(
+                count = tag.count - 1
+            )
+        }.forEach { tag ->
+            repository.deleteTag(tag = tag)
+        }
 
+        // TODO: delete location
     }
 }

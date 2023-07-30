@@ -131,9 +131,18 @@ class CommonTransactionsViewModel(): ViewModel() {
         )
     }
 
-    fun saveTransaction(transactionFullForUI: TransactionFullForUI) {
+    fun addTransaction(transactionFullForUI: TransactionFullForUI) {
         viewModelScope.launch {
-            transactionFullForUI.save(
+            transactionFullForUI.copy(
+                transaction = transactionFullForUI.transaction.copy(
+                    isBlueprint = false
+                ),
+                tagList = transactionFullForUI.tagList.map { tag ->
+                    tag.copy(
+                        count = tag.count + 1
+                    )
+                }
+            ).save(
                 repository = repository,
                 newTransaction = true,
             )
@@ -141,5 +150,20 @@ class CommonTransactionsViewModel(): ViewModel() {
             EventMessages.sendMessageId(R.string.TransactionEdit_transaction_saved)
 
         }
+    }
+
+    fun deleteTransaction(transactionFullForUI: TransactionFullForUI)  {
+        viewModelScope.launch {
+            transactionFullForUI.copy(
+                tagList = transactionFullForUI.tagList.map { tag ->
+                    tag.copy(
+                        count = tag.count - 1
+                    )
+                }
+            ).delete(repository)
+            jobLoadTransactionBlueprint.cancel()
+            jobLoadTransactionBlueprint = loadTransactionBlueprint()
+        }
+        EventMessages.sendMessageId(R.string.CommonTransactions_transaction_deleted)
     }
 }

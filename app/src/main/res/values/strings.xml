@@ -84,6 +84,12 @@
     <string name="Balance_week">Week</string>
     <string name="Balance_year">Year</string>
 
+    <!-- CommonTransactions -->
+    <string name="CommonTransactions_no_model">There are no blueprints</string>
+    <string name="CommonTransactions_edit_model">Edit model</string>
+    <string name="CommonTransactions_tag">Tags:</string>
+    <string name="CommonTransactions_transaction_deleted">Transaction blueprint deleted</string>
+
     <!-- ManageCategories-->
     <string name="ManageCategories_cannot_delete">Cannot delete the category: there are transactions using this category</string>
     <string name="ManageCategories_choose_category_icon">Choose category icon</string>
@@ -104,7 +110,9 @@
     <string name="TransactionEdit_amount_insert_prompt">Insert the amount</string>
 
     <!-- TransactionReport -->
+    <string name="TransactionReport_delete_transaction">Delete transaction</string>
     <string name="TransactionReport_edit_transaction">Edit transaction</string>
+    <string name="TransactionReport_transaction_deleted">Transaction deleted</string>
 
     <string name="tag">Tag</string>
     <string name="tag_no">No tags</string>
@@ -153,5 +161,6 @@
     <string name="empty_group">Empty group</string>
     <string name="err_divide_by_zero">Cannot divide by zero</string>
     <string name="loading">Loading</string>
+    <string name="delete_tag">Delete tag %1s</string>
 
 </resources>

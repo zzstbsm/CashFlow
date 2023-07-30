@@ -7,13 +7,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.TagEntry
+import com.zhengzhou.cashflow.ui.SingleTag
 
 @Composable
 fun TagSection(
@@ -133,46 +133,6 @@ private fun TagListPart(
                     )
                 }
             }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SingleTag(
-    tag: String = "",
-    selected: Boolean,
-    onTagClick: () -> Unit,
-) {
-    Row(
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.Start,
-    ) {
-        if (tag == "") {
-            Text(
-                text = stringResource(id = R.string.tag_no),
-                color = Color.Gray,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        } else {
-            FilterChip(
-                selected = selected,
-                onClick = { onTagClick() },
-                label = { Text(text = tag) },
-                leadingIcon =  {
-                    if (selected) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_check),
-                            contentDescription = null,
-                        )
-                    } else {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_clear),
-                            contentDescription = "Delete tag $tag" // TODO: to put in string.xml
-                        )
-                    }
-                }
-            )
         }
     }
 }

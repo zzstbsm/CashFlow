@@ -2,15 +2,10 @@ package com.zhengzhou.cashflow.ui.transactionReport
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zhengzhou.cashflow.data.Category
-import com.zhengzhou.cashflow.data.Tag
-import com.zhengzhou.cashflow.data.TagLocation
-import com.zhengzhou.cashflow.data.TagTransaction
-import com.zhengzhou.cashflow.data.Transaction
+import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.TransactionFullForUI
-import com.zhengzhou.cashflow.data.TransactionType
-import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
+import com.zhengzhou.cashflow.tools.EventMessages
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,14 +15,7 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 
 data class TransactionReportUiState(
-    val wallet: Wallet = Wallet(),
-    val transaction: Transaction = Transaction(),
-    val category: Category = Category(),
-    val tagTransactionList: List<TagTransaction> = listOf(),
-    val tagList: List<Tag> = listOf(),
-    val location: TagLocation = TagLocation(),
-
-    val transactionType: TransactionType = TransactionType.Loading,
+    val transactionFullForUI: TransactionFullForUI = TransactionFullForUI(),
 
     val isLoading: Boolean = true,
 
@@ -42,6 +30,8 @@ class TransactionReportViewModel(
 
     private val repository = DatabaseRepository.get()
 
+    private var writingOnUiState: Boolean = false
+
     private var jobLoadTransactionReport: Job
 
 
@@ -49,26 +39,43 @@ class TransactionReportViewModel(
         jobLoadTransactionReport = loadTransactionReport(transactionUUID)
     }
 
+    private fun setUiState(
+        transactionFullForUI: TransactionFullForUI? = null,
+        isLoading: Boolean? = null,
+    ) {
+        viewModelScope.launch {
+            while (writingOnUiState) delay(5)
+
+            writingOnUiState = true
+            _uiState.value = uiState.value.copy(
+                transactionFullForUI = transactionFullForUI ?: uiState.value.transactionFullForUI,
+                isLoading = isLoading ?: uiState.value.isLoading,
+            )
+            writingOnUiState = false
+
+        }
+    }
+
     fun loadTransactionReport(transactionUUID: UUID): Job {
         return viewModelScope.launch {
             val (transactionFullForUI, isLoaded) = TransactionFullForUI.load(repository,transactionUUID)
-
-            while (!isLoaded) {
-                delay(20)
-            }
-            _uiState.value = uiState.value.copy(
-                wallet = transactionFullForUI.wallet,
-                transaction = transactionFullForUI.transaction,
-                category = transactionFullForUI.category,
-                tagList = transactionFullForUI.tagList,
-                location = transactionFullForUI.location,
-
-                transactionType = TransactionType.setTransaction(
-                    transactionFullForUI.transaction.movementType
-                ) ?: TransactionType.Loading,
-
-                isLoading = false,
+            setUiState(
+                transactionFullForUI = transactionFullForUI,
+                isLoading = !isLoaded
             )
         }
+    }
+
+    fun deleteTransaction() {
+        viewModelScope.launch {
+            uiState.value.transactionFullForUI.copy(
+                tagList = uiState.value.transactionFullForUI.tagList.map { tag ->
+                    tag.copy(
+                        count = tag.count - 1
+                    )
+                }
+            ).delete(repository)
+        }
+        EventMessages.sendMessageId(R.string.TransactionReport_transaction_deleted)
     }
 }

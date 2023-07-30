@@ -71,7 +71,7 @@ data class BalanceUiState(
     }
 }
 
-class BalanceViewModel() : ViewModel() {
+class BalanceViewModel : ViewModel() {
 
     private val repository = DatabaseRepository.get()
 
@@ -200,7 +200,15 @@ class BalanceViewModel() : ViewModel() {
             )
             // Collect all wallets
             repository.getWalletListByCurrency(currency).collect { collectedWalletList ->
+                var amount = 0f
+                collectedWalletList.forEach { wallet: Wallet ->
+                    amount += wallet.startAmount
+                }
                 setUiState(
+                    equivalentWallet = uiState.value.equivalentWallet.copy(
+                        currency = currency,
+                        startAmount = amount,
+                    ),
                     walletList = collectedWalletList,
                     isLoading = false
                 )

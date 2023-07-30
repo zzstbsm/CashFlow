@@ -201,6 +201,7 @@ private fun BalanceFloatingActionButtons(
                                 transactionType = TransactionType.Deposit,
                                 transactionUUID = transaction.id,
                                 isBlueprint = false,
+                                editBlueprint = false,
                                 navController = navController,
                             )
                         } else {
@@ -227,6 +228,7 @@ private fun BalanceFloatingActionButtons(
                                 transactionType = TransactionType.Expense,
                                 transactionUUID = transaction.id,
                                 isBlueprint = false,
+                                editBlueprint = false,
                                 navController = navController,
                             )
                         } else {
@@ -253,6 +255,7 @@ private fun BalanceFloatingActionButtons(
                                 transactionType = TransactionType.Move,
                                 transactionUUID = transaction.id,
                                 isBlueprint = false,
+                                editBlueprint = false,
                                 navController = navController,
                             )
                         } else {

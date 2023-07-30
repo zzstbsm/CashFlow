@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -39,6 +41,7 @@ import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
+import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.tools.KeypadDigit
 import com.zhengzhou.cashflow.tools.mapCharToKeypadDigit
@@ -425,5 +428,76 @@ fun DropdownTextFieldMenu(
             },
             content = dropdownMenuContent
         )
+    }
+}
+
+@Composable
+fun TagListLazyStaggeredHorizontalGrid(
+    tagList: List<Tag>,
+    modifier: Modifier = Modifier,
+) {
+    LazyHorizontalStaggeredGrid(
+        rows = StaggeredGridCells.Fixed(1),
+        content = {
+            if (tagList.isEmpty()) {
+                item {
+                    SingleTag(
+                        tag = "",
+                        selected = true,
+                        onTagClick = { },
+                    )
+                }
+            } else {
+                items(tagList.size) { position ->
+                    val tag = tagList[position]
+                    SingleTag(
+                        tag = tag.name,
+                        selected = true,
+                        onTagClick = { },
+                    )
+                }
+            }
+        },
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SingleTag(
+    tag: String = "",
+    selected: Boolean,
+    onTagClick: () -> Unit,
+) {
+    Row(
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.Start,
+    ) {
+        if (tag == "") {
+            Text(
+                text = stringResource(id = R.string.tag_no),
+                color = Color.Gray,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        } else {
+            FilterChip(
+                selected = selected,
+                onClick = { onTagClick() },
+                label = { Text(text = tag) },
+                leadingIcon =  {
+                    if (selected) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_check),
+                            contentDescription = null,
+                        )
+                    } else {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_clear),
+                            contentDescription = stringResource(R.string.delete_tag,tag),
+                        )
+                    }
+                }
+            )
+        }
     }
 }

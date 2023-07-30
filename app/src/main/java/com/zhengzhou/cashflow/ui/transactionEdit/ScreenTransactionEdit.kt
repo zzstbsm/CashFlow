@@ -44,6 +44,7 @@ fun TransactionEditScreen(
     transactionType: TransactionType,
     transactionUUID: UUID,
     isBlueprint: Boolean,
+    editBlueprint: Boolean,
     navController: NavController,
 ) {
 
@@ -52,6 +53,7 @@ fun TransactionEditScreen(
             transactionUUID = transactionUUID,
             transactionType = transactionType,
             isBlueprint = isBlueprint,
+            editBlueprint = editBlueprint,
         )
     }
     val transactionEditUiState by transactionEditViewModel.uiState.collectAsState()

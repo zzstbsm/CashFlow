@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
@@ -35,6 +36,7 @@ import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.tools.mapIconsFromName
+import com.zhengzhou.cashflow.ui.TagListLazyStaggeredHorizontalGrid
 import java.util.UUID
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -56,27 +58,33 @@ fun TransactionReportScreen(
         transactionReportViewModel.loadTransactionReport(transactionUUID)
     }
 
+    val transactionType = TransactionType.setTransaction(transactionReportUiState.transactionFullForUI.transaction.movementType)!!
+
     Scaffold(
         topBar = {
              TransactionReportTopAppBar(
-                 transactionType = transactionReportUiState.transactionType,
+                 transactionType = transactionType,
                  onNavigationIconClick = {
                     navController.popBackStack()
                  },
                  onEditClick = {
                      Screen.TransactionEdit.navigate(
-                         transactionType = transactionReportUiState.transactionType,
+                         transactionType = transactionType,
                          transactionUUID = transactionUUID,
                          isBlueprint = false,
+                         editBlueprint = false,
                          navController = navController,
                      )
                  },
+                 onDeleteTransaction = {
+                     transactionReportViewModel.deleteTransaction()
+                     navController.popBackStack()
+                 }
              )
         },
         content = { paddingValues ->
             TransactionReportMainBody(
                 transactionReportUiState = transactionReportUiState,
-                transactionReportViewModel = transactionReportViewModel,
                 contentPadding = paddingValues,
             )
         },
@@ -89,6 +97,7 @@ fun TransactionReportTopAppBar(
     transactionType: TransactionType,
     onNavigationIconClick: (Boolean) -> Unit,
     onEditClick: () -> Unit,
+    onDeleteTransaction: () -> Unit,
 ) {
     TopAppBar(
         title = {
@@ -107,10 +116,16 @@ fun TransactionReportTopAppBar(
             }
         },
         actions = {
-            IconButton(onClick = { onEditClick() }) {
+            IconButton(onClick = onEditClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_edit),
-                    contentDescription = stringResource(id = R.string.TransactionReport_edit_transaction) 
+                    contentDescription = stringResource(id = R.string.TransactionReport_edit_transaction)
+                )
+            }
+            IconButton(onClick = onDeleteTransaction) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_trash),
+                    contentDescription = stringResource(id = R.string.TransactionReport_delete_transaction)
                 )
             }
         }
@@ -120,10 +135,14 @@ fun TransactionReportTopAppBar(
 @Composable
 private fun TransactionReportMainBody(
     transactionReportUiState: TransactionReportUiState,
-    transactionReportViewModel: TransactionReportViewModel,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
+
+    val transaction = transactionReportUiState.transactionFullForUI.transaction
+    val wallet = transactionReportUiState.transactionFullForUI.wallet
+    val category = transactionReportUiState.transactionFullForUI.category
+    val tagList = transactionReportUiState.transactionFullForUI.tagList
 
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -132,11 +151,9 @@ private fun TransactionReportMainBody(
     ) {
         item {
             Card(
-                //horizontalAlignment = Alignment.Start,
-                //verticalArrangement = Arrangement.Top,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Column(
                     horizontalAlignment = Alignment.Start,
@@ -156,22 +173,22 @@ private fun TransactionReportMainBody(
                     ) {
                         Text(
                             text = Currency.formatCurrency(
-                                currency = Currency.setCurrencyFormatter(transactionReportUiState.wallet.currency.abbreviation),
-                                amount = transactionReportUiState.transaction.amount,
+                                currency = Currency.setCurrencyFormatter(wallet.currency.abbreviation),
+                                amount = transaction.amount,
                             ),
                             fontStyle = FontStyle.Normal,
                             style = MaterialTheme.typography.headlineLarge,
                             modifier = Modifier
                                 .weight(5f)
                         )
-                        if (transactionReportUiState.category.iconName == "loading") {
+                        if (category.iconName == "loading") {
                             CircularProgressIndicator(
                                 modifier = Modifier
                                     .weight(1f)
                             )
                         } else {
                             Icon(
-                                painter = painterResource(id = mapIconsFromName[transactionReportUiState.category.iconName]!!),
+                                painter = painterResource(id = mapIconsFromName[category.iconName]!!),
                                 contentDescription = null,
                                 modifier = Modifier
                                     .weight(1f)
@@ -179,15 +196,35 @@ private fun TransactionReportMainBody(
                         }
                     }
                     Text(
-                        text = transactionReportUiState.transaction.description,
+                        text = transaction.description,
                     )
                     Text(
                         text = DateFormat.format(
                             "EEEE, dd MMMM yyyy",
-                            transactionReportUiState.transaction.date,
+                            transaction.date,
                         ).toString()
                     )
                 }
+            }
+        }
+        item {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.CommonTransactions_tag),
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+                TagListLazyStaggeredHorizontalGrid(
+                    tagList = tagList,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .height(32.dp)
+                )
             }
         }
     }

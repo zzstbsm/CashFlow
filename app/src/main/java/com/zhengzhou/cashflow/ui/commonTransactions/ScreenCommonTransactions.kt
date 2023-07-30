@@ -3,23 +3,17 @@ package com.zhengzhou.cashflow.ui.commonTransactions
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -51,8 +45,6 @@ import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
-import com.zhengzhou.cashflow.ui.CategoryIcon
-import com.zhengzhou.cashflow.ui.DropdownTextFieldMenu
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.ui.SectionTopAppBar
 import java.util.UUID
@@ -139,6 +131,35 @@ private fun CommonTransactionsMainBody(
     navController: NavController,
 ) {
 
+    if (commonTransactionsUiState.transactionFullForUIList.isEmpty()) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+        ) {
+            Text(
+                text = stringResource(id = R.string.CommonTransactions_no_model)
+            )
+        }
+    } else {
+        CommonTransactionsNonEmptyList(
+            commonTransactionsUiState = commonTransactionsUiState,
+            commonTransactionsViewModel = commonTransactionsViewModel,
+            innerPadding = innerPadding,
+            navController = navController,
+        )
+    }
+}
+
+@Composable
+private fun CommonTransactionsNonEmptyList(
+    commonTransactionsUiState: CommonTransactionsUiState,
+    commonTransactionsViewModel: CommonTransactionsViewModel,
+    innerPadding: PaddingValues,
+    navController: NavController,
+) {
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -151,7 +172,7 @@ private fun CommonTransactionsMainBody(
                 transactionFullForUI = transactionFullForUI,
                 walletList = commonTransactionsUiState.walletList,
                 onCreateTransaction = {
-                    commonTransactionsViewModel.saveTransaction(transactionFullForUI)
+                    commonTransactionsViewModel.addTransaction(transactionFullForUI)
                 },
                 onEditTransaction = {
                     val transaction = transactionFullForUI.transaction
@@ -159,10 +180,23 @@ private fun CommonTransactionsMainBody(
                         transactionType = TransactionType.setTransaction(transaction.movementType)!!,
                         transactionUUID = transaction.id,
                         isBlueprint = true,
+                        editBlueprint = false,
                         navController = navController,
                     )
                 },
-                onDeleteTransaction = { /* TODO: deleteTransaction */ },
+                onEditTransactionModel = {
+                    val transaction = transactionFullForUI.transaction
+                    Screen.TransactionEdit.navigate(
+                        transactionType = TransactionType.setTransaction(transaction.movementType)!!,
+                        transactionUUID = transaction.id,
+                        isBlueprint = true,
+                        editBlueprint = true,
+                        navController = navController,
+                    )
+                },
+                onDeleteTransaction = {
+                    commonTransactionsViewModel.deleteTransaction(transactionFullForUI)
+                },
                 onChangeWallet = { wallet ->
                     commonTransactionsViewModel.changeWallet(position, wallet)
                 }
@@ -215,6 +249,7 @@ private fun PreviewSingleTransaction() {
         walletList = walletList,
         onCreateTransaction = { },
         onEditTransaction = { },
+        onEditTransactionModel = { },
         onDeleteTransaction = { },
         onChangeWallet = { _ ->  }
     )
@@ -226,14 +261,12 @@ private fun SingleTransaction(
     walletList: List<Wallet>,
     onCreateTransaction: () -> Unit,
     onEditTransaction: () -> Unit,
+    onEditTransactionModel: () -> Unit,
     onDeleteTransaction: () -> Unit,
     onChangeWallet: (Wallet) -> Unit,
 ) {
 
     var ifOpen by remember {
-        mutableStateOf(false)
-    }
-    var ifWalletChoiceOpen by remember {
         mutableStateOf(false)
     }
 
@@ -256,102 +289,26 @@ private fun SingleTransaction(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceAround,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Column(
-                    modifier = Modifier.weight(3f)
-                ) {
-                    val transactionTypeText = stringResource(TransactionType.setTransaction(transaction.movementType)!!.text)
-                    Text(
-                        text = transactionTypeText + ": " + transaction.description,
-                        softWrap = true,
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        CategoryIcon(
-                            iconName = category.iconName,
-                            contentDescription = null,
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = Currency.formatCurrency(currencyFormatter,transaction.amount))
-                    }
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.End,
-                    modifier = Modifier.weight(2f)
-                ) {
-                    IconButton(onClick = { onCreateTransaction() }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_add),
-                            contentDescription = null,
-                        )
-                    }
-                    IconButton(onClick = { onEditTransaction() }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_edit),
-                            contentDescription = null,
-                        )
-                    }
-                    IconButton(onClick = { ifOpen = !ifOpen }) {
-                        Icon(
-                            painter = painterResource(
-                                id = if (ifOpen) R.drawable.ic_up else R.drawable.ic_down
-                            ),
-                            contentDescription = null,
-                        )
-                    }
-                }
-            }
+
+            SingleTransactionVisibleSection(
+                transaction = transaction,
+                category = category,
+                currencyFormatter = currencyFormatter,
+                onCreateTransaction = onCreateTransaction,
+                onEditTransaction = onEditTransaction,
+                ifTransactionOpen = ifOpen,
+                onOpenTransaction = { ifOpen = it },
+            )
 
             if (ifOpen) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp)
-                ) {
-                    CategoryIcon(
-                        iconName = wallet.iconName,
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    DropdownTextFieldMenu(
-                        label = stringResource(id = R.string.wallet),
-                        value = wallet.name,
-                        expanded = ifWalletChoiceOpen,
-                        onChangeExpanded = { ifShow ->
-                            ifWalletChoiceOpen = ifShow
-                        },
-                        dropdownMenuContent = {
-                            walletList.forEach { walletInList ->
-                                DropdownMenuItem(
-                                    leadingIcon = {
-                                        CategoryIcon(
-                                            iconName = walletInList.iconName,
-                                            contentDescription = walletInList.name
-                                        )
-                                    },
-                                    text = { Text(walletInList.name) },
-                                    onClick = {
-                                        onChangeWallet(walletInList)
-                                        ifWalletChoiceOpen = false
-                                    }
-                                )
-                            }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
-                }
+                SingleTransactionHiddenSection(
+                    wallet = wallet,
+                    walletList = walletList,
+                    tagList = tagList,
+                    onChangeWallet = onChangeWallet,
+                    onEditTransactionModel = onEditTransactionModel,
+                    onDeleteTransaction = onDeleteTransaction,
+                )
             }
         }
     }
@@ -397,6 +354,7 @@ private fun CommonTransactionFloatingActionButtons(
                                 transactionType = TransactionType.Deposit,
                                 transactionUUID = transaction.id,
                                 isBlueprint = true,
+                                editBlueprint = true,
                                 navController = navController,
                             )
                         } else {
@@ -423,6 +381,7 @@ private fun CommonTransactionFloatingActionButtons(
                                 transactionType = TransactionType.Expense,
                                 transactionUUID = transaction.id,
                                 isBlueprint = true,
+                                editBlueprint = true,
                                 navController = navController,
                             )
                         } else {
@@ -449,6 +408,7 @@ private fun CommonTransactionFloatingActionButtons(
                                 transactionType = TransactionType.Move,
                                 transactionUUID = transaction.id,
                                 isBlueprint = true,
+                                editBlueprint = true,
                                 navController = navController,
                             )
                         } else {

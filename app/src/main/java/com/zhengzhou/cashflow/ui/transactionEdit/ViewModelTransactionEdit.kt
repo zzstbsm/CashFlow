@@ -13,6 +13,7 @@ import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.Calculator
 import com.zhengzhou.cashflow.tools.KeypadDigit
+import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -64,6 +65,7 @@ class TransactionEditViewModel(
     transactionUUID: UUID,
     transactionType: TransactionType,
     isBlueprint: Boolean,
+    editBlueprint: Boolean,
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(TransactionEditUiState())
@@ -126,18 +128,21 @@ class TransactionEditViewModel(
                 transaction = Transaction(
                     idWallet = wallet.id,
                     movementType = transactionType.id,
-                    isBlueprint = isBlueprint,
+                    isBlueprint = (isBlueprint && editBlueprint),
                 )
                 isLoadedTransactionFull = true
 
             } else {
                 val (transactionFullForUI, isLoaded) = TransactionFullForUI.load(repository, transactionUUID)
                 wallet = transactionFullForUI.wallet
-                transaction = transactionFullForUI.transaction
+                transaction = transactionFullForUI.transaction.copy(
+                    isBlueprint = (isBlueprint && editBlueprint)
+                )
                 currentTagList = transactionFullForUI.tagList
 
                 isLoadedTransactionFull = isLoaded
             }
+            newTransaction = newTransaction || (isBlueprint && !editBlueprint)
 
 
             while (!(walletListCollected && tagListInDBCollected && categoryListCollected && isLoadedTransactionFull)) {
@@ -285,10 +290,7 @@ class TransactionEditViewModel(
 
     fun addTag(tagName: String) {
         // Clean text
-        var cleanText = tagName
-        while (cleanText.isNotEmpty() && cleanText.last() == ' ') {
-            cleanText = cleanText.dropLast(1)
-        }
+        val cleanText = removeSpaceFromStringEnd(tagName)
         if (cleanText.isEmpty()) return
 
         // Ignore the add tag if the tag is already added

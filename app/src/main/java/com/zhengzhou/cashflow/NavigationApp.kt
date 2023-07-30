@@ -97,6 +97,7 @@ fun NavigationApp() {
             val transactionTypeId = backStackEntry.arguments?.getString("transactionType")
             val transactionUUIDStr = backStackEntry.arguments?.getString("transactionUUIDStr")
             val isBlueprint = backStackEntry.arguments?.getString("isBlueprint").toBoolean()
+            val editBlueprint = backStackEntry.arguments?.getString("editBlueprint").toBoolean()
             requireNotNull(transactionTypeId) {
                 "Exception: passed transactionType not valid"
             }
@@ -107,7 +108,8 @@ fun NavigationApp() {
                 transactionType = TransactionType.setTransaction(transactionTypeId.toInt())!!,
                 transactionUUID = UUID.fromString(transactionUUIDStr),
                 isBlueprint = isBlueprint,
-                navController = navController
+                editBlueprint = editBlueprint,
+                navController = navController,
             )
         }
         composable(route = Screen.TransactionReport.route) {backStackEntry ->
@@ -279,20 +281,23 @@ sealed class Screen(
         route = NavigationCurrentScreen.TransactionEdit.route +
                 "/{transactionType}" +
                 "/{transactionUUIDStr}" +
-                "/{isBlueprint}",
+                "/{isBlueprint}" +
+                "/{editBlueprint}",
         screenEnum = NavigationCurrentScreen.Balance,
     ) {
         private fun createRoute(
             transactionType: TransactionType,
             transactionUUID: UUID,
             isBlueprint: Boolean,
+            editBlueprint: Boolean,
         ) = NavigationCurrentScreen.TransactionEdit.route +
-                "/${transactionType.id}/$transactionUUID/$isBlueprint"
+                "/${transactionType.id}/$transactionUUID/$isBlueprint/$editBlueprint"
 
         fun navigate(
             transactionType: TransactionType,
             transactionUUID: UUID,
             isBlueprint: Boolean,
+            editBlueprint: Boolean,
             navController: NavController,
         )  {
             navController.navigate(
@@ -300,6 +305,7 @@ sealed class Screen(
                     transactionType = transactionType,
                     transactionUUID = transactionUUID,
                     isBlueprint = isBlueprint,
+                    editBlueprint = editBlueprint,
                 )
             )
         }
