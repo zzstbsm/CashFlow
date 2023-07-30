@@ -185,13 +185,31 @@ class Calculator {
 
     fun onScreenString(): String = state.amountOnScreen
 
+    fun getAmount(): Float {
+        calculatorEqual()
+        if (state.amountOnScreen in listOf("0","0.","")) return 0f
+
+        return state.amountOnScreen.toFloat()
+    }
+
     companion object {
         fun initialize(amount: Float) : Calculator {
-            val calculator: Calculator = Calculator()
+            val calculator = Calculator()
 
             if (amount == 0f) return calculator
 
             amount.toString().forEach { digit ->
+                calculator.addKey(
+                    mapCharToKeypadDigit(digit)!!
+                )
+            }
+            return calculator
+        }
+
+        fun initialize(amount: String) : Calculator {
+            val calculator = Calculator()
+
+            amount.forEach { digit ->
                 calculator.addKey(
                     mapCharToKeypadDigit(digit)!!
                 )

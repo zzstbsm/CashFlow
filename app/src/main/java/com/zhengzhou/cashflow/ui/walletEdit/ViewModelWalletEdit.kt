@@ -12,7 +12,7 @@ import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.Calculator
 import com.zhengzhou.cashflow.tools.EventMessages
-import com.zhengzhou.cashflow.tools.KeypadDigit
+import com.zhengzhou.cashflow.tools.mapCharToKeypadDigit
 import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -26,6 +26,9 @@ import java.util.*
 
 data class WalletEditUiState(
     val isLoading: Boolean = true,
+
+    val amountOnScreen: String = "",
+    val isErrorAmountOnScreen: Boolean = false,
 
     val isErrorWalletNameInUse: Boolean = false,
     val isErrorWalletNameNotValid: Boolean = false,
@@ -94,6 +97,7 @@ class WalletEditViewModel(
     private var calculator: Calculator = Calculator()
 
     private var jobLoadBudget: Job
+    private var jobLoadWallet: Job
     private var jobLoadWalletListName: Job
 
     init {
@@ -101,23 +105,53 @@ class WalletEditViewModel(
         _newWallet = walletUUID == UUID(0L,0L)
 
         // Load wallet
-        viewModelScope.launch(Dispatchers.IO) {
+        jobLoadWallet = loadWallet(walletUUID = walletUUID)
+        jobLoadBudget = loadBudget(walletUUID = walletUUID)
 
-            _uiState.value = uiState.value.copy(
-                wallet = if (_newWallet) {
-                    Wallet()
-                } else {
-                    repository.getWallet(walletUUID) ?: Wallet()
-                },
-                isLoading = false,
-            )
-            _budgetEnabledWhenLoaded = uiState.value.wallet.budgetEnabled
-
-            calculator = Calculator.initialize(uiState.value.wallet.startAmount)
-
+        jobLoadWalletListName = viewModelScope.launch {
+            repository.getWalletListOfNames().collect() {
+                _walletListName.value = it
+            }
         }
+    }
 
-        jobLoadBudget = viewModelScope.launch(Dispatchers.IO) {
+    private fun setUiState(
+        isLoading: Boolean? = null,
+
+        amountOnScreen: String? = null,
+        isErrorAmountOnScreen: Boolean? = null,
+
+        isErrorWalletNameInUse: Boolean? = null,
+        isErrorWalletNameNotValid: Boolean? = null,
+
+        wallet: Wallet? = null,
+        budgetPeriod: BudgetPeriod? = null,
+        groupCategoryAndBudgetList: List<GroupCategoryAndBudget>? = null,
+    ) {
+        viewModelScope.launch {
+            while (writingOnUiState) delay(5)
+            writingOnUiState = true
+
+            _uiState.value = WalletEditUiState(
+                isLoading = isLoading ?: uiState.value.isLoading,
+
+                amountOnScreen = amountOnScreen ?: uiState.value.amountOnScreen,
+                isErrorAmountOnScreen = isErrorAmountOnScreen ?: uiState.value.isErrorAmountOnScreen,
+
+                isErrorWalletNameInUse = isErrorWalletNameInUse ?: uiState.value.isErrorWalletNameInUse,
+                isErrorWalletNameNotValid = isErrorWalletNameNotValid ?: uiState.value.isErrorWalletNameNotValid,
+
+                wallet = wallet ?: uiState.value.wallet,
+                budgetPeriod = budgetPeriod ?: uiState.value.budgetPeriod,
+                groupCategoryAndBudgetList = groupCategoryAndBudgetList ?: uiState.value.groupCategoryAndBudgetList
+            )
+
+            writingOnUiState = false
+        }
+    }
+
+    private fun loadBudget(walletUUID: UUID): Job {
+        return viewModelScope.launch(Dispatchers.IO) {
 
             // Load data about the budget period
             if (!_newWallet) {
@@ -167,86 +201,83 @@ class WalletEditViewModel(
                 )
             }
         }
-        jobLoadWalletListName = viewModelScope.launch {
-            repository.getWalletListOfNames().collect() {
-                _walletListName.value = it
+    }
+
+    private fun loadWallet(walletUUID: UUID): Job {
+        return viewModelScope.launch(Dispatchers.IO) {
+
+
+            val retrievedWallet = if (_newWallet) {
+                Wallet()
+            } else {
+                repository.getWallet(walletUUID) ?: Wallet()
+            }
+
+            setUiState(
+                wallet = retrievedWallet,
+                isLoading = false,
+            )
+            _budgetEnabledWhenLoaded = uiState.value.wallet.budgetEnabled
+
+            calculator = Calculator.initialize(uiState.value.wallet.startAmount)
+            updateAmountOnScreen(amount = retrievedWallet.startAmount.toString())
+
+        }
+    }
+
+    fun updateAmountOnScreen(amount: String) {
+
+        var validAmount = true
+
+        amount.forEach { digit ->
+            val key = mapCharToKeypadDigit(digit)
+            if (key == null) {
+                validAmount = false
+                return@forEach
             }
         }
+
+        setUiState(
+            amountOnScreen = amount,
+            isErrorAmountOnScreen = !validAmount
+        )
     }
 
-    private fun setUiState(
-        isLoading: Boolean? = null,
-
-        isErrorWalletNameInUse: Boolean? = null,
-        isErrorWalletNameNotValid: Boolean? = null,
-
-        wallet: Wallet? = null,
-        budgetPeriod: BudgetPeriod? = null,
-        groupCategoryAndBudgetList: List<GroupCategoryAndBudget>? = null,
+    fun updateWallet(
+        name: String? = null,
+        startAmount: Float? = null,
+        iconName: String? = null,
+        currency: Currency? = null,
+        creationDate: Date? = null,
+        lastAccess: Date? = null,
+        budgetEnabled: Boolean? = null,
     ) {
-        viewModelScope.launch {
-            while (writingOnUiState) delay(5)
-            writingOnUiState = true
+        val wallet = uiState.value.wallet
+        val newWalletForUi = wallet.copy(
+            name = name ?: wallet.name,
+            startAmount = startAmount ?: wallet.startAmount,
+            iconName = iconName ?: wallet.iconName,
+            currency = currency ?: wallet.currency,
+            creationDate = creationDate ?: wallet.creationDate,
+            lastAccess = lastAccess ?: wallet.lastAccess,
+            budgetEnabled = budgetEnabled ?: wallet.budgetEnabled,
+        )
 
-            _uiState.value = WalletEditUiState(
-                isLoading = isLoading ?: uiState.value.isLoading,
-                isErrorWalletNameInUse = isErrorWalletNameInUse ?: uiState.value.isErrorWalletNameInUse,
-                isErrorWalletNameNotValid = isErrorWalletNameNotValid ?: uiState.value.isErrorWalletNameNotValid,
-                wallet = wallet ?: uiState.value.wallet,
-                budgetPeriod = budgetPeriod ?: uiState.value.budgetPeriod,
-                groupCategoryAndBudgetList = groupCategoryAndBudgetList ?: uiState.value.groupCategoryAndBudgetList
-            )
-
-            writingOnUiState = false
+        val isErrorWalletNameInUse = if (name == null) uiState.value.isErrorWalletNameInUse else {
+            val checkedName = removeSpaceFromStringEnd(name)
+            checkedName in walletListName.value
         }
-    }
-
-
-    fun getOnScreenString() : String {
-        return calculator.onScreenString()
-    }
-
-    fun onKeyPressed(key: KeypadDigit) {
-        if (key == KeypadDigit.KeyBack) {
-            calculator.dropLastDigit()
-        } else {
-            calculator.addKey(key)
+        val isErrorWalletNameNotValid = if (name == null) uiState.value.isErrorWalletNameNotValid else {
+            val checkedName = removeSpaceFromStringEnd(name)
+            checkedName.isEmpty()
         }
-
-        updateWalletAmount(calculator.onScreenString().toFloat())
-
-    }
-
-    fun updateWalletName(name: String) {
-
-        val checkedName = removeSpaceFromStringEnd(name)
 
         setUiState(
-            isErrorWalletNameInUse = checkedName in walletListName.value,
-            isErrorWalletNameNotValid = checkedName.isEmpty(),
+            isErrorWalletNameInUse = isErrorWalletNameInUse,
+            isErrorWalletNameNotValid = isErrorWalletNameNotValid,
 
-            wallet = uiState.value.wallet.copy(
-                name = name
-            )
+            wallet = newWalletForUi
         )
-    }
-
-    fun updateWalletAmount(amount: Float) {
-        setUiState(
-            wallet = uiState.value.wallet.copy(
-                startAmount = amount
-            )
-        )
-    }
-
-    fun updateWalletCreationDate(millis: Long?) {
-        if (millis != null) {
-            setUiState(
-                wallet = uiState.value.wallet.copy(
-                    creationDate = Date(millis)
-                )
-            )
-        }
     }
 
     fun updateWalletBudgetStartDate(millis: Long?) {
@@ -265,34 +296,25 @@ class WalletEditViewModel(
         _uiState.value = uiState.value.updateWalletBudgetEnabled(budgetEnabled = budgetEnabled)
     }
 
-    fun updateWalletCurrency(currency: Currency) {
-        setUiState(
-            wallet = uiState.value.wallet.copy(
-                currency = currency
-            )
-        )
-    }
-    fun updateWalletIcon(iconName: String) {
-        setUiState(
-            wallet = uiState.value.wallet.copy(
-                iconName = iconName
-            )
-        )
-    }
-
-    fun saveWallet() {
+    fun saveWallet(): WalletEditSaveResults {
 
         if (uiState.value.isErrorWalletNameInUse) {
             EventMessages.sendMessageId(R.string.WalletEdit_error_wallet_name_already_in_use)
-            return
+            return WalletEditSaveResults.NAME_IN_USE
         } else if (uiState.value.isErrorWalletNameNotValid) {
             EventMessages.sendMessageId(R.string.WalletEdit_error_wallet_name_not_valid)
+            return WalletEditSaveResults.NON_VALID_NAME
+        } else if (uiState.value.isErrorAmountOnScreen) {
+            EventMessages.sendMessageId(R.string.WalletEdit_error_amount_non_valid)
+            return WalletEditSaveResults.NON_VALID_AMOUNT
         }
 
         viewModelScope.launch {
 
+            val amount = Calculator.initialize(uiState.value.amountOnScreen).getAmount()
+
             // Save wallet
-            var wallet = uiState.value.wallet
+            var wallet = uiState.value.wallet.copy(startAmount = amount)
             while (wallet.name.last() == ' ') {
                 wallet = wallet.copy(
                     name = wallet.name.dropLast(1)
@@ -325,5 +347,24 @@ class WalletEditViewModel(
             }
             EventMessages.sendMessageId(R.string.WalletEdit_wallet_saved)
         }
+        return WalletEditSaveResults.SUCCESS
     }
+}
+
+enum class WalletEditSaveResults(
+    val message: Int,
+
+) {
+    SUCCESS(
+        message = R.string.WalletEdit_wallet_saved
+    ),
+    NON_VALID_NAME(
+        message = R.string.WalletEdit_error_wallet_name_not_valid
+    ),
+    NON_VALID_AMOUNT(
+        message = R.string.WalletEdit_error_amount_non_valid
+    ),
+    NAME_IN_USE(
+        message = R.string.WalletEdit_error_wallet_name_already_in_use
+    )
 }

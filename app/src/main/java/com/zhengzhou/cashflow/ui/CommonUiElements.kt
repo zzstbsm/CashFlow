@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,7 +32,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -43,8 +41,6 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.Transaction
-import com.zhengzhou.cashflow.tools.KeypadDigit
-import com.zhengzhou.cashflow.tools.mapCharToKeypadDigit
 import com.zhengzhou.cashflow.tools.mapIconsFromName
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -189,38 +185,6 @@ private fun routeClick(
     else {
         EventMessages.sendMessage("Route not active")
     }
-}
-
-@Composable
-fun MoneyTextField(
-    label: String,
-    amountOnScreen: String,
-    onKeyPressed: (KeypadDigit) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-
-    OutlinedTextField(
-        label = {
-            Text(text = label)
-        },
-        value = amountOnScreen,
-        onValueChange = { newText ->
-            if (newText.length >= amountOnScreen.length) {
-                val newDigit = newText.last()
-                val newKey: KeypadDigit? = mapCharToKeypadDigit(newDigit)
-                if (newKey != null) {
-                    onKeyPressed(newKey)
-                }
-            } else {
-                onKeyPressed(KeypadDigit.KeyBack)
-            }
-        },
-        modifier = modifier,
-        maxLines = 1,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Decimal
-        )
-    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -29,7 +31,7 @@ import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.mapIconsFromName
 import com.zhengzhou.cashflow.ui.DateSelector
 import com.zhengzhou.cashflow.ui.DropdownTextFieldMenu
-import com.zhengzhou.cashflow.ui.MoneyTextField
+import java.util.Date
 import java.util.UUID
 
 private enum class WalletEditOption(
@@ -106,17 +108,21 @@ fun WalletEditScreen(
                     } else if (walletEditUiState.isErrorWalletNameNotValid) {
                         EventMessages.sendMessageId(R.string.WalletEdit_error_wallet_name_not_valid)
                     } else {
-                        walletEditViewModel.saveWallet()
-                        navController.previousBackStackEntry
-                            ?.savedStateHandle
-                            ?.set(
-                                Screen.WalletOverview.keyWalletUUID(),
-                                walletEditUiState.wallet.id.toString()
+
+                        val ifSuccess = walletEditViewModel.saveWallet() == WalletEditSaveResults.SUCCESS
+
+                        if (ifSuccess) {
+                            navController.previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set(
+                                    Screen.WalletOverview.keyWalletUUID(),
+                                    walletEditUiState.wallet.id.toString()
+                                )
+                            navController.popBackStack(
+                                route = Screen.WalletOverview.route,
+                                inclusive = false
                             )
-                        navController.popBackStack(
-                            route = Screen.WalletOverview.route,
-                            inclusive = false
-                        )
+                        }
                     }
                 }
             ) {
@@ -167,7 +173,7 @@ fun WalletEditMainBody(
 
         Row(
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.Bottom,
+            verticalAlignment = Alignment.Top,
             modifier = modifier,
         ) {
             TextWalletIcon(
@@ -176,6 +182,7 @@ fun WalletEditMainBody(
                 modifier = Modifier
                     .padding(horizontal = 4.dp)
                     .weight(1f)
+                    .padding(top = 8.dp)
             )
             TextWalletName(
                 walletEditUiState = walletEditUiState,
@@ -187,10 +194,11 @@ fun WalletEditMainBody(
         }
         MoneyTextField(
             label = stringResource(id = R.string.WalletEdit_initial_amount),
-            amountOnScreen = walletEditViewModel.getOnScreenString(),
-            onKeyPressed = { pressedKey ->
-                walletEditViewModel.onKeyPressed(pressedKey)
+            amountOnScreen = walletEditUiState.amountOnScreen,
+            onValueChange = { newText ->
+                walletEditViewModel.updateAmountOnScreen(newText)
             },
+            isError = walletEditUiState.isErrorAmountOnScreen,
             modifier = modifier,
         )
         Row {
@@ -199,7 +207,9 @@ fun WalletEditMainBody(
                 dateFormat = "EEEE, dd MMMM yyyy",
                 date = walletEditUiState.wallet.creationDate,
                 onSelectDate = { millis ->
-                    walletEditViewModel.updateWalletCreationDate(millis)
+                    walletEditViewModel.updateWallet(
+                        creationDate = Date(millis ?: walletEditUiState.wallet.creationDate.time)
+                    )
                 },
                 modifier = modifier.weight(2f),
             )
@@ -211,7 +221,7 @@ fun WalletEditMainBody(
         }
 
         Spacer(modifier = Modifier.height(8.dp))
-        Divider()
+        HorizontalDivider()
         Spacer(modifier = Modifier.height(8.dp))
 
         SectionWalletBudget(
@@ -237,7 +247,7 @@ private fun TextWalletName(
         value = walletEditUiState.wallet.name,
         onValueChange = {
             if (!(it.isNotEmpty() && it.last() == '\n')) {
-                walletEditViewModel.updateWalletName(it)
+                walletEditViewModel.updateWallet(name = it)
             }
         },
         modifier = modifier,
@@ -297,7 +307,7 @@ private fun TextWalletIcon(
                             OutlinedButton(
                                 enabled = iconName != currentIcon,
                                 onClick = {
-                                    walletEditViewModel.updateWalletIcon(iconName = iconName)
+                                    walletEditViewModel.updateWallet(iconName = iconName)
                                     showDialog = false
                                 },
                                 shape = RoundedCornerShape(8.dp),
@@ -317,6 +327,35 @@ private fun TextWalletIcon(
             }
         }
     }
+}
+
+@Composable
+private fun MoneyTextField(
+    label: String,
+    amountOnScreen: String,
+    onValueChange: (String) -> Unit,
+    isError: Boolean,
+    modifier: Modifier = Modifier,
+) {
+
+    OutlinedTextField(
+        label = {
+            Text(text = label)
+        },
+        value = amountOnScreen,
+        onValueChange = onValueChange,
+        modifier = modifier,
+        maxLines = 1,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Decimal
+        ),
+        isError = isError,
+        supportingText = {
+            if (isError) {
+                Text(text = stringResource(id = R.string.WalletEdit_error_amount_non_valid))
+            }
+        }
+    )
 }
 
 @Composable
@@ -351,7 +390,7 @@ private fun TextWalletCurrencyChooser(
                         )
                     },
                     onClick = {
-                        walletEditViewModel.updateWalletCurrency(currency = currency)
+                        walletEditViewModel.updateWallet(currency = currency)
                         showDropDownMenu = false
                     }
                 )
