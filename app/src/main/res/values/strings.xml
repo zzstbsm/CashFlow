@@ -132,6 +132,7 @@
     <string name="movement_select_wallets">Select wallets</string>
 
     <!-- WalletEdit page -->
+    <string name="WalletEdit_choose_wallet_icon">Choose wallet icon</string>
     <string name="WalletEdit_creation_date">Creation date</string>
     <string name="WalletEdit_error_amount_non_valid">Inserted amount not valid</string>
     <string name="WalletEdit_error_wallet_name_already_in_use">Wallet name already in use</string>
@@ -146,12 +147,14 @@
     <!-- WalletOverview page-->
     <string name="WalletOverview_add_wallet">Add wallet</string>
     <string name="WalletOverview_balance">Balance</string>
+    <string name="WalletOverview_cannot_delete_wallet">Cannot delete wallet, there are transactions registered in it.</string>
     <string name="WalletOverview_choose_wallet">Choose wallet</string>
     <string name="WalletOverview_edit_wallet">Edit wallet</string>
     <string name="WalletOverview_no_transactions">No transactions</string>
     <string name="WalletOverview_no_wallet">No wallet</string>
     <string name="WalletOverview_recent_transactions">Recent transactions</string>
     <string name="WalletOverview_select_wallet">Select wallet</string>
+    <string name="WalletOverview_wallet_deleted">Wallet deleted</string>
 
     <!-- Supported currencies -->
     <string name="currency">Currency</string>

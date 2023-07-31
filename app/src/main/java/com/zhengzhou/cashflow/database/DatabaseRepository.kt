@@ -6,9 +6,9 @@ import com.zhengzhou.cashflow.data.BudgetCategory
 import com.zhengzhou.cashflow.data.BudgetPeriod
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
+import com.zhengzhou.cashflow.data.Location
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.TagEntry
-import com.zhengzhou.cashflow.data.TagLocation
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
@@ -108,15 +108,15 @@ open class DatabaseRepository(
         = database.databaseDao().getCategoryOccurrences(categoryUUID = category.id)
 
     /* Location section */
-    suspend fun getLocation(locationUUID: UUID): TagLocation? = database.databaseDao().getLocation(locationUUID)
-    suspend fun addLocation(tagLocation: TagLocation) {
-        database.databaseDao().addLocation(tagLocation)
+    suspend fun getLocation(locationUUID: UUID): Location? = database.databaseDao().getLocation(locationUUID)
+    suspend fun addLocation(location: Location) {
+        database.databaseDao().addLocation(location)
     }
-    suspend fun updateLocation(tagLocation: TagLocation) {
-        database.databaseDao().updateLocation(tagLocation)
+    suspend fun updateLocation(location: Location) {
+        database.databaseDao().updateLocation(location)
     }
-    suspend fun deleteLocation(tagLocation: TagLocation) {
-        database.databaseDao().deleteLocation(tagLocation)
+    suspend fun deleteLocation(location: Location) {
+        database.databaseDao().deleteLocation(location)
     }
 
     /* Tag section */

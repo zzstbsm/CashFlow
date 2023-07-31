@@ -35,7 +35,8 @@ import com.zhengzhou.cashflow.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
-import com.zhengzhou.cashflow.tools.mapIconsFromName
+import com.zhengzhou.cashflow.tools.IconsMappedForDB
+import com.zhengzhou.cashflow.ui.CategoryIcon
 import com.zhengzhou.cashflow.ui.TagListLazyStaggeredHorizontalGrid
 import java.util.UUID
 
@@ -58,7 +59,7 @@ fun TransactionReportScreen(
         transactionReportViewModel.loadTransactionReport(transactionUUID)
     }
 
-    val transactionType = TransactionType.setTransaction(transactionReportUiState.transactionFullForUI.transaction.movementType)!!
+    val transactionType = transactionReportUiState.transactionFullForUI.transaction.movementType
 
     Scaffold(
         topBar = {
@@ -181,17 +182,17 @@ private fun TransactionReportMainBody(
                             modifier = Modifier
                                 .weight(5f)
                         )
-                        if (category.iconName == "loading") {
+                        if (category.iconName == IconsMappedForDB.LOADING) {
                             CircularProgressIndicator(
                                 modifier = Modifier
                                     .weight(1f)
                             )
                         } else {
-                            Icon(
-                                painter = painterResource(id = mapIconsFromName[category.iconName]!!),
+                            CategoryIcon(
+                                iconName = category.iconName,
                                 contentDescription = null,
                                 modifier = Modifier
-                                    .weight(1f)
+                                    .weight(1f),
                             )
                         }
                     }

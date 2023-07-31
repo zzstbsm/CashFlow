@@ -7,6 +7,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.tools.IconsMappedForDB
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
@@ -18,7 +19,7 @@ data class Wallet(
     @ColumnInfo(name = "start_amount")
     val startAmount: Float = 0f,
     @ColumnInfo(name = "icon_id")
-    val iconName: String = "wallet",
+    val iconName: IconsMappedForDB = IconsMappedForDB.HOME,
     val currency: Currency = Currency.EUR,
     @ColumnInfo(name = "creation_date")
     val creationDate: Date = Date(),
@@ -34,7 +35,7 @@ data class Wallet(
                 id = UUID(0L,0L),
                 // TODO: next line to remove after the implementation of EditWalletScreen
                 startAmount = 0f,
-                iconName = "wallet",
+                iconName = IconsMappedForDB.WALLET,
             )
         }
 

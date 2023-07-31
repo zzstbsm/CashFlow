@@ -167,8 +167,7 @@ class TestWalletOverview {
 
             val walletOverviewViewModel = WalletOverviewViewModel(wallet1.id)
             while (walletOverviewViewModel.uiState.value.isLoadingWallet) delay(5)
-            val job = walletOverviewViewModel.deleteShownWallet()
-            job.join()
+            val result = walletOverviewViewModel.deleteShownWallet()
             val walletOverviewUiState = walletOverviewViewModel.uiState.value
             assertSameWallet(Wallet.emptyWallet(),walletOverviewUiState.wallet)
 
@@ -189,13 +188,11 @@ class TestWalletOverview {
             val walletOverviewViewModel = WalletOverviewViewModel(wallet2.id)
             while (walletOverviewViewModel.uiState.value.isLoadingWallet) delay(5)
 
-            var job = walletOverviewViewModel.deleteShownWallet()
-            job.join()
+            walletOverviewViewModel.deleteShownWallet()
             var walletOverviewUiState: WalletOverviewUiState = walletOverviewViewModel.uiState.value
             assertSameWallet(wallet1,walletOverviewUiState.wallet)
 
-            job = walletOverviewViewModel.deleteShownWallet()
-            job.join()
+            walletOverviewViewModel.deleteShownWallet()
             walletOverviewUiState = walletOverviewViewModel.uiState.value
             assertSameWallet(Wallet.emptyWallet(),walletOverviewUiState.wallet)
 

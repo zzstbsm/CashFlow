@@ -29,7 +29,6 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.BudgetCategory
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
-import com.zhengzhou.cashflow.tools.mapIconsFromName
 import com.zhengzhou.cashflow.ui.DateSelector
 import java.text.NumberFormat
 
@@ -197,7 +196,7 @@ private fun CategoryBoxToSet(
             verticalArrangement = Arrangement.Center,
         ) {
             Icon(
-                painter = painterResource(id = mapIconsFromName[category.iconName]!!),
+                painter = painterResource(id = category.iconName.resource),
                 contentDescription = null, // TODO: add content description
                 modifier = Modifier.size(32.dp)
             )

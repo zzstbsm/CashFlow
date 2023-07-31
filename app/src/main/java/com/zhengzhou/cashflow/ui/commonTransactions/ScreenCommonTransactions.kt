@@ -44,6 +44,7 @@ import com.zhengzhou.cashflow.data.TransactionFullForUI
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.tools.EventMessages
+import com.zhengzhou.cashflow.tools.IconsMappedForDB
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.ui.SectionTopAppBar
@@ -177,7 +178,7 @@ private fun CommonTransactionsNonEmptyList(
                 onEditTransaction = {
                     val transaction = transactionFullForUI.transaction
                     Screen.TransactionEdit.navigate(
-                        transactionType = TransactionType.setTransaction(transaction.movementType)!!,
+                        transactionType = transaction.movementType,
                         transactionUUID = transaction.id,
                         isBlueprint = true,
                         editBlueprint = false,
@@ -187,7 +188,7 @@ private fun CommonTransactionsNonEmptyList(
                 onEditTransactionModel = {
                     val transaction = transactionFullForUI.transaction
                     Screen.TransactionEdit.navigate(
-                        transactionType = TransactionType.setTransaction(transaction.movementType)!!,
+                        transactionType = transaction.movementType,
                         transactionUUID = transaction.id,
                         isBlueprint = true,
                         editBlueprint = true,
@@ -212,7 +213,7 @@ private fun PreviewSingleTransaction() {
         transaction = Transaction(
             description = "Description/Title",
             amount = 100f,
-            movementType = TransactionType.Expense.id,
+            movementType = TransactionType.Expense,
         ),
         wallet = Wallet(
             name = "Preview wallet",
@@ -220,7 +221,7 @@ private fun PreviewSingleTransaction() {
         ),
         category = Category(
             name = "Category",
-            iconName = "home"
+            iconName = IconsMappedForDB.HOME
         ),
         tagList = listOf(
             Tag(

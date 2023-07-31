@@ -1,6 +1,5 @@
 package com.zhengzhou.cashflow.ui.transactionEdit
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -14,14 +13,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.tools.KeypadDigit
 import com.zhengzhou.cashflow.tools.KeypadDigitButton
-import com.zhengzhou.cashflow.tools.mapIconsFromName
+import com.zhengzhou.cashflow.ui.CategoryIcon
 
 @Composable
 fun AmountTextSection(
@@ -65,8 +63,8 @@ fun AmountTextSection(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(
-                            painter = painterResource(id = mapIconsFromName[wallet.iconName]!!),
+                        CategoryIcon(
+                            iconName = wallet.iconName,
                             contentDescription = null, // TODO: Add content description
                             modifier = modifier.size(24.dp)
                         )
@@ -83,8 +81,8 @@ fun AmountTextSection(
                     walletList.forEach { walletInList ->
                         DropdownMenuItem(
                             leadingIcon = {
-                                Icon(
-                                    painter = painterResource(id = mapIconsFromName[walletInList.iconName]!!),
+                                CategoryIcon(
+                                    iconName = walletInList.iconName,
                                     contentDescription = walletInList.name
                                 )
                             },

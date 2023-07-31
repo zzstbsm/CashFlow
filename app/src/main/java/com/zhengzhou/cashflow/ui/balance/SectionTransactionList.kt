@@ -1,7 +1,6 @@
 package com.zhengzhou.cashflow.ui.balance
 
 import android.text.format.DateFormat
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
@@ -11,12 +10,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Transaction
-import com.zhengzhou.cashflow.tools.mapIconsFromName
+import com.zhengzhou.cashflow.ui.CategoryIcon
 import java.text.NumberFormat
 
 @Composable
@@ -44,10 +42,8 @@ fun TransactionEntry(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(
-                    id = mapIconsFromName[category.iconName]!!
-                ),
+            CategoryIcon(
+                iconName = category.iconName,
                 contentDescription = null, //TODO add description
                 modifier = Modifier
                     .size(54.dp)

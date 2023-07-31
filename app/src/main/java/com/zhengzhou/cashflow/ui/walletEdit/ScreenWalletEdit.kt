@@ -2,8 +2,6 @@ package com.zhengzhou.cashflow.ui.walletEdit
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -28,9 +26,11 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.tools.EventMessages
-import com.zhengzhou.cashflow.tools.mapIconsFromName
+import com.zhengzhou.cashflow.tools.IconsMappedForDB
+import com.zhengzhou.cashflow.ui.CategoryIcon
 import com.zhengzhou.cashflow.ui.DateSelector
 import com.zhengzhou.cashflow.ui.DropdownTextFieldMenu
+import com.zhengzhou.cashflow.ui.IconChoiceDialog
 import java.util.Date
 import java.util.UUID
 
@@ -284,48 +284,28 @@ private fun TextWalletIcon(
         shape = RoundedCornerShape(4.dp),
         modifier = modifier,
     ) {
-        Icon(
-            painter = painterResource(id = mapIconsFromName[currentIcon]!!),
+        CategoryIcon(
+            iconName = currentIcon,
             contentDescription = null,
             modifier = Modifier.size(40.dp)
         )
     }
 
     if (showDialog) {
-        AlertDialog(onDismissRequest = { showDialog = false }) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = stringResource(id = R.string.ManageCategories_choose_category_icon),
-                    modifier = Modifier.padding(8.dp)
+        IconChoiceDialog(
+            text = stringResource(id = R.string.WalletEdit_choose_wallet_icon),
+            iconList = IconsMappedForDB.values()
+                .toList()
+                .filter { it.wallet },
+            onDismissRequest = { showDialog = false },
+            currentSelectedIcon = currentIcon,
+            onChooseIcon = { chosenIcon ->
+                walletEditViewModel.updateWallet(
+                   iconName = chosenIcon
                 )
-                LazyVerticalGrid(columns = GridCells.Fixed(3)) {
-                    mapIconsFromName.forEach { (iconName, resourceId) ->
-                        item {
-                            OutlinedButton(
-                                enabled = iconName != currentIcon,
-                                onClick = {
-                                    walletEditViewModel.updateWallet(iconName = iconName)
-                                    showDialog = false
-                                },
-                                shape = RoundedCornerShape(8.dp),
-                                modifier= Modifier
-                                    .fillMaxWidth()
-                                    .padding(4.dp),
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = resourceId),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(32.dp)
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 

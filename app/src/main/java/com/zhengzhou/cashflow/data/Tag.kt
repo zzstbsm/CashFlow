@@ -63,6 +63,27 @@ data class Tag (
         return Pair(tagTransaction,tagEntry)
 
     }
+
+    fun increaseCounter(): Tag {
+        return this.copy(
+            count = this.count + 1
+        )
+    }
+    fun decreaseCounter(): Tag {
+        return this.copy(
+            count = this.count - 1
+        )
+    }
+    fun enableTag(): Tag {
+        return this.copy(
+            enabled = true
+        )
+    }
+    fun disableTag(): Tag {
+        return this.copy(
+            enabled = false
+        )
+    }
 }
 
 @Entity(tableName = "tag_transaction")

@@ -1,5 +1,6 @@
 package com.zhengzhou.cashflow.ui.manageCategories
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,16 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalNavigationDrawer
@@ -49,8 +46,10 @@ import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
-import com.zhengzhou.cashflow.tools.mapIconsFromName
+import com.zhengzhou.cashflow.tools.IconsMappedForDB
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
+import com.zhengzhou.cashflow.ui.CategoryIcon
+import com.zhengzhou.cashflow.ui.IconChoiceDialog
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.ui.SectionTopAppBar
 
@@ -229,9 +228,13 @@ private fun CategoryEntry(
             Row(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable {
+                    val toReturnCategory = if (ifOpen) null else category
+                    onOpenCategory(toReturnCategory)
+                }
             ) {
-                Icon(
-                    painter = painterResource(id = mapIconsFromName[category.iconName]!!),
+                CategoryIcon(
+                    iconName = category.iconName,
                     contentDescription = category.name,
                     modifier = Modifier
                         .padding(8.dp)
@@ -269,13 +272,13 @@ private fun CategoryEntry(
                     vertical = 8.dp,
                 )
             ) {
-                Divider()
+                HorizontalDivider()
                 Text(
                     text = stringResource(id = R.string.ManageCategories_occurrences) + ": $categoryOccurrences",
                     modifier = Modifier.padding(4.dp)
                 )
 
-                Divider()
+                HorizontalDivider()
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.Bottom,
@@ -324,11 +327,10 @@ private fun CategoryEntry(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ChooseCategoryIcon(
-    currentIcon: String,
-    onChooseIcon: (String) -> Unit,
+    currentIcon: IconsMappedForDB,
+    onChooseIcon: (IconsMappedForDB) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -341,49 +343,24 @@ private fun ChooseCategoryIcon(
         shape = RoundedCornerShape(4.dp),
         modifier = modifier,
     ) {
-        Icon(
-            painter = painterResource(id = mapIconsFromName[currentIcon]!!),
+        CategoryIcon(
+            iconName = currentIcon,
             contentDescription = null,
             modifier = Modifier.size(40.dp)
         )
     }
     
     if (showDialog) {
-        AlertDialog(onDismissRequest = { showDialog = false }) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = stringResource(id = R.string.ManageCategories_choose_category_icon),
-                    modifier = Modifier.padding(8.dp)
-                )
-
-                LazyVerticalGrid(columns = GridCells.Fixed(3)) {
-                    mapIconsFromName.forEach { (iconName, resourceId) ->
-                        item {
-                            OutlinedButton(
-                                enabled = iconName != currentIcon,
-                                onClick = {
-                                    onChooseIcon(iconName)
-                                    showDialog = false
-                                },
-                                shape = RoundedCornerShape(8.dp),
-                                modifier= Modifier
-                                    .fillMaxWidth()
-                                    .padding(4.dp),
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = resourceId),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(32.dp)
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        IconChoiceDialog(
+            text = stringResource(id = R.string.ManageCategories_choose_category_icon),
+            iconList = IconsMappedForDB.values()
+                .toList()
+                .filter { it.category },
+            onDismissRequest = { showDialog = false },
+            currentSelectedIcon = currentIcon,
+            onChooseIcon = onChooseIcon,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 

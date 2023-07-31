@@ -30,7 +30,6 @@ import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.Transaction
-import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.ui.CategoryIcon
 import com.zhengzhou.cashflow.ui.DropdownTextFieldMenu
@@ -87,7 +86,7 @@ private fun SingleTransactionDescriptionPart(
                 onDescriptionSectionClick()
             }
     ) {
-        val transactionTypeText = stringResource(TransactionType.setTransaction(transaction.movementType)!!.text)
+        val transactionTypeText = stringResource(transaction.movementType.text)
         Text(
             text = transactionTypeText + ": " + transaction.description,
             softWrap = true,

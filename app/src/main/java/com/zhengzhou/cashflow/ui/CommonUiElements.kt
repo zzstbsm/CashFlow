@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -15,8 +16,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,10 +45,11 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.Transaction
-import com.zhengzhou.cashflow.tools.mapIconsFromName
+import com.zhengzhou.cashflow.tools.IconsMappedForDB
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Date
+import java.util.UUID
 
 @Composable
 fun BottomNavigationBar(
@@ -281,10 +286,8 @@ fun SectionTransactionEntry(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Icon(
-                painter = painterResource(
-                    id = mapIconsFromName[category.iconName]!!
-                ),
+            CategoryIcon(
+                iconName = category.iconName,
                 contentDescription = category.name, //TODO add description
                 modifier = modifier
                     .size(54.dp)
@@ -340,12 +343,12 @@ fun SectionTransactionEntry(
 
 @Composable
 fun CategoryIcon(
-    iconName: String,
+    iconName: IconsMappedForDB,
     contentDescription: String?,
     modifier: Modifier = Modifier,
 ) {
     Icon(
-        painter = painterResource(id = mapIconsFromName[iconName] ?: R.drawable.ic_clear),
+        painter = painterResource(id = iconName.resource),
         contentDescription = contentDescription,
         modifier = modifier,
     )
@@ -462,6 +465,119 @@ fun SingleTag(
                     }
                 }
             )
+        }
+    }
+}
+
+@Composable
+fun SelectIconsGrid(
+    gridColumns: Int,
+    categoryList: List<Category>,
+    currentlyChosenCategoryId: UUID,
+    onCategoryChoice: (Category) -> Unit,
+    modifier: Modifier = Modifier,
+    buttonModifier: Modifier = Modifier,
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(gridColumns),
+        modifier = modifier
+    ) {
+
+        items(categoryList.size) {position ->
+
+            val itemCategory = categoryList[position]
+
+            if (currentlyChosenCategoryId != itemCategory.id) {
+                OutlinedButton(
+                    onClick = {
+                        onCategoryChoice(itemCategory)
+                    },
+                    modifier = buttonModifier,
+                    contentPadding = PaddingValues(0.dp),
+                    shape = RoundedCornerShape(4.dp),
+                ) {
+                    ChooseCategoryButton(
+                        category = itemCategory
+                    )
+                }
+            } else {
+                Button(
+                    onClick = { },
+                    modifier = buttonModifier,
+                    contentPadding = PaddingValues(0.dp),
+                    shape = RoundedCornerShape(4.dp),
+                    enabled = false,
+                ) {
+                    ChooseCategoryButton(
+                        category = itemCategory
+                    )
+                }
+            }
+        }
+    }
+}
+@Composable
+private fun ChooseCategoryButton(
+    category: Category
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        CategoryIcon(
+            iconName = category.iconName,
+            contentDescription = null, // TODO: add content description
+            modifier = Modifier.size(32.dp)
+        )
+        Text(
+            text = category.name,
+            style = MaterialTheme.typography.labelSmall,
+            maxLines = 1,
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun IconChoiceDialog(
+    text: String,
+    iconList: List<IconsMappedForDB>,
+    onDismissRequest: () -> Unit,
+    currentSelectedIcon: IconsMappedForDB?,
+    onChooseIcon: (IconsMappedForDB) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    AlertDialog(onDismissRequest = onDismissRequest) {
+        Card(
+            modifier = modifier
+        ) {
+            Text(
+                text = text,
+                modifier = Modifier.padding(8.dp)
+            )
+
+            LazyVerticalGrid(columns = GridCells.Fixed(3)) {
+                items(iconList.size) { position ->
+                    val icon = iconList[position]
+                    OutlinedButton(
+                        enabled = icon != currentSelectedIcon,
+                        onClick = {
+                            onChooseIcon(icon)
+                            onDismissRequest()
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        modifier= Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp),
+                    ) {
+                        CategoryIcon(
+                            iconName = icon,
+                            contentDescription = null,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                }
+            }
         }
     }
 }

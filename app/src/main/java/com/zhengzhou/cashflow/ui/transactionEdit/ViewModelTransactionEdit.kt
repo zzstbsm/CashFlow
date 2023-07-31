@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.TagEntry
-import com.zhengzhou.cashflow.data.TagLocation
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.TransactionFullForUI
 import com.zhengzhou.cashflow.data.TransactionType
@@ -127,7 +126,7 @@ class TransactionEditViewModel(
                 wallet = repository.getWalletLastAccessed() ?: Wallet()
                 transaction = Transaction(
                     idWallet = wallet.id,
-                    movementType = transactionType.id,
+                    movementType = transactionType,
                     isBlueprint = (isBlueprint && editBlueprint),
                 )
                 isLoadedTransactionFull = true
@@ -230,8 +229,8 @@ class TransactionEditViewModel(
             } else {
 
                 val sign = when (uiState.value.transaction.movementType) {
-                    TransactionType.Deposit.id -> 1f
-                    TransactionType.Expense.id -> -1f
+                    TransactionType.Deposit -> 1f
+                    TransactionType.Expense -> -1f
                     else -> 0f // TODO: to fix
                 }
 
@@ -271,7 +270,7 @@ class TransactionEditViewModel(
                 it.id == uiState.value.transaction.idCategory
             },
             tagList = currentTransactionTagList,
-            location = TagLocation(),
+            location = null,
         )
         viewModelScope.launch {
             transactionFullForUI.save(

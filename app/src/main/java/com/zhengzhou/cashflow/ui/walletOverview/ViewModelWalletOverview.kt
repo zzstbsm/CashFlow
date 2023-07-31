@@ -16,6 +16,11 @@ import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.*
 
+enum class WalletOverviewReturnResults {
+    CAN_DELETE_WALLET,
+    CANNOT_DELETE_WALLET,
+}
+
 data class WalletOverviewUiState(
     val wallet: Wallet = Wallet(),
     val currentAmountInTheWallet: Float = 0f,
@@ -126,25 +131,29 @@ class WalletOverviewViewModel(
         retrieveTransactionJob = jobUpdateTransaction()
     }
 
-    fun deleteShownWallet(): Job {
-        return viewModelScope.launch {
-            repository.deleteWallet(uiState.value.wallet)
-            setUiState(
-                wallet = Wallet(),
-                isLoading = true
-            )
-            loadLastAccessed()
-            while (uiState.value.isLoadingWallet) {
-                delay(5)
-            }
-            if (uiState.value.wallet.id == UUID(0L,0L)) {
+    fun deleteShownWallet(): WalletOverviewReturnResults {
 
+        return if (uiState.value.transactionAndCategoryList.isEmpty()) {
+            viewModelScope.launch {
+                repository.deleteWallet(uiState.value.wallet)
                 setUiState(
-                    ifZeroWallet = true,
-                    isLoading = false
+                    wallet = Wallet(),
+                    isLoading = true
                 )
+                loadLastAccessed()
+                while (uiState.value.isLoadingWallet) delay(5)
+
+                if (uiState.value.wallet.id == UUID(0L,0L)) {
+                    setUiState(
+                        ifZeroWallet = true,
+                        isLoading = false
+                    )
+                }
             }
-        }
+            WalletOverviewReturnResults.CAN_DELETE_WALLET
+        } else WalletOverviewReturnResults.CANNOT_DELETE_WALLET
+
+
     }
 
     fun reloadScreen() {

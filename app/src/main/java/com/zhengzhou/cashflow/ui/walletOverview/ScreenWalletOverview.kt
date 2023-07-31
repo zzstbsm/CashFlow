@@ -24,8 +24,9 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.data.Wallet
-import com.zhengzhou.cashflow.tools.mapIconsFromName
+import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
+import com.zhengzhou.cashflow.ui.CategoryIcon
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.ui.SectionTopAppBar
 import com.zhengzhou.cashflow.ui.SectionTransactionEntry
@@ -163,9 +164,12 @@ fun WalletOverviewAppBarAction(
                 Text(text = stringResource(id = R.string.nav_name_wallet_delete))
             },
             onClick = {
-                walletOverviewViewModel.deleteShownWallet()
                 openMenu = false
-
+                if (walletOverviewViewModel.deleteShownWallet() == WalletOverviewReturnResults.CAN_DELETE_WALLET) {
+                    EventMessages.sendMessageId(R.string.WalletOverview_wallet_deleted)
+                } else {
+                    EventMessages.sendMessageId(R.string.WalletOverview_cannot_delete_wallet)
+                }
             },
         )
     }
@@ -429,8 +433,8 @@ private fun SelectWalletDialog(
                                     .fillMaxWidth()
                                     .padding(8.dp),
                             ) {
-                                Icon(
-                                    painter = painterResource(id = mapIconsFromName[wallet.iconName]!!),
+                                CategoryIcon(
+                                    iconName = wallet.iconName,
                                     contentDescription = null,
                                     modifier = Modifier
                                         .size(32.dp)

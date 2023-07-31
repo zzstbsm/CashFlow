@@ -37,55 +37,55 @@ class ConfigurationFirstStartup {
                 Category(
                     id = UUID.randomUUID(),
                     name = "Groceries",
-                    iconName = "grocery",
+                    iconName = IconsMappedForDB.GROCERY,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Eating out",
-                    iconName = "eating_out",
+                    iconName = IconsMappedForDB.EATING_OUT,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Health",
-                    iconName = "health",
+                    iconName = IconsMappedForDB.HEALTH,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Transportation",
-                    iconName = "transportation",
+                    iconName = IconsMappedForDB.TRANSPORTATION,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Travel",
-                    iconName = "travel",
+                    iconName = IconsMappedForDB.TRAVEL,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Home",
-                    iconName = "home",
+                    iconName = IconsMappedForDB.HOME,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Subscriptions",
-                    iconName = "subscription",
+                    iconName = IconsMappedForDB.SUBSCRIPTION,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Entertainment",
-                    iconName = "entertainment",
+                    iconName = IconsMappedForDB.ENTERTAINMENT,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Gift",
-                    iconName = "gift",
+                    iconName = IconsMappedForDB.GIFT,
                     transactionTypeId = TransactionType.Expense.id,
                 ),
             )
@@ -96,13 +96,13 @@ class ConfigurationFirstStartup {
                 Category(
                     id = UUID.randomUUID(),
                     name = "Salary",
-                    iconName = "salary",
+                    iconName = IconsMappedForDB.SALARY,
                     transactionTypeId = TransactionType.Deposit.id
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Deposit",
-                    iconName = "wallet",
+                    iconName = IconsMappedForDB.WALLET,
                     transactionTypeId = TransactionType.Deposit.id
                 ),
             )
@@ -113,7 +113,7 @@ class ConfigurationFirstStartup {
                 Category(
                     id = UUID.randomUUID(),
                     name = "Movement",
-                    iconName = "transfer",
+                    iconName = IconsMappedForDB.TRANSFER,
                     transactionTypeId = TransactionType.Move.id
                 ),
             )

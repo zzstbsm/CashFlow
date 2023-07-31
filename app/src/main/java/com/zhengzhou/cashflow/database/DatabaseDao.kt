@@ -5,8 +5,8 @@ import com.zhengzhou.cashflow.data.BudgetCategory
 import com.zhengzhou.cashflow.data.BudgetPeriod
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
+import com.zhengzhou.cashflow.data.Location
 import com.zhengzhou.cashflow.data.TagEntry
-import com.zhengzhou.cashflow.data.TagLocation
 import com.zhengzhou.cashflow.data.TagTransaction
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.Wallet
@@ -52,14 +52,14 @@ interface DatabaseDao {
     suspend fun getCategoryOccurrences(categoryUUID: UUID): Int
 
     // Location section
-    @Query("SELECT * FROM tag_location WHERE id=(:tagLocationUUID)")
-    suspend fun getLocation(tagLocationUUID: UUID): TagLocation?
-    @Insert(entity = TagLocation::class, onConflict = OnConflictStrategy.ABORT)
-    suspend fun addLocation(tagLocation: TagLocation)
-    @Update(entity = TagLocation::class)
-    suspend fun updateLocation(tagLocation: TagLocation)
-    @Delete(entity = TagLocation::class)
-    suspend fun deleteLocation(tagLocation: TagLocation)
+    @Query("SELECT * FROM location WHERE id=(:locationUUID)")
+    suspend fun getLocation(locationUUID: UUID): Location?
+    @Insert(entity = Location::class, onConflict = OnConflictStrategy.ABORT)
+    suspend fun addLocation(location: Location)
+    @Update(entity = Location::class)
+    suspend fun updateLocation(location: Location)
+    @Delete(entity = Location::class)
+    suspend fun deleteLocation(location: Location)
 
     @Query("SELECT * FROM category")
     fun getCategoryList(): Flow<List<Category>>

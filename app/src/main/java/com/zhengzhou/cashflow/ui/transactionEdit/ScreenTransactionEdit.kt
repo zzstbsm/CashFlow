@@ -202,9 +202,9 @@ fun TransactionEditMainBody(
         )
 
         if (
-            transactionEditUiState.transaction.movementType == TransactionType.Deposit.id
+            transactionEditUiState.transaction.movementType == TransactionType.Deposit
             ||
-            transactionEditUiState.transaction.movementType == TransactionType.Expense.id
+            transactionEditUiState.transaction.movementType == TransactionType.Expense
         ) {
             TransactionMovementTypeTab(
                 transactionEditUiState = transactionEditUiState,

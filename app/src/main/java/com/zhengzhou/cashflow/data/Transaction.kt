@@ -26,12 +26,38 @@ data class Transaction (
     val idCategory: UUID = UUID(0L,0L),
     val description: String = "",
     @ColumnInfo(name = "id_location")
-    val idLocation: UUID = UUID(0L,0L),
+    val idLocation: UUID? = null,
     @ColumnInfo(name = "movement_type")
-    val movementType: Int = TransactionType.Loading.id,
+    val movementType: TransactionType = TransactionType.Loading,
     @ColumnInfo(name = "is_blueprint")
     val isBlueprint: Boolean = false,
 ) {
+
+    companion object {
+        fun new(
+            description: String,
+            amount: Float,
+            walletUUID: UUID,
+            categoryUUID: UUID,
+            locationUUID: UUID?,
+            date: Date,
+            transactionType: TransactionType,
+            isBlueprint: Boolean,
+        ): Transaction {
+            return Transaction(
+                id = UUID(0L,0L),
+                idWallet = walletUUID,
+                amount = amount,
+                date = date,
+                idCategory = categoryUUID,
+                description = description,
+                idLocation = locationUUID,
+                movementType = transactionType,
+                isBlueprint = isBlueprint,
+            )
+        }
+    }
+
     suspend fun getCategory() : Category? {
         val repository = DatabaseRepository.get()
         return repository.getCategory(idCategory)
@@ -102,7 +128,7 @@ data class TransactionFullForUI(
     val wallet: Wallet = Wallet(),
     val category: Category = Category(),
     val tagList: List<Tag> = listOf(),
-    val location: TagLocation = TagLocation(),
+    val location: Location? = null,
 ) {
     companion object {
         suspend fun load(
@@ -130,7 +156,7 @@ data class TransactionFullForUI(
             }
             jobRetrieveTagTransaction.cancel()
 
-            val location = repository.getLocation(transaction.idLocation) ?: TagLocation()
+            val location = if (transaction.idLocation == null) null else repository.getLocation(transaction.idLocation)
 
             val isLoaded = !isLoading
 
@@ -143,6 +169,35 @@ data class TransactionFullForUI(
                     location = location,
                 ),
                 isLoaded
+            )
+        }
+
+        fun new(
+            description: String,
+            amount: Float,
+            date: Date,
+            wallet: Wallet,
+            category: Category,
+            location: Location?,
+            tagList: List<Tag>,
+            transactionType: TransactionType,
+            isBlueprint: Boolean,
+        ): TransactionFullForUI {
+            return TransactionFullForUI(
+                transaction = Transaction.new(
+                    walletUUID = wallet.id,
+                    amount = amount,
+                    date = date,
+                    categoryUUID = category.id,
+                    description = description,
+                    locationUUID = location?.id,
+                    transactionType = transactionType,
+                    isBlueprint = isBlueprint,
+                ),
+                wallet = wallet,
+                category = category,
+                tagList = tagList,
+                location = location,
             )
         }
     }
@@ -192,7 +247,6 @@ data class TransactionFullForUI(
                 repository.updateTag(tag)
             }
         }
-        // TODO: Save location
 
         return TransactionSaveResult.SUCCESS
     }
