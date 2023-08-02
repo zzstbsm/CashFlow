@@ -2,6 +2,8 @@ package com.zhengzhou.cashflow.database
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.zhengzhou.cashflow.data.BudgetCategory
 import com.zhengzhou.cashflow.data.BudgetPeriod
 import com.zhengzhou.cashflow.data.Category
@@ -13,10 +15,12 @@ import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.util.*
 
 private const val DATABASE_NAME = "Registry_DB"
@@ -28,7 +32,17 @@ fun databaseRepositoryInitializer(
         context.applicationContext,
         RegisterDatabase::class.java,
         DATABASE_NAME
-    )
+    ).addCallback(object : RoomDatabase.Callback() {
+        override fun onCreate(db: SupportSQLiteDatabase) {
+            super.onCreate(db)
+            val coroutineScope = CoroutineScope(Dispatchers.Default)
+
+            coroutineScope.launch {
+                // Prepopulate database
+            }
+        }
+
+    })
     //.addMigrations(migration_1_2, migration_2_3)
     //.addMigrations(MIGRATION_1_2)
     .build()

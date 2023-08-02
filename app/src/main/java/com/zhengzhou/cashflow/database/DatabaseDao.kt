@@ -73,6 +73,10 @@ interface DatabaseDao {
     suspend fun addTagEntry(tag: TagEntry)
     @Update(entity = TagEntry::class)
     suspend fun updateTagEntry(tag: TagEntry)
+    @Query("UPDATE tag_entry SET count = count + 1 WHERE id=(:tagUUID)")
+    suspend fun updateTagEntryIncreaseCounter(tagUUID: UUID)
+    @Query("UPDATE tag_entry SET count = count - 1 WHERE id=(:tagUUID)")
+    suspend fun updateTagEntryDecreaseCounter(tagUUID: UUID)
     @Delete(entity = TagEntry::class)
     suspend fun deleteTagEntry(tag: TagEntry)
 
