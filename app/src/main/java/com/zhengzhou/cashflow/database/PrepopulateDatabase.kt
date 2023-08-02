@@ -3,6 +3,7 @@ package com.zhengzhou.cashflow.database
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Tag
+import com.zhengzhou.cashflow.data.TagEntry
 import com.zhengzhou.cashflow.data.TransactionFullForUI
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
@@ -23,9 +24,9 @@ class PrepopulateDatabase {
         val date = Date()
 
         val wallets = setWallets(date)
-        val wallet1 = wallets[0]
-        val wallet2 = wallets[1]
-        val wallet3 = wallets[2]
+        val walletEUR1 = wallets[0]
+        val walletEUR2 = wallets[1]
+        val walletSEK = wallets[2]
 
         val categories = setCategories()
         val catGrocery = categories[0]
@@ -33,15 +34,22 @@ class PrepopulateDatabase {
         val catEntertainment = categories[7]
         val catDeposit = categories[10]
 
+        val tagEntries = setTagEntries()
+        val tagSky = tagEntries[0]
+        val tagLunch = tagEntries[1]
+        val tagGin = tagEntries[2]
+        val tagGlasses = tagEntries[3]
+        val tagLessons = tagEntries[4]
+
         val transactionFullForUIList = listOf(
             TransactionFullForUI.new(
                 description = "Esselunga",
                 amount = -20f,
                 date = date,
-                wallet = wallet1,
+                wallet = walletEUR1,
                 category = catGrocery,
                 location = null,
-                tagList = listOf(),
+                tagEntryList = listOf(),
                 transactionType = TransactionType.Expense,
                 isBlueprint = false,
             ),
@@ -49,12 +57,23 @@ class PrepopulateDatabase {
                 description = "Agri",
                 amount = -10f,
                 date = date,
-                wallet = wallet1,
+                wallet = walletEUR1,
                 category = catEatingOut,
                 location = null,
-                tagList = listOf(),
+                tagEntryList = listOf(),
                 transactionType = TransactionType.Expense,
-                isBlueprint = false,
+                isBlueprint = true,
+            ),
+            TransactionFullForUI.new(
+                description = "Ica",
+                amount = -100f,
+                date = date,
+                wallet = walletSEK,
+                category = catEatingOut,
+                location = null,
+                tagEntryList = listOf(),
+                transactionType = TransactionType.Expense,
+                isBlueprint = true,
             ),
         )
 
@@ -76,7 +95,7 @@ class PrepopulateDatabase {
         return listOf(
             Wallet(
                 id = UUID.randomUUID(),
-                name = "Wallet",
+                name = "Mastercard",
                 startAmount = 100f,
                 iconName = IconsMappedForDB.WALLET,
                 currency = Currency.EUR,
@@ -96,8 +115,8 @@ class PrepopulateDatabase {
             ),
             Wallet(
                 id = UUID.randomUUID(),
-                name = "Mastercard",
-                startAmount = 100f,
+                name = "Sweden",
+                startAmount = 1000f,
                 iconName = IconsMappedForDB.WALLET,
                 currency = Currency.SEK,
                 creationDate = Date(date.time + 20000),
@@ -114,9 +133,33 @@ class PrepopulateDatabase {
                 ConfigurationFirstStartup.setDefaultMovementCategories()
     }
 
-    private fun setTags(): List<Tag> {
+    private fun setTagEntries(): List<TagEntry> {
         return listOf(
-            Tag(),
+            TagEntry(
+                id = UUID.randomUUID(),
+                name = "Sky",
+                count = 0,
+            ),
+            TagEntry(
+                id = UUID.randomUUID(),
+                name = "Lunch",
+                count = 0,
+            ),
+            TagEntry(
+                id = UUID.randomUUID(),
+                name = "Gin",
+                count = 0,
+            ),
+            TagEntry(
+                id = UUID.randomUUID(),
+                name = "Glasses",
+                count = 0,
+            ),
+            TagEntry(
+                id = UUID.randomUUID(),
+                name = "Lessons",
+                count = 0,
+            ),
         )
     }
 

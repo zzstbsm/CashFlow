@@ -62,10 +62,6 @@ data class Transaction (
         val repository = DatabaseRepository.get()
         return repository.getCategory(idCategory)
     }
-
-    fun isNewTransaction(): Boolean {
-        return this.id == UUID(0L,0L)
-    }
 }
 
 data class TransactionAndCategory(
@@ -179,7 +175,7 @@ data class TransactionFullForUI(
             wallet: Wallet,
             category: Category,
             location: Location?,
-            tagList: List<Tag>,
+            tagEntryList: List<TagEntry>,
             transactionType: TransactionType,
             isBlueprint: Boolean,
         ): TransactionFullForUI {
@@ -196,7 +192,12 @@ data class TransactionFullForUI(
                 ),
                 wallet = wallet,
                 category = category,
-                tagList = tagList,
+                tagList = tagEntryList.map { tagEntry ->
+                    Tag.newFromTagEntry(
+                        transactionUUID = UUID(0L,0L),
+                        tagEntry = tagEntry,
+                    )
+                },
                 location = location,
             )
         }
