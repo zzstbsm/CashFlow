@@ -1,6 +1,5 @@
 package com.zhengzhou.cashflow.database
 
-import android.util.Log
 import androidx.room.TypeConverter
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
@@ -47,7 +46,6 @@ class TransactionTypeConverters {
     @TypeConverter
     fun toIconsMappedForDB(name: String): IconsMappedForDB? {
         val splitName = name.split("-")[0]
-        Log.d("DatabaseTypeConverter","toIconsMappedForDB: from $name to $splitName")
         return IconsMappedForDB.setIcon(splitName)
     }
 

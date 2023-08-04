@@ -1,12 +1,9 @@
 package com.zhengzhou.cashflow.tools
 
-import android.util.Log
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import java.util.UUID
-
-const val TAG = "ConfigurationFirstStartup"
 
 class ConfigurationFirstStartup {
 
@@ -17,21 +14,18 @@ class ConfigurationFirstStartup {
         ) {
 
             setDefaultExpenseCategories().forEach {category: Category ->
-                Log.d(TAG,"Adding ${category.name}")
                 repository.addCategory(category)
             }
             setDefaultDepositCategories().forEach { category: Category ->
-                Log.d(TAG, "Adding ${category.name}")
                 repository.addCategory(category)
             }
             setDefaultMovementCategories().forEach {category: Category ->
-                Log.d(TAG,"Adding ${category.name}")
                 repository.addCategory(category)
             }
 
         }
 
-        fun setDefaultExpenseCategories(): MutableList<Category> {
+        private fun setDefaultExpenseCategories(): MutableList<Category> {
 
             return mutableListOf(
                 Category(
@@ -91,7 +85,7 @@ class ConfigurationFirstStartup {
             )
         }
 
-        fun setDefaultDepositCategories(): MutableList<Category>{
+        private fun setDefaultDepositCategories(): MutableList<Category>{
             return mutableListOf(
                 Category(
                     id = UUID.randomUUID(),
@@ -108,7 +102,7 @@ class ConfigurationFirstStartup {
             )
         }
 
-        fun setDefaultMovementCategories(): MutableList<Category>{
+        private fun setDefaultMovementCategories(): MutableList<Category>{
             return mutableListOf(
                 Category(
                     id = UUID.randomUUID(),

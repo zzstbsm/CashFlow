@@ -9,7 +9,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalContext
 import com.zhengzhou.cashflow.database.DatabaseRepository
-import com.zhengzhou.cashflow.database.PrepopulateDatabase
 import com.zhengzhou.cashflow.tools.ApplicationConfigurationService
 import com.zhengzhou.cashflow.tools.ConfigurationFirstStartup
 import com.zhengzhou.cashflow.tools.EventMessages
@@ -32,11 +31,6 @@ class MainActivity : ComponentActivity() {
                         ConfigurationFirstStartup.configureTableCategory()
 
                 }
-            }
-
-            val coroutinePreloadData = CoroutineScope(Dispatchers.Default)
-            coroutinePreloadData.launch {
-                if (repository.getWalletLastAccessed() == null) PrepopulateDatabase()
             }
 
             MaterialTheme {

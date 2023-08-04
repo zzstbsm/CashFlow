@@ -1,11 +1,12 @@
 package com.zhengzhou.cashflow.ui.balance
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.data.*
+import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
+import com.zhengzhou.cashflow.data.TransactionAndCategory
+import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.TimeTools
 import kotlinx.coroutines.Dispatchers
@@ -16,9 +17,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
-import java.util.*
-
-const val TAG = "BalanceViewModel"
+import java.util.Calendar
+import java.util.Date
+import java.util.UUID
 
 data class BalanceUiState(
     val isLoading: Boolean = true,
@@ -158,9 +159,6 @@ class BalanceViewModel : ViewModel() {
         startDate: Date = uiState.value.filterStartDate,
         endDate: Date = uiState.value.filterEndDate,
     ): List<TransactionAndCategory> {
-        Log.d(TAG,"Filter start: $startDate")
-        Log.d(TAG,"Filter end: $endDate")
-        Log.d(TAG,"${uiState.value.transactionList}")
         return uiState.value.transactionList.filter { transactionAndCategory ->
             transactionAndCategory.transaction.date in startDate..endDate
         }
@@ -172,10 +170,8 @@ class BalanceViewModel : ViewModel() {
             setUiState(
                 transactionList = listOf()
             )
-            Log.d(TAG,"Selected WalletList: ${uiState.value.walletList.map { it.name }}")
             repository.getTransactionListInListOfWallet(uiState.value.walletList).collect { transactionList ->
 
-                Log.d(TAG,"List of transactions in the group: \n${transactionList.map { it.description }}")
                 val transactionCategoryGroup: MutableList<TransactionAndCategory> = mutableListOf()
 
                 transactionList.forEach { transaction ->
@@ -205,7 +201,6 @@ class BalanceViewModel : ViewModel() {
                 isLoading = true
             )
             // Collect all wallets
-            Log.d(TAG,"Getting wallets with currency ${currency.name}")
             repository.getWalletListByCurrency(currency).collect { collectedWalletList ->
                 var amount = 0f
                 collectedWalletList.forEach { wallet: Wallet ->
