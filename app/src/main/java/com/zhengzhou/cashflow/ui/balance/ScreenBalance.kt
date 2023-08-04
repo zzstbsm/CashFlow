@@ -23,7 +23,6 @@ import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.TimeTools
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
-import com.zhengzhou.cashflow.ui.DateSelector
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.ui.SectionTopAppBar
 import java.util.Date
@@ -144,20 +143,6 @@ private fun BalanceMainBody(
                 },
                 modifier = modifier,
             )
-            /*
-            PeriodSelectorInBalance(
-                startDate = balanceUiState.filterStartDate,
-                endDate = balanceUiState.filterEndDate,
-                onSelectTimePeriod = { startDate, endDate ->
-                    balanceViewModel.setTimeFilter(
-                        timeFilter = null,
-                        startDate = startDate,
-                        endDate = endDate,
-                    )
-                },
-                modifier = modifier
-            )
-             */
         }
 
         if (balanceUiState.transactionListToShow.isEmpty()) {
@@ -330,57 +315,6 @@ private fun SelectTimeFilter(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun PeriodSelectorInBalance(
-    startDate: Date,
-    endDate: Date,
-    onSelectTimePeriod: (Date, Date) -> Unit = { _, _ -> },
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
-) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier,
-    ) {
-
-        DateSelector(
-            label = stringResource(id = R.string.from),
-            dateFormat = "dd/MM/yyyy",
-            date = startDate,
-            onSelectDate = { millis ->
-                if (millis != null) {
-                    startDate.time = millis
-                }
-                onSelectTimePeriod(startDate, endDate)
-            },
-            modifier = Modifier
-                .padding(4.dp)
-                .weight(1f),
-            selectableDatesCondition = { utcTimeMillis ->
-                utcTimeMillis <= endDate.time
-            },
-        )
-
-        DateSelector(
-            label = stringResource(id = R.string.to),
-            dateFormat = "dd/MM/yyyy",
-            date = endDate,
-            onSelectDate = { millis ->
-                if (millis != null) {
-                    endDate.time = millis
-                }
-                onSelectTimePeriod(startDate, endDate)
-            },
-            modifier = Modifier
-                .padding(4.dp)
-                .weight(1f),
-            selectableDatesCondition = { utcTimeMillis ->
-                utcTimeMillis >= startDate.time
-            },
-        )
     }
 }
 

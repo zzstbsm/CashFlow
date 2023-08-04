@@ -109,7 +109,9 @@ fun WalletEditScreen(
                         EventMessages.sendMessageId(R.string.WalletEdit_error_wallet_name_not_valid)
                     } else {
 
-                        val ifSuccess = walletEditViewModel.saveWallet() == WalletEditSaveResults.SUCCESS
+                        val walletEditSaveResults: WalletEditSaveResults = walletEditViewModel.saveWallet()
+                        EventMessages.sendMessageId(walletEditSaveResults.message)
+                        val ifSuccess = walletEditSaveResults == WalletEditSaveResults.SUCCESS
 
                         if (ifSuccess) {
                             navController.previousBackStackEntry
@@ -224,12 +226,6 @@ fun WalletEditMainBody(
         HorizontalDivider()
         Spacer(modifier = Modifier.height(8.dp))
 
-        SectionWalletBudget(
-            walletEditUiState = walletEditUiState,
-            walletEditViewModel = walletEditViewModel,
-            modifier = modifier
-        )
-
     }
 
 }
@@ -266,7 +262,6 @@ private fun TextWalletName(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TextWalletIcon(
     walletEditUiState: WalletEditUiState,

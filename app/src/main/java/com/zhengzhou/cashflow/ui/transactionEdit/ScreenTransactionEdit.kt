@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.zhengzhou.cashflow.BackHandler
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.tools.EventMessages
@@ -61,7 +62,11 @@ fun TransactionEditScreen(
     var showBackDialog by remember {
         mutableStateOf(false)
     }
-    
+
+    BackHandler {
+        showBackDialog = true
+    }
+
     Scaffold(
         topBar = {
             TransactionEditTopAppBar(
@@ -211,17 +216,6 @@ fun TransactionEditMainBody(
                 transactionEditViewModel = transactionEditViewModel,
             )
         }
-
-        /*
-     else {
-        MovementSubsection(
-            uiState = uiState,
-            viewModel = viewModel,
-            modifier = modifier,
-        )
-
-        }
-         */
     }
 }
 
@@ -308,99 +302,8 @@ private fun TransferMovementTypeSection(
                 }
             )
         }
-        else -> {
-            Text(text = "Not yet implemented")
-        }
     }
 }
-
-/*
-
-@Composable
-private fun ExpenseOrDepositSubsection(
-    uiState: OperationViewModel.UiState,
-    viewModel: OperationViewModel,
-    modifier: Modifier = Modifier,
-) {
-    // Select function to choose
-    LazyRow(
-        modifier = modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-    ) {
-        items(OperationScreenToChooseFunctionality.size) {pos ->
-            ChoiceButton(
-                currentChoice = OperationScreenToChooseFunctionality[pos],
-                viewModel = viewModel,
-                modifier = modifier
-            )
-        }
-    }
-
-    // Choice section
-    when(uiState.toShow) {
-        OperationScreenToShow.AMOUNT -> {
-            KeypadTransactionSection(
-                onDigitClick = { pressedKey ->
-                    viewModel.keyPressed(pressedKey)
-                }
-            )
-        }
-        OperationScreenToShow.CATEGORY -> {
-            ChooseCategorySection(
-                uiState = uiState,
-                viewModel = viewModel,
-            )
-        }
-        OperationScreenToShow.TAG -> {
-            TagSection(
-                uiState = uiState,
-                viewModel = viewModel,
-                modifier = modifier,
-            )
-        }
-        else -> {
-            Text(text = "Not yet implemented")
-        }
-    }
-}
-
-@Composable
-private fun MovementSubsection(
-    uiState: OperationViewModel.UiState,
-    viewModel: OperationViewModel,
-    modifier: Modifier = Modifier,
-) {
-
-    ChoiceButton(
-        currentChoice = OperationScreenToShow.MOVEMENT,
-        viewModel = viewModel,
-        modifier = modifier
-    )
-
-    // Choice section
-    when(uiState.toShow) {
-        OperationScreenToShow.AMOUNT -> {
-            KeypadTransactionSection(
-                onDigitClick = { pressedKey ->
-                    viewModel.keyPressed(pressedKey)
-                }
-            )
-        }
-        OperationScreenToShow.MOVEMENT -> {
-            ChooseSecondaryWallet(
-                uiState = uiState,
-                viewModel = viewModel,
-                modifier = modifier,
-            )
-        }
-        else -> {
-            Text(text = "Not yet implemented")
-        }
-    }
-}
-
- */
 
 private fun saveTransactionCheck(status: TransactionSaveResult): Boolean {
 

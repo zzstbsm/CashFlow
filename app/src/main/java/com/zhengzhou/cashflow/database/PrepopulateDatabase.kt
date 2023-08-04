@@ -2,7 +2,6 @@ package com.zhengzhou.cashflow.database
 
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
-import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.TagEntry
 import com.zhengzhou.cashflow.data.TransactionFullForUI
 import com.zhengzhou.cashflow.data.TransactionType
@@ -23,16 +22,8 @@ class PrepopulateDatabase {
 
         val date = Date()
 
-        val wallets = setWallets(date)
-        val walletEUR1 = wallets[0]
-        val walletEUR2 = wallets[1]
-        val walletSEK = wallets[2]
-
-        val categories = setCategories()
-        val catGrocery = categories[0]
-        val catEatingOut = categories[1]
-        val catEntertainment = categories[7]
-        val catDeposit = categories[10]
+        val wallets = setWallets(date).toMutableList()
+        val categories = setCategories().toMutableList()
 
         val tagEntries = setTagEntries()
         val tagSky = tagEntries[0]
@@ -41,50 +32,122 @@ class PrepopulateDatabase {
         val tagGlasses = tagEntries[3]
         val tagLessons = tagEntries[4]
 
-        val transactionFullForUIList = listOf(
-            TransactionFullForUI.new(
-                description = "Esselunga",
-                amount = -20f,
-                date = date,
-                wallet = walletEUR1,
-                category = catGrocery,
-                location = null,
-                tagEntryList = listOf(),
-                transactionType = TransactionType.Expense,
-                isBlueprint = false,
-            ),
-            TransactionFullForUI.new(
-                description = "Agri",
-                amount = -10f,
-                date = date,
-                wallet = walletEUR1,
-                category = catEatingOut,
-                location = null,
-                tagEntryList = listOf(),
-                transactionType = TransactionType.Expense,
-                isBlueprint = true,
-            ),
-            TransactionFullForUI.new(
-                description = "Ica",
-                amount = -100f,
-                date = date,
-                wallet = walletSEK,
-                category = catEatingOut,
-                location = null,
-                tagEntryList = listOf(),
-                transactionType = TransactionType.Expense,
-                isBlueprint = true,
-            ),
-        )
 
         val coroutineScope = CoroutineScope(Dispatchers.Default)
         coroutineScope.launch {
-            categories.forEach {
-                repository.addCategory(it)
+
+            categories.forEachIndexed { index, category ->
+                categories[index] = repository.addCategory(category)
             }
-            wallets.forEach {
-                repository.addWallet(it)
+            wallets.forEachIndexed { index, wallet ->
+                wallets[index] = repository.addWallet(wallet)
             }
+
+            val catGrocery = categories[0]
+            val catEatingOut = categories[1]
+            val catEntertainment = categories[7]
+            val catDeposit = categories[10]
+
+            val walletEUR1 = wallets[0]
+            val walletEUR2 = wallets[1]
+            val walletSEK = wallets[2]
+
+            val transactionFullForUIList = listOf(
+                TransactionFullForUI.new(
+                    description = "Esselunga",
+                    amount = -20f,
+                    date = date,
+                    wallet = walletEUR1,
+                    category = catGrocery,
+                    location = null,
+                    tagEntryList = listOf(
+                        tagLunch,
+                    ),
+                    transactionType = TransactionType.Expense,
+                    isBlueprint = false,
+                ),
+                TransactionFullForUI.new(
+                    description = "Agri",
+                    amount = -10f,
+                    date = date,
+                    wallet = walletEUR1,
+                    category = catEatingOut,
+                    location = null,
+                    tagEntryList = listOf(
+                        tagSky,
+                        tagLunch
+                    ),
+                    transactionType = TransactionType.Expense,
+                    isBlueprint = true,
+                ),
+                TransactionFullForUI.new(
+                    description = "Agri",
+                    amount = -10f,
+                    date = date,
+                    wallet = walletEUR1,
+                    category = catEatingOut,
+                    location = null,
+                    tagEntryList = listOf(
+                        tagSky,
+                        tagLunch
+                    ),
+                    transactionType = TransactionType.Expense,
+                    isBlueprint = false,
+                ),
+                TransactionFullForUI.new(
+                    description = "Ica",
+                    amount = -100f,
+                    date = date,
+                    wallet = walletSEK,
+                    category = catEatingOut,
+                    location = null,
+                    tagEntryList = listOf(
+                        tagGin
+                    ),
+                    transactionType = TransactionType.Expense,
+                    isBlueprint = true,
+                ),
+                TransactionFullForUI.new(
+                    description = "Private lessons",
+                    amount = 50f,
+                    date = date,
+                    wallet = walletEUR2,
+                    category = catDeposit,
+                    location = null,
+                    tagEntryList = listOf(
+                        tagLessons
+                    ),
+                    transactionType = TransactionType.Expense,
+                    isBlueprint = true,
+                ),
+                TransactionFullForUI.new(
+                    description = "Mercolegin",
+                    amount = -15f,
+                    date = date,
+                    wallet = walletEUR2,
+                    category = catEntertainment,
+                    location = null,
+                    tagEntryList = listOf(
+                        tagGin
+                    ),
+                    transactionType = TransactionType.Expense,
+                    isBlueprint = true,
+                ),
+                TransactionFullForUI.new(
+                    description = "Glasses",
+                    amount = -200f,
+                    date = date,
+                    wallet = walletEUR1,
+                    category = catGrocery,
+                    location = null,
+                    tagEntryList = listOf(
+                        tagGlasses,
+                    ),
+                    transactionType = TransactionType.Expense,
+                    isBlueprint = true,
+                ),
+            )
+
             transactionFullForUIList.forEach {
                 it.save(repository,newTransaction = true)
             }
@@ -94,9 +157,9 @@ class PrepopulateDatabase {
     private fun setWallets(date: Date): List<Wallet> {
         return listOf(
             Wallet(
-                id = UUID.randomUUID(),
+                id = UUID(0L,0L),
                 name = "Mastercard",
-                startAmount = 100f,
+                startAmount = 500f,
                 iconName = IconsMappedForDB.WALLET,
                 currency = Currency.EUR,
                 creationDate = date,
@@ -104,7 +167,7 @@ class PrepopulateDatabase {
                 budgetEnabled = false,
             ),
             Wallet(
-                id = UUID.randomUUID(),
+                id = UUID(0L,0L),
                 name = "Visa",
                 startAmount = 100f,
                 iconName = IconsMappedForDB.WALLET,
@@ -114,7 +177,7 @@ class PrepopulateDatabase {
                 budgetEnabled = false,
             ),
             Wallet(
-                id = UUID.randomUUID(),
+                id = UUID(0L,0L),
                 name = "Sweden",
                 startAmount = 1000f,
                 iconName = IconsMappedForDB.WALLET,

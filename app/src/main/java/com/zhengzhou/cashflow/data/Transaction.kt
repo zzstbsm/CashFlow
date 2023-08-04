@@ -57,11 +57,6 @@ data class Transaction (
             )
         }
     }
-
-    suspend fun getCategory() : Category? {
-        val repository = DatabaseRepository.get()
-        return repository.getCategory(idCategory)
-    }
 }
 
 data class TransactionAndCategory(
@@ -152,8 +147,6 @@ data class TransactionFullForUI(
             }
             jobRetrieveTagTransaction.cancel()
 
-            val location = if (transaction.idLocation == null) null else repository.getLocation(transaction.idLocation)
-
             val isLoaded = !isLoading
 
             return Pair(
@@ -162,7 +155,6 @@ data class TransactionFullForUI(
                     transaction = transaction,
                     category = category,
                     tagList = tagList,
-                    location = location,
                 ),
                 isLoaded
             )
@@ -263,7 +255,5 @@ data class TransactionFullForUI(
         }.forEach { tag ->
             repository.deleteTag(tag = tag)
         }
-
-        // TODO: delete location
     }
 }

@@ -187,8 +187,8 @@ enum class NavigationCurrentScreen(
         optionNameShort = R.string.nav_name_profile,
         accessibilityText = R.string.accessibility_menu_navbar_profile,
         route = "Profile",
-        navBarActive = true,
-        bottomActive = true,
+        navBarActive = false,
+        bottomActive = false,
     ),
 
     /*
@@ -224,34 +224,23 @@ enum class NavigationCurrentScreen(
 
 sealed class Screen(
     val route: String,
-    val screenEnum: NavigationCurrentScreen,
 ) {
-
-    private fun createRoute() = this.route
-    fun navigate(navController: NavController) {
-        navController.navigate(createRoute())
-    }
 
     object Balance: Screen(
         route = NavigationCurrentScreen.Balance.route,
-        screenEnum = NavigationCurrentScreen.Balance,
     )
     object CommonTransactions: Screen(
         route = NavigationCurrentScreen.CommonTransactions.route,
-        screenEnum = NavigationCurrentScreen.CommonTransactions,
     )
     object ManageCategories: Screen(
         route = NavigationCurrentScreen.ManageCategories.route,
-        screenEnum = NavigationCurrentScreen.ManageCategories,
     )
     object Profile: Screen(
         route = NavigationCurrentScreen.Profile.route,
-        screenEnum = NavigationCurrentScreen.Profile,
     )
     object WalletEdit: Screen(
         route = NavigationCurrentScreen.WalletEdit.route +
                 "/{walletUUIDStr}",
-        screenEnum = NavigationCurrentScreen.WalletEdit,
     ) {
         private fun createRoute(
             walletID: UUID,
@@ -272,7 +261,6 @@ sealed class Screen(
     }
     object WalletOverview: Screen(
         route = NavigationCurrentScreen.WalletOverview.route,
-        screenEnum = NavigationCurrentScreen.Balance,
     ) {
         fun keyWalletUUID() : String = "walletUUIDStr"
     }
@@ -283,7 +271,6 @@ sealed class Screen(
                 "/{transactionUUIDStr}" +
                 "/{isBlueprint}" +
                 "/{editBlueprint}",
-        screenEnum = NavigationCurrentScreen.Balance,
     ) {
         private fun createRoute(
             transactionType: TransactionType,
@@ -313,7 +300,6 @@ sealed class Screen(
     object TransactionReport: Screen(
         route = NavigationCurrentScreen.TransactionReport.route +
                 "/{transactionUUIDStr}",
-        screenEnum = NavigationCurrentScreen.Balance,
     ) {
         private fun createRoute(
             transactionUUID: UUID,

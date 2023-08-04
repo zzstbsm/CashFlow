@@ -1,8 +1,6 @@
 package com.zhengzhou.cashflow.database
 
 import androidx.room.*
-import com.zhengzhou.cashflow.data.BudgetCategory
-import com.zhengzhou.cashflow.data.BudgetPeriod
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Location
@@ -15,29 +13,6 @@ import java.util.*
 
 @Dao
 interface DatabaseDao {
-
-    // BudgetCategory Section
-    @Query("SELECT * FROM budget_category WHERE (id_period=(:budgetPeriodUUID) AND id_category=(:categoryUUID))")
-    suspend fun getBudgetCategory(budgetPeriodUUID: UUID, categoryUUID: UUID): BudgetCategory?
-    @Insert(entity = BudgetCategory::class, onConflict = OnConflictStrategy.ABORT)
-    suspend fun addBudgetCategory(budgetCategory: BudgetCategory)
-    @Update(entity = BudgetCategory::class)
-    suspend fun updateBudgetCategory(budgetCategory: BudgetCategory)
-    @Delete(entity = BudgetCategory::class)
-    suspend fun deleteBudgetCategory(budgetCategory: BudgetCategory)
-
-
-    // BudgetPeriod section
-    @Query("SELECT * FROM budget_period WHERE id_wallet=(:walletUUID)")
-    fun getBudgetPeriodListFromWallet(walletUUID: UUID): Flow<List<BudgetPeriod>>
-    @Insert(entity = BudgetPeriod::class, onConflict = OnConflictStrategy.ABORT)
-    suspend fun addBudgetPeriod(budgetPeriod: BudgetPeriod)
-    @Update(entity = BudgetPeriod::class)
-    suspend fun updateBudgetPeriod(budgetPeriod: BudgetPeriod)
-    @Delete(entity = BudgetPeriod::class)
-    suspend fun deleteBudgetPeriod(budgetPeriod: BudgetPeriod)
-    @Query("SELECT * FROM budget_period WHERE id_wallet=(:walletUUID) ORDER BY end_date DESC LIMIT 1")
-    fun getBudgetPeriodLastActive(walletUUID: UUID): BudgetPeriod?
 
     // Category section
     @Query("SELECT * FROM category WHERE id=(:categoryUUID)")
@@ -106,10 +81,10 @@ interface DatabaseDao {
     suspend fun deleteTransaction(transaction: Transaction)
     @Query("SELECT * FROM movement WHERE (id_wallet IN (:idWalletList) AND is_blueprint=0) ORDER BY date DESC")
     fun getTransactionListInListOfWallet(idWalletList: List<UUID>): Flow<List<Transaction>>
-    @Query("SELECT * FROM movement WHERE (id_wallet=(:id_wallet) AND is_blueprint=0) ORDER BY date DESC")
-    fun getTransactionListInWallet(id_wallet: UUID): Flow<List<Transaction>>
-    @Query("SELECT * FROM movement WHERE (id_wallet=(:id_wallet) AND is_blueprint=0) ORDER BY date DESC LIMIT :number_of_entries")
-    fun getTransactionShortListInWallet(id_wallet: UUID,number_of_entries: Int): Flow<List<Transaction>>
+    @Query("SELECT * FROM movement WHERE (id_wallet=(:idWallet) AND is_blueprint=0) ORDER BY date DESC")
+    fun getTransactionListInWallet(idWallet: UUID): Flow<List<Transaction>>
+    @Query("SELECT * FROM movement WHERE (id_wallet=(:idWallet) AND is_blueprint=0) ORDER BY date DESC LIMIT :numberOfEntries")
+    fun getTransactionShortListInWallet(idWallet: UUID,numberOfEntries: Int): Flow<List<Transaction>>
     @Query("SELECT * FROM movement WHERE is_blueprint != 0")
     fun getTransactionIsBlueprint(): Flow<List<Transaction>>
 
