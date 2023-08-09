@@ -29,7 +29,7 @@ android {
         targetSdk 34
         compileSdk 34
         versionCode 1
-        versionName "0.1.0"
+        versionName "0.1.0-alpha02"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
