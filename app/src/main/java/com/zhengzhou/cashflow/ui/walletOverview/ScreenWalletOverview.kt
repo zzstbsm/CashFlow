@@ -175,7 +175,6 @@ fun WalletOverviewAppBarAction(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletOverviewMainBody(
     walletOverviewUiState: WalletOverviewUiState,
@@ -192,12 +191,6 @@ fun WalletOverviewMainBody(
                 walletOverviewUiState = walletOverviewUiState,
                 walletOverviewViewModel = walletOverviewViewModel,
                 navController = navController,
-            )
-        }
-        item {
-            BudgetSection(
-                walletOverviewUiState = walletOverviewUiState,
-                walletOverviewViewModel = walletOverviewViewModel,
             )
         }
     }
@@ -331,21 +324,6 @@ private fun TransactionListSection(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun BudgetSection(
-    walletOverviewUiState: WalletOverviewUiState,
-    walletOverviewViewModel: WalletOverviewViewModel,
-    modifier: Modifier = Modifier,
-) {
-    CustomCard {
-        Text(
-            text = "Budget section",
-            color = Color.DarkGray,
-            fontWeight = FontWeight.Bold,
-        )
     }
 }
 @Composable

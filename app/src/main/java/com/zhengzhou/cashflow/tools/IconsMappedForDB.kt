@@ -78,7 +78,7 @@ enum class IconsMappedForDB(
         wallet = false,
     ),
     TRANSFER(
-        resource = R.drawable.ic_grocery,
+        resource = R.drawable.ic_transfer,
         category = true,
         wallet = false,
     ),

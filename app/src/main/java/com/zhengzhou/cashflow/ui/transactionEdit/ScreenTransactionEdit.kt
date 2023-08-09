@@ -8,13 +8,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -34,16 +35,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.BackHandler
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
-import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.KeypadDigit
 import java.util.UUID
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionEditScreen(
     transactionType: TransactionType,
     transactionUUID: UUID,
+    currency: Currency,
     isBlueprint: Boolean,
     editBlueprint: Boolean,
     navController: NavController,
@@ -53,6 +54,7 @@ fun TransactionEditScreen(
         TransactionEditViewModel(
             transactionUUID = transactionUUID,
             transactionType = transactionType,
+            currency = currency,
             isBlueprint = isBlueprint,
             editBlueprint = editBlueprint,
         )
@@ -82,52 +84,32 @@ fun TransactionEditScreen(
                 transactionEditViewModel = transactionEditViewModel,
                 contentPadding = paddingValues,
             )
-            
-            if (showBackDialog) {
-                AlertDialog(onDismissRequest = { showBackDialog = false }) {
-                    Card() {
-                        Text(
-                            text = stringResource(id = R.string.TransactionEdit_prompt_save_transaction),
-                            modifier = Modifier.padding(16.dp)
-                        )
-                        Row(
-                            horizontalArrangement = Arrangement.End,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            TextButton(
-                                onClick = {
-                                    navController.popBackStack()
-                                    showBackDialog = false
-                                }
-                            ) {
-                                Text(
-                                    stringResource(id = R.string.no)
-                                )
-                            }
-                            TextButton(
-                                onClick = {
-                                    val saveTransactionResult = transactionEditViewModel.saveTransaction()
-                                    val saveTransactionSuccessful = saveTransactionCheck(saveTransactionResult)
-                                    if (saveTransactionSuccessful) navController.popBackStack()
-                                    showBackDialog = false
-                                }
-                            ) {
-                                Text(
-                                    stringResource(id = R.string.yes)
-                                )
-                            }
-                        }
-                    }
-                }
-            }
+
+            BackDialog(
+                enabled = showBackDialog,
+                onSave = {
+                    TransactionEditActions.save(
+                        transactionEditViewModel = transactionEditViewModel,
+                        navController = navController,
+                    )
+                    showBackDialog = false
+                },
+                onDiscard = {
+                    navController.popBackStack()
+                    showBackDialog = false
+                },
+                onDismissRequest = { showBackDialog = false },
+                modifier = Modifier.fillMaxWidth()
+            )
         },
         floatingActionButton = {
             if (!transactionEditUiState.isLoading) {
                 FloatingActionButton(
                     onClick = {
-                        val saveTransactionResult = transactionEditViewModel.saveTransaction()
-                        val saveTransactionSuccessful = saveTransactionCheck(saveTransactionResult)
-                        if (saveTransactionSuccessful) navController.popBackStack()
+                        TransactionEditActions.save(
+                            transactionEditViewModel = transactionEditViewModel,
+                            navController = navController,
+                        )
                     }
                 ) {
                     Icon(
@@ -196,7 +178,8 @@ fun TransactionEditMainBody(
             onWalletSelected = { selectedWallet ->
                 transactionEditViewModel.updateWallet(wallet = selectedWallet)
             },
-            onBackKeyClick = { transactionEditViewModel.amountKeyPress(KeypadDigit.KeyBack) }
+            onBackKeyClick = { transactionEditViewModel.amountKeyPress(KeypadDigit.KeyBack) },
+            transactionType = transactionEditUiState.transaction.transactionType
         )
         DescriptionSection(
             text = transactionEditUiState.transaction.description,
@@ -206,21 +189,15 @@ fun TransactionEditMainBody(
             modifier = modifier
         )
 
-        if (
-            transactionEditUiState.transaction.movementType == TransactionType.Deposit
-            ||
-            transactionEditUiState.transaction.movementType == TransactionType.Expense
-        ) {
-            TransactionMovementTypeTab(
-                transactionEditUiState = transactionEditUiState,
-                transactionEditViewModel = transactionEditViewModel,
-            )
-        }
+        TransactionEditTypeTab(
+            transactionEditUiState = transactionEditUiState,
+            transactionEditViewModel = transactionEditViewModel,
+        )
     }
 }
 
 @Composable
-private fun TransactionMovementTypeTab(
+private fun TransactionEditTypeTab(
     transactionEditUiState: TransactionEditUiState,
     transactionEditViewModel: TransactionEditViewModel,
 ) {
@@ -229,11 +206,16 @@ private fun TransactionMovementTypeTab(
         mutableIntStateOf(0)
     }
 
+    val toShowFunctionalities = TransactionEditScreenToChooseFunctionality.filter {
+        val chosenTransactionType = transactionEditUiState.transaction.transactionType
+        chosenTransactionType in it.transactionTypeList
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         TabRow(selectedTabIndex = activeTab) {
-            TransactionEditScreenToChooseFunctionality.forEachIndexed { index, section ->
+            toShowFunctionalities.forEachIndexed { index, section ->
                 Tab(
                     selected = activeTab == index,
                     onClick = {
@@ -272,10 +254,32 @@ private fun TransferMovementTypeSection(
                 }
             )
         }
+        TransactionSectionToShow.SECONDARY_WALLET -> {
+            if (transactionEditUiState.isLoading) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                SecondaryWalletSection(
+                    primaryWallet = transactionEditUiState.wallet,
+                    onSelectPrimaryWallet = {
+                        transactionEditViewModel.updateWallet(it)
+                    },
+                    secondaryWallet = transactionEditUiState.secondaryWallet ?: transactionEditUiState.wallet,
+                    onSelectSecondaryWallet = {
+                        transactionEditViewModel.updateSecondaryWallet(it)
+                    },
+                    walletList = transactionEditUiState.walletList
+                )
+            }
+        }
         TransactionSectionToShow.CATEGORY -> {
             ChooseCategorySection(
                 categoryList = transactionEditUiState.categoryList,
-                currentlyChosenCategoryId = transactionEditUiState.transaction.idCategory,
+                currentlyChosenCategoryId = transactionEditUiState.transaction.categoryId,
                 onCategoryChoice = { category ->
                     transactionEditViewModel.updateCategory(category)
                 }
@@ -305,18 +309,44 @@ private fun TransferMovementTypeSection(
     }
 }
 
-private fun saveTransactionCheck(status: TransactionSaveResult): Boolean {
-
-    if (status == TransactionSaveResult.SUCCESS) {
-        EventMessages.sendMessageId(R.string.TransactionEdit_transaction_saved)
-        return true
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun BackDialog(
+    enabled: Boolean,
+    onSave: () -> Unit,
+    onDiscard: () -> Unit,
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+){
+    if (enabled) {
+        AlertDialog(onDismissRequest = onDismissRequest) {
+            Card(
+                modifier = modifier,
+            ) {
+                Text(
+                    text = stringResource(id = R.string.TransactionEdit_prompt_save_transaction),
+                    modifier = Modifier.padding(16.dp)
+                )
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    TextButton(
+                        onClick = onDiscard
+                    ) {
+                        Text(
+                            stringResource(id = R.string.no)
+                        )
+                    }
+                    TextButton(
+                        onClick = onSave
+                    ) {
+                        Text(
+                            stringResource(id = R.string.yes)
+                        )
+                    }
+                }
+            }
+        }
     }
-    if (status == TransactionSaveResult.NO_AMOUNT) {
-        EventMessages.sendMessageId(R.string.TransactionEdit_no_amount)
-    }
-    if (status == TransactionSaveResult.NO_CATEGORY) {
-        EventMessages.sendMessageId(R.string.TransactionEdit_no_category)
-    }
-    return false
-
 }

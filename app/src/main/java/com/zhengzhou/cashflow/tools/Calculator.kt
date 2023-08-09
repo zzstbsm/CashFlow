@@ -1,7 +1,10 @@
 package com.zhengzhou.cashflow.tools
 
+import android.util.Log
 import com.zhengzhou.cashflow.R
 import kotlin.math.roundToInt
+
+private const val TAG = "Calculator"
 
 class Calculator {
 
@@ -198,7 +201,9 @@ class Calculator {
 
             if (amount == 0f) return calculator
 
-            amount.toString().forEach { digit ->
+            Log.d(TAG,"Amount to initialize in the calculator: $amount")
+            kotlin.math.abs(amount).toString().forEach { digit ->
+                Log.d(TAG,"Injecting digit: $digit")
                 calculator.addKey(
                     mapCharToKeypadDigit(digit)!!
                 )

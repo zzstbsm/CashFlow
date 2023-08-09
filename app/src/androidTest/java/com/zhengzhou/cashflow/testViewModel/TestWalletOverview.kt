@@ -40,25 +40,25 @@ class TestWalletOverview {
 
         val date = Date()
 
-        wallet1 = Wallet(
+        wallet1 = Wallet.newEmpty().copy(
             id = UUID(0L,1L),
             name = "myWallet1",
             startAmount = 100f,
             lastAccess = date,
         )
-        wallet2 = Wallet(
+        wallet2 = Wallet.newEmpty().copy(
             id = UUID(0L,2L),
             name = "myWallet2",
             startAmount = 10f,
             lastAccess = Date(date.time + 20),
         )
-        wallet3 = Wallet(
+        wallet3 = Wallet.newEmpty().copy(
             id = UUID(0L,2L),
             name = "myWallet3",
             startAmount = 5f,
             lastAccess = Date(date.time + 30),
         )
-        wallet4 = Wallet(
+        wallet4 = Wallet.newEmpty().copy(
             id = UUID(0L,2L),
             name = "myWallet4",
             startAmount = 0f,
@@ -167,9 +167,8 @@ class TestWalletOverview {
 
             val walletOverviewViewModel = WalletOverviewViewModel(wallet1.id)
             while (walletOverviewViewModel.uiState.value.isLoadingWallet) delay(5)
-            val result = walletOverviewViewModel.deleteShownWallet()
             val walletOverviewUiState = walletOverviewViewModel.uiState.value
-            assertSameWallet(Wallet.emptyWallet(),walletOverviewUiState.wallet)
+            assertSameWallet(Wallet.newEmpty(), walletOverviewUiState.wallet)
 
         }
     }
@@ -194,7 +193,7 @@ class TestWalletOverview {
 
             walletOverviewViewModel.deleteShownWallet()
             walletOverviewUiState = walletOverviewViewModel.uiState.value
-            assertSameWallet(Wallet.emptyWallet(),walletOverviewUiState.wallet)
+            assertSameWallet(Wallet.newEmpty(), walletOverviewUiState.wallet)
 
         }
     }
@@ -224,7 +223,7 @@ class TestWalletOverview {
 
             walletOverviewViewModel.deleteShownWallet()
             walletOverviewUiState = walletOverviewViewModel.uiState.value
-            assertSameWallet(Wallet.emptyWallet(),walletOverviewUiState.wallet)
+            assertSameWallet(Wallet.newEmpty(), walletOverviewUiState.wallet)
 
         }
     }

@@ -116,7 +116,7 @@ class ManageCategoriesViewModel : ViewModel() {
             id = UUID.randomUUID(),
             name = "New category",
             iconName = IconsMappedForDB.HOME,
-            transactionTypeId = transactionType.id
+            transactionType = transactionType
         )
         viewModelScope.launch {
             repository.addCategory(category = newCategory)

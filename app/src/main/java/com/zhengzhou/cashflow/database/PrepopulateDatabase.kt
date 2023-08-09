@@ -58,6 +58,7 @@ class PrepopulateDatabase {
                     amount = -20f,
                     date = date,
                     wallet = walletEUR1,
+                    secondaryWallet = Wallet.newEmpty(),
                     category = catGrocery,
                     location = null,
                     tagEntryList = listOf(
@@ -71,6 +72,7 @@ class PrepopulateDatabase {
                     amount = -10f,
                     date = date,
                     wallet = walletEUR1,
+                    secondaryWallet = Wallet.newEmpty(),
                     category = catEatingOut,
                     location = null,
                     tagEntryList = listOf(
@@ -85,6 +87,7 @@ class PrepopulateDatabase {
                     amount = -10f,
                     date = date,
                     wallet = walletEUR1,
+                    secondaryWallet = Wallet.newEmpty(),
                     category = catEatingOut,
                     location = null,
                     tagEntryList = listOf(
@@ -99,6 +102,7 @@ class PrepopulateDatabase {
                     amount = -100f,
                     date = date,
                     wallet = walletSEK,
+                    secondaryWallet = Wallet.newEmpty(),
                     category = catEatingOut,
                     location = null,
                     tagEntryList = listOf(
@@ -112,6 +116,7 @@ class PrepopulateDatabase {
                     amount = 50f,
                     date = date,
                     wallet = walletEUR2,
+                    secondaryWallet = Wallet.newEmpty(),
                     category = catDeposit,
                     location = null,
                     tagEntryList = listOf(
@@ -125,6 +130,7 @@ class PrepopulateDatabase {
                     amount = -15f,
                     date = date,
                     wallet = walletEUR2,
+                    secondaryWallet = Wallet.newEmpty(),
                     category = catEntertainment,
                     location = null,
                     tagEntryList = listOf(
@@ -138,6 +144,7 @@ class PrepopulateDatabase {
                     amount = -200f,
                     date = date,
                     wallet = walletEUR1,
+                    secondaryWallet = Wallet.newEmpty(),
                     category = catGrocery,
                     location = null,
                     tagEntryList = listOf(

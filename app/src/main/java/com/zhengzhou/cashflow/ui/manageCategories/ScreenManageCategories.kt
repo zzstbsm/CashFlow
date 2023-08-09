@@ -135,7 +135,6 @@ fun ManageCategoriesMainBody(
     val manageCategoriesScreenToChooseFunctionality = listOf(
         TransactionType.Expense,
         TransactionType.Deposit,
-        TransactionType.Move,
     )
 
     Column(
@@ -165,7 +164,7 @@ fun ManageCategoriesMainBody(
 
         LazyColumn {
             val listCategories = manageCategoriesUiState.listCategories.filter { category ->
-                category.transactionTypeId == manageCategoriesUiState.transactionType.id
+                category.transactionType == manageCategoriesUiState.transactionType
             }
             items(listCategories.size) { position ->
                 val category = listCategories[position]

@@ -198,7 +198,8 @@ fun WalletEditMainBody(
             label = stringResource(id = R.string.WalletEdit_initial_amount),
             amountOnScreen = walletEditUiState.amountOnScreen,
             onValueChange = { newText ->
-                walletEditViewModel.updateAmountOnScreen(newText)
+                if (newText.count { it == '.' } < 2)
+                    walletEditViewModel.updateAmountOnScreen(newText)
             },
             isError = walletEditUiState.isErrorAmountOnScreen,
             modifier = modifier,

@@ -38,7 +38,7 @@ interface DatabaseDao {
 
     @Query("SELECT * FROM category")
     fun getCategoryList(): Flow<List<Category>>
-    @Query("SELECT * FROM category WHERE movement_type_id=(:transactionTypeId)")
+    @Query("SELECT * FROM category WHERE movement_type=(:transactionTypeId)")
     fun getCategoryListByTransactionType(transactionTypeId: Int): Flow<List<Category>>
 
     // TagEntry section
@@ -79,11 +79,13 @@ interface DatabaseDao {
     suspend fun updateTransaction(transaction: Transaction)
     @Delete(entity = Transaction::class)
     suspend fun deleteTransaction(transaction: Transaction)
-    @Query("SELECT * FROM movement WHERE (id_wallet IN (:idWalletList) AND is_blueprint=0) ORDER BY date DESC")
-    fun getTransactionListInListOfWallet(idWalletList: List<UUID>): Flow<List<Transaction>>
+    @Query("SELECT * FROM movement " +
+                   "WHERE (id_wallet IN (:idWalletList) AND is_blueprint=0 AND id_secondary_wallet=(:secondaryWalletId)) " +
+                   "ORDER BY date DESC")
+    fun getTransactionListInListOfWallet(idWalletList: List<UUID>, secondaryWalletId: UUID = UUID(0L, 0L)): Flow<List<Transaction>>
     @Query("SELECT * FROM movement WHERE (id_wallet=(:idWallet) AND is_blueprint=0) ORDER BY date DESC")
     fun getTransactionListInWallet(idWallet: UUID): Flow<List<Transaction>>
-    @Query("SELECT * FROM movement WHERE (id_wallet=(:idWallet) AND is_blueprint=0) ORDER BY date DESC LIMIT :numberOfEntries")
+    @Query("SELECT * FROM movement WHERE (id_wallet=(:idWallet) OR id_secondary_wallet=(:idWallet) AND is_blueprint=0) ORDER BY date DESC LIMIT :numberOfEntries")
     fun getTransactionShortListInWallet(idWallet: UUID,numberOfEntries: Int): Flow<List<Transaction>>
     @Query("SELECT * FROM movement WHERE is_blueprint != 0")
     fun getTransactionIsBlueprint(): Flow<List<Transaction>>

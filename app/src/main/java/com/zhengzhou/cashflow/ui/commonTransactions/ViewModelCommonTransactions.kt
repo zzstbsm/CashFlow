@@ -121,7 +121,7 @@ class CommonTransactionsViewModel(): ViewModel() {
         element = element.copy(
             wallet = newWallet,
             transaction = element.transaction.copy(
-                idWallet = newWallet.id
+                walletId = newWallet.id
             )
         )
         val list = uiState.value.transactionFullForUIList.toMutableList()
