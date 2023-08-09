@@ -41,13 +41,13 @@ android {
             debuggable false
             jniDebuggable false
             renderscriptDebuggable false
-            versionNameSuffix '.debugStaging'
+            versionNameSuffix '.debug'
             signingConfig signingConfigs.release
         }
         debug {
-            applicationIdSuffix ".debugStaging"
+            applicationIdSuffix ".debug"
             debuggable true
-            versionNameSuffix '.debugStaging'
+            versionNameSuffix '.debug'
         }
     }
     compileOptions {
