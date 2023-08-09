@@ -41,7 +41,7 @@ android {
             debuggable false
             jniDebuggable false
             renderscriptDebuggable false
-            versionNameSuffix '.debug'
+            versionNameSuffix '.release'
             signingConfig signingConfigs.release
         }
         debug {
