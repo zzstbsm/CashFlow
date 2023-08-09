@@ -16,6 +16,7 @@
     <string name="yes">Yes</string>
     <string name="nav_back">Go back</string>
 
+    <string name="nav_name_about_me">About CashFlow</string>
     <string name="nav_name_balance">Balance</string>
     <string name="nav_name_common_transactions_short">Common</string>
     <string name="nav_name_common_transactions">Common transactions</string>
@@ -72,6 +73,15 @@
     <string name="new_deposit">New deposit</string>
     <string name="new_expense">New expense</string>
     <string name="new_move">New movement</string>
+
+    <!-- About me -->
+    <string name="AboutMe_description">Greetings from Italy!\nThank you for using CashFlow!\nThis is my first Android application and I hope you like it, I am developing it for fun as side project in my free/spare time.\nFeel free to share it with your friends and relatives!\nIf you like this app/have suggestions/want to leave a feedback, please leave a review on the Play Store!</string>
+    <string name="AboutMe_GitHub">GitHub: zzstbsm</string>
+    <string name="AboutMe_GitHub_link">https://github.com/zzstbsm/CashFlow</string>
+    <string name="AboutMe_LinkedIn">LinkedIn: Zhou Zheng</string>
+    <string name="AboutMe_LinkedIn_link">https://www.linkedin.com/in/zhou-zheng-974b14167/</string>
+    <string name="AboutMe_donate">Make a donation to the project</string>
+    <string name="AboutMe_donate_dialog">Thank you for showing support for the project!\n\nUnfortunately, for the Google policies, I am not authorized to keep the direct link to the donation page. However, you can check my GitHub page.</string>
 
     <!-- Balance Screen -->
     <string name="Balance_all">All</string>

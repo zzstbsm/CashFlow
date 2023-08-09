@@ -21,8 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Transaction
-import com.zhengzhou.cashflow.tools.balanceFlowIn
-import com.zhengzhou.cashflow.tools.balanceFlowOut
+import com.zhengzhou.cashflow.tools.CashFlowTools
 import java.text.NumberFormat
 import java.util.*
 
@@ -149,8 +148,8 @@ private fun CardText(
     modifier: Modifier = Modifier
 ) {
 
-    val balanceIn = balanceFlowIn(transactionList)
-    val balanceOut = balanceFlowOut(transactionList)
+    val balanceIn = CashFlowTools.balanceFlowIn(transactionList)
+    val balanceOut = CashFlowTools.balanceFlowOut(transactionList)
 
     val formattedBalance = Currency.formatCurrency(currencyFormatter, balance)
     val formattedIn = Currency.formatCurrency(currencyFormatter,balanceIn)

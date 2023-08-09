@@ -4,13 +4,23 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
+import com.zhengzhou.cashflow.ui.aboutMe.AboutMeScreen
 import com.zhengzhou.cashflow.ui.balance.BalanceScreen
 import com.zhengzhou.cashflow.ui.commonTransactions.CommonTransactionsScreen
 import com.zhengzhou.cashflow.ui.manageCategories.ManageCategoriesScreen
@@ -32,6 +42,15 @@ fun NavigationApp() {
     // Set the navigation controller
     val navController = rememberNavController()
     NavHost(navController, startDestination = startDestination) {
+        composable(route = Screen.AboutMe.route) {
+            AboutMeScreen(
+                currentScreen = currentScreen,
+                setCurrentScreen = { screen ->
+                    currentScreen = screen
+                },
+                navController = navController,
+            )
+        }
         composable(route = Screen.Balance.route) {
             BalanceScreen(
                 currentScreen = currentScreen,
@@ -96,6 +115,9 @@ fun NavigationApp() {
         composable(route = Screen.TransactionEdit.route) {backStackEntry ->
             val transactionTypeId = backStackEntry.arguments?.getString("transactionType")
             val transactionUUIDStr = backStackEntry.arguments?.getString("transactionUUIDStr")
+            val currency = Currency.setCurrency(
+                abbreviation = backStackEntry.arguments?.getString("currency").toString()
+            )
             val isBlueprint = backStackEntry.arguments?.getString("isBlueprint").toBoolean()
             val editBlueprint = backStackEntry.arguments?.getString("editBlueprint").toBoolean()
             requireNotNull(transactionTypeId) {
@@ -104,9 +126,13 @@ fun NavigationApp() {
             requireNotNull(transactionUUIDStr) {
                 "Exception: passed updateTransaction not valid"
             }
+            requireNotNull(currency) {
+                "Exception: passed currency not valid"
+            }
             TransactionEditScreen(
                 transactionType = TransactionType.setTransaction(transactionTypeId.toInt())!!,
                 transactionUUID = UUID.fromString(transactionUUIDStr),
+                currency = currency,
                 isBlueprint = isBlueprint,
                 editBlueprint = editBlueprint,
                 navController = navController,
@@ -190,6 +216,15 @@ enum class NavigationCurrentScreen(
         navBarActive = false,
         bottomActive = false,
     ),
+    AboutMe(
+        iconId = R.drawable.ic_info,
+        optionName = R.string.nav_name_about_me,
+        optionNameShort = R.string.nav_name_about_me,
+        accessibilityText = R.string.nav_name_about_me,
+        route = "AboutMe",
+        navBarActive = true,
+        bottomActive = false,
+    ),
 
     /*
      * Not present in the navigation bar
@@ -226,6 +261,9 @@ sealed class Screen(
     val route: String,
 ) {
 
+    object AboutMe: Screen(
+        route = NavigationCurrentScreen.AboutMe.route
+    )
     object Balance: Screen(
         route = NavigationCurrentScreen.Balance.route,
     )
@@ -238,6 +276,62 @@ sealed class Screen(
     object Profile: Screen(
         route = NavigationCurrentScreen.Profile.route,
     )
+
+    object TransactionEdit: Screen(
+        route = NavigationCurrentScreen.TransactionEdit.route +
+                "/{transactionType}" +
+                "/{transactionUUIDStr}" +
+                "/{currency}" +
+                "/{isBlueprint}" +
+                "/{editBlueprint}",
+    ) {
+        private fun createRoute(
+            transactionType: TransactionType,
+            transactionUUID: UUID,
+            currency: Currency,
+            isBlueprint: Boolean,
+            editBlueprint: Boolean,
+        ) = NavigationCurrentScreen.TransactionEdit.route +
+                "/${transactionType.id}/$transactionUUID/${currency.abbreviation}/$isBlueprint/$editBlueprint"
+
+        fun navigate(
+            transactionType: TransactionType,
+            transactionUUID: UUID,
+            currency: Currency,
+            isBlueprint: Boolean,
+            editBlueprint: Boolean,
+            navController: NavController,
+        )  {
+            navController.navigate(
+                createRoute(
+                    transactionType = transactionType,
+                    transactionUUID = transactionUUID,
+                    currency = currency,
+                    isBlueprint = isBlueprint,
+                    editBlueprint = editBlueprint,
+                )
+            )
+        }
+    }
+    object TransactionReport: Screen(
+        route = NavigationCurrentScreen.TransactionReport.route +
+                "/{transactionUUIDStr}",
+    ) {
+        private fun createRoute(
+            transactionUUID: UUID,
+        ) = NavigationCurrentScreen.TransactionReport.route + "/$transactionUUID"
+
+        fun navigate(
+            transactionUUID: UUID,
+            navController: NavController,
+        ) {
+            navController.navigate(
+                createRoute(
+                    transactionUUID
+                )
+            )
+        }
+    }
     object WalletEdit: Screen(
         route = NavigationCurrentScreen.WalletEdit.route +
                 "/{walletUUIDStr}",
@@ -263,58 +357,6 @@ sealed class Screen(
         route = NavigationCurrentScreen.WalletOverview.route,
     ) {
         fun keyWalletUUID() : String = "walletUUIDStr"
-    }
-
-    object TransactionEdit: Screen(
-        route = NavigationCurrentScreen.TransactionEdit.route +
-                "/{transactionType}" +
-                "/{transactionUUIDStr}" +
-                "/{isBlueprint}" +
-                "/{editBlueprint}",
-    ) {
-        private fun createRoute(
-            transactionType: TransactionType,
-            transactionUUID: UUID,
-            isBlueprint: Boolean,
-            editBlueprint: Boolean,
-        ) = NavigationCurrentScreen.TransactionEdit.route +
-                "/${transactionType.id}/$transactionUUID/$isBlueprint/$editBlueprint"
-
-        fun navigate(
-            transactionType: TransactionType,
-            transactionUUID: UUID,
-            isBlueprint: Boolean,
-            editBlueprint: Boolean,
-            navController: NavController,
-        )  {
-            navController.navigate(
-                createRoute(
-                    transactionType = transactionType,
-                    transactionUUID = transactionUUID,
-                    isBlueprint = isBlueprint,
-                    editBlueprint = editBlueprint,
-                )
-            )
-        }
-    }
-    object TransactionReport: Screen(
-        route = NavigationCurrentScreen.TransactionReport.route +
-                "/{transactionUUIDStr}",
-    ) {
-        private fun createRoute(
-            transactionUUID: UUID,
-        ) = NavigationCurrentScreen.TransactionReport.route + "/$transactionUUID"
-
-        fun navigate(
-            transactionUUID: UUID,
-            navController: NavController,
-        ) {
-            navController.navigate(
-                createRoute(
-                    transactionUUID
-                )
-            )
-        }
     }
 }
 

@@ -19,12 +19,10 @@ import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Calendar
 import java.util.Date
-import java.util.UUID
 
 data class BalanceUiState(
     val isLoading: Boolean = true,
-    val equivalentWallet: Wallet = Wallet(
-        id = UUID(0L,0L),
+    val equivalentWallet: Wallet = Wallet.newEmpty().copy(
         name = "All wallets",
         currency = Currency.EUR,
     ),
@@ -54,7 +52,7 @@ data class BalanceUiState(
     fun getLastWallet(): Wallet {
         return this.walletList.maxByOrNull { wallet ->
             wallet.lastAccess
-        } ?: Wallet()
+        } ?: Wallet.newEmpty()
     }
 
     private fun updateEquivalentWallet() : BalanceUiState{
@@ -175,7 +173,7 @@ class BalanceViewModel : ViewModel() {
                 val transactionCategoryGroup: MutableList<TransactionAndCategory> = mutableListOf()
 
                 transactionList.forEach { transaction ->
-                    val category = repository.getCategory(transaction.idCategory) ?: Category()
+                    val category = repository.getCategory(transaction.categoryId) ?: Category.newEmpty()
                     transactionCategoryGroup.add(
                         TransactionAndCategory(
                             transaction = transaction,

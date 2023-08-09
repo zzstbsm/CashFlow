@@ -14,15 +14,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
-import java.util.*
-
-enum class WalletOverviewReturnResults {
-    CAN_DELETE_WALLET,
-    CANNOT_DELETE_WALLET,
-}
+import java.util.Date
+import java.util.UUID
 
 data class WalletOverviewUiState(
-    val wallet: Wallet = Wallet(),
+    val wallet: Wallet = Wallet.newEmpty(),
     val currentAmountInTheWallet: Float = 0f,
     val isLoading: Boolean = true,
 
@@ -43,9 +39,6 @@ class WalletOverviewViewModel(
 
     private var _uiState = MutableStateFlow(WalletOverviewUiState())
     val uiState: StateFlow<WalletOverviewUiState> = _uiState.asStateFlow()
-
-    //private val _walletList = MutableStateFlow(listOf<Wallet>())
-    //val walletList: StateFlow<List<Wallet>> = _walletList.asStateFlow()
 
     private val repository = DatabaseRepository.get()
 
@@ -115,14 +108,14 @@ class WalletOverviewViewModel(
 
     private suspend fun getWallet(walletUUID: UUID) {
         setUiState(
-            wallet = repository.getWallet(walletUUID) ?: Wallet.emptyWallet(),
+            wallet = repository.getWallet(walletUUID) ?: Wallet.newEmpty(),
             isLoading = false
         )
     }
 
     private suspend fun loadLastAccessed() {
         setUiState(
-            wallet = repository.getWalletLastAccessed() ?: Wallet.emptyWallet(),
+            wallet = repository.getWalletLastAccessed() ?: Wallet.newEmpty(),
             isLoading = false,
         )
         retrieveCurrentAmountInWalletJob.cancel()
@@ -137,7 +130,7 @@ class WalletOverviewViewModel(
             viewModelScope.launch {
                 repository.deleteWallet(uiState.value.wallet)
                 setUiState(
-                    wallet = Wallet(),
+                    wallet = Wallet.newEmpty(),
                     isLoading = true
                 )
                 loadLastAccessed()
@@ -204,17 +197,25 @@ class WalletOverviewViewModel(
             while (uiState.value.isLoading) {
                 delay(5)
             }
+
+            val wallet = uiState.value.wallet
+
             repository.getTransactionShortListInWallet(
-                uiState.value.wallet.id,
+                wallet.id,
                 3
             ).collect { list ->
                 val transactionAndCategoryList = mutableListOf<TransactionAndCategory>()
 
                 list.forEach { transaction ->
-                    val category = repository.getCategory(transaction.idCategory) ?: Category()
+                    val category = repository.getCategory(transaction.categoryId) ?: Category.newEmpty()
+
                     transactionAndCategoryList.add(
                         TransactionAndCategory(
-                            transaction = transaction,
+                            transaction = if (wallet.id == transaction.secondaryWalletId) {
+                                transaction.copy(
+                                    amount = -transaction.amount
+                                )
+                            } else transaction,
                             category = category,
                         )
                     )

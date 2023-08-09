@@ -13,102 +13,102 @@ class ConfigurationFirstStartup {
             repository: DatabaseRepository = DatabaseRepository.get()
         ) {
 
-            setDefaultExpenseCategories().forEach {category: Category ->
+            setDefaultExpenseCategories().forEach { category: Category ->
                 repository.addCategory(category)
             }
             setDefaultDepositCategories().forEach { category: Category ->
                 repository.addCategory(category)
             }
-            setDefaultMovementCategories().forEach {category: Category ->
+            setDefaultMovementCategories().forEach { category: Category ->
                 repository.addCategory(category)
             }
 
         }
 
-        private fun setDefaultExpenseCategories(): MutableList<Category> {
+        fun setDefaultExpenseCategories(): MutableList<Category> {
 
             return mutableListOf(
                 Category(
                     id = UUID.randomUUID(),
                     name = "Groceries",
                     iconName = IconsMappedForDB.GROCERY,
-                    transactionTypeId = TransactionType.Expense.id,
+                    transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Eating out",
                     iconName = IconsMappedForDB.EATING_OUT,
-                    transactionTypeId = TransactionType.Expense.id,
+                    transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Health",
                     iconName = IconsMappedForDB.HEALTH,
-                    transactionTypeId = TransactionType.Expense.id,
+                    transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Transportation",
                     iconName = IconsMappedForDB.TRANSPORTATION,
-                    transactionTypeId = TransactionType.Expense.id,
+                    transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Travel",
                     iconName = IconsMappedForDB.TRAVEL,
-                    transactionTypeId = TransactionType.Expense.id,
+                    transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Home",
                     iconName = IconsMappedForDB.HOME,
-                    transactionTypeId = TransactionType.Expense.id,
+                    transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Subscriptions",
                     iconName = IconsMappedForDB.SUBSCRIPTION,
-                    transactionTypeId = TransactionType.Expense.id,
+                    transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Entertainment",
                     iconName = IconsMappedForDB.ENTERTAINMENT,
-                    transactionTypeId = TransactionType.Expense.id,
+                    transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Gift",
                     iconName = IconsMappedForDB.GIFT,
-                    transactionTypeId = TransactionType.Expense.id,
+                    transactionType = TransactionType.Expense,
                 ),
             )
         }
 
-        private fun setDefaultDepositCategories(): MutableList<Category>{
+        fun setDefaultDepositCategories(): MutableList<Category>{
             return mutableListOf(
                 Category(
                     id = UUID.randomUUID(),
                     name = "Salary",
                     iconName = IconsMappedForDB.SALARY,
-                    transactionTypeId = TransactionType.Deposit.id
+                    transactionType = TransactionType.Deposit
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Deposit",
                     iconName = IconsMappedForDB.WALLET,
-                    transactionTypeId = TransactionType.Deposit.id
+                    transactionType = TransactionType.Deposit
                 ),
             )
         }
 
-        private fun setDefaultMovementCategories(): MutableList<Category>{
+        fun setDefaultMovementCategories(): MutableList<Category>{
             return mutableListOf(
                 Category(
                     id = UUID.randomUUID(),
-                    name = "Movement",
+                    name = "Transfer",
                     iconName = IconsMappedForDB.TRANSFER,
-                    transactionTypeId = TransactionType.Move.id
+                    transactionType = TransactionType.Move
                 ),
             )
         }

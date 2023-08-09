@@ -17,7 +17,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
+import java.util.UUID
 
 
 data class WalletEditUiState(
@@ -104,9 +105,9 @@ class WalletEditViewModel(
 
 
             val retrievedWallet = if (_newWallet) {
-                Wallet()
+                Wallet.newEmpty()
             } else {
-                repository.getWallet(walletUUID) ?: Wallet()
+                repository.getWallet(walletUUID) ?: Wallet.newEmpty()
             }
 
             setUiState(

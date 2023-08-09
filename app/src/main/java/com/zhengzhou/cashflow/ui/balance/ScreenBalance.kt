@@ -86,7 +86,7 @@ fun BalanceScreen(
                 if (!balanceUiState.isLoading) {
                     BalanceFloatingActionButtons(
                         wallet = balanceUiState.getLastWallet(),
-                        transaction = Transaction(),
+                        transaction = Transaction.newEmpty(),
                         navController = navController,
                     )
                 }
@@ -180,7 +180,7 @@ private fun BalanceMainBody(
 @Composable
 private fun BalanceFloatingActionButtons(
     wallet: Wallet,
-    transaction: Transaction = Transaction(),
+    transaction: Transaction = Transaction.newEmpty(),
     navController: NavController,
 ) {
 
@@ -215,6 +215,7 @@ private fun BalanceFloatingActionButtons(
                             Screen.TransactionEdit.navigate(
                                 transactionType = TransactionType.Deposit,
                                 transactionUUID = transaction.id,
+                                currency = wallet.currency,
                                 isBlueprint = false,
                                 editBlueprint = false,
                                 navController = navController,
@@ -242,6 +243,7 @@ private fun BalanceFloatingActionButtons(
                             Screen.TransactionEdit.navigate(
                                 transactionType = TransactionType.Expense,
                                 transactionUUID = transaction.id,
+                                currency = wallet.currency,
                                 isBlueprint = false,
                                 editBlueprint = false,
                                 navController = navController,
@@ -269,6 +271,7 @@ private fun BalanceFloatingActionButtons(
                             Screen.TransactionEdit.navigate(
                                 transactionType = TransactionType.Move,
                                 transactionUUID = transaction.id,
+                                currency = wallet.currency,
                                 isBlueprint = false,
                                 editBlueprint = false,
                                 navController = navController,

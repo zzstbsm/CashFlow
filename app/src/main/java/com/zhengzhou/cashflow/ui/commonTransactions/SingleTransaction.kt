@@ -86,7 +86,7 @@ private fun SingleTransactionDescriptionPart(
                 onDescriptionSectionClick()
             }
     ) {
-        val transactionTypeText = stringResource(transaction.movementType.text)
+        val transactionTypeText = stringResource(transaction.transactionType.text)
         Text(
             text = transactionTypeText + ": " + transaction.description,
             softWrap = true,

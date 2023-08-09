@@ -59,7 +59,7 @@ fun TransactionReportScreen(
         transactionReportViewModel.loadTransactionReport(transactionUUID)
     }
 
-    val transactionType = transactionReportUiState.transactionFullForUI.transaction.movementType
+    val transactionType = transactionReportUiState.transactionFullForUI.transaction.transactionType
 
     Scaffold(
         topBar = {
@@ -72,6 +72,7 @@ fun TransactionReportScreen(
                      Screen.TransactionEdit.navigate(
                          transactionType = transactionType,
                          transactionUUID = transactionUUID,
+                         currency = transactionReportUiState.transactionFullForUI.wallet.currency,
                          isBlueprint = false,
                          editBlueprint = false,
                          navController = navController,

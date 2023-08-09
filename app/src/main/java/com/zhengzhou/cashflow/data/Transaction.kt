@@ -13,47 +13,42 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
+import java.util.UUID
 
 @Entity(tableName = "movement")
 data class Transaction (
-    @PrimaryKey val id: UUID = UUID(0L,0L),
+    @PrimaryKey val id: UUID,
     @ColumnInfo(name = "id_wallet")
-    val idWallet: UUID = UUID(0L,0L),
-    val amount: Float = 0f,
-    val date: Date = Date(),
+    val walletId: UUID,
+    @ColumnInfo(name = "id_secondary_wallet")
+    val secondaryWalletId: UUID,
+    val amount: Float,
+    val date: Date,
     @ColumnInfo(name = "id_category")
-    val idCategory: UUID = UUID(0L,0L),
-    val description: String = "",
+    val categoryId: UUID,
+    val description: String,
     @ColumnInfo(name = "id_location")
-    val idLocation: UUID? = null,
+    val locationId: UUID?,
     @ColumnInfo(name = "movement_type")
-    val movementType: TransactionType = TransactionType.Loading,
+    val transactionType: TransactionType,
     @ColumnInfo(name = "is_blueprint")
-    val isBlueprint: Boolean = false,
+    val isBlueprint: Boolean,
 ) {
 
     companion object {
-        fun new(
-            description: String,
-            amount: Float,
-            walletUUID: UUID,
-            categoryUUID: UUID,
-            locationUUID: UUID?,
-            date: Date,
-            transactionType: TransactionType,
-            isBlueprint: Boolean,
-        ): Transaction {
+        fun newEmpty(): Transaction {
             return Transaction(
                 id = UUID(0L,0L),
-                idWallet = walletUUID,
-                amount = amount,
-                date = date,
-                idCategory = categoryUUID,
-                description = description,
-                idLocation = locationUUID,
-                movementType = transactionType,
-                isBlueprint = isBlueprint,
+                walletId = UUID(0L, 0L),
+                secondaryWalletId = UUID(0L, 0L),
+                amount = 0f,
+                date = Date(),
+                categoryId = UUID(0L,0L),
+                description = "",
+                locationId = null,
+                transactionType = TransactionType.Loading,
+                isBlueprint = false,
             )
         }
     }
@@ -69,30 +64,35 @@ enum class TransactionType (
     @StringRes val text: Int,
     @StringRes val newText: Int,
     @DrawableRes val iconId: Int,
+    val signInDB: Float,
 ) {
     Loading(
         id = 0,
         text = R.string.loading,
         newText = R.string.loading,
         iconId = R.drawable.ic_error,
+        signInDB = 0f,
     ),
     Move(
         id = 1,
         text = R.string.move,
         newText = R.string.new_move,
-        iconId = R.drawable.ic_transfer
+        iconId = R.drawable.ic_transfer,
+        signInDB = -1f,
     ),
     Deposit(
         id = 2,
         text = R.string.deposit,
         newText = R.string.new_deposit,
-        iconId = R.drawable.ic_add
+        iconId = R.drawable.ic_add,
+        signInDB = 1f,
     ),
     Expense(
         id = 3,
         text = R.string.expense,
         newText = R.string.new_expense,
-        iconId = R.drawable.ic_remove
+        iconId = R.drawable.ic_remove,
+        signInDB = -1f,
     );
 
     companion object {
@@ -109,17 +109,23 @@ enum class TransactionType (
 
             // The id is not valid
             return null
+        }
 
+        fun getAllActive(): List<TransactionType> {
+            return listOf(
+                Deposit,
+                Expense,
+                Move,
+            )
         }
     }
 }
 
 data class TransactionFullForUI(
-    val transaction: Transaction = Transaction(),
-    val wallet: Wallet = Wallet(),
-    val category: Category = Category(),
+    val transaction: Transaction = Transaction.newEmpty(),
+    val wallet: Wallet = Wallet.newEmpty(),
+    val category: Category = Category.newEmpty(),
     val tagList: List<Tag> = listOf(),
-    val location: Location? = null,
 ) {
     companion object {
         suspend fun load(
@@ -130,9 +136,9 @@ data class TransactionFullForUI(
             var isLoading = true
             val jobRetrieveTagTransaction = CoroutineScope(Dispatchers.Default)
 
-            val transaction: Transaction = repository.getTransaction(transactionId = transactionUUID) ?: Transaction()
-            val wallet = repository.getWallet(transaction.idWallet) ?: Wallet()
-            val category = repository.getCategory(transaction.idCategory) ?: Category()
+            val transaction: Transaction = repository.getTransaction(transactionId = transactionUUID) ?: Transaction.newEmpty()
+            val wallet = repository.getWallet(transaction.walletId) ?: Wallet.newEmpty()
+            val category = repository.getCategory(transaction.categoryId) ?: Category.transfer(transaction.categoryId)
 
             var  tagList: List<Tag> = listOf()
             jobRetrieveTagTransaction.launch {
@@ -165,6 +171,7 @@ data class TransactionFullForUI(
             amount: Float,
             date: Date,
             wallet: Wallet,
+            secondaryWallet: Wallet,
             category: Category,
             location: Location?,
             tagEntryList: List<TagEntry>,
@@ -172,13 +179,15 @@ data class TransactionFullForUI(
             isBlueprint: Boolean,
         ): TransactionFullForUI {
             return TransactionFullForUI(
-                transaction = Transaction.new(
-                    walletUUID = wallet.id,
+                transaction = Transaction(
+                    id = UUID(0L,0L),
+                    walletId = wallet.id,
+                    secondaryWalletId = secondaryWallet.id,
                     amount = amount,
                     date = date,
-                    categoryUUID = category.id,
+                    categoryId = category.id,
                     description = description,
-                    locationUUID = location?.id,
+                    locationId = location?.id,
                     transactionType = transactionType,
                     isBlueprint = isBlueprint,
                 ),
@@ -190,7 +199,6 @@ data class TransactionFullForUI(
                         tagEntry = tagEntry,
                     )
                 },
-                location = location,
             )
         }
     }
@@ -249,9 +257,7 @@ data class TransactionFullForUI(
     ) {
         repository.deleteTransaction(transaction = transaction)
         tagList.map { tag ->
-            tag.copy(
-                count = tag.count - 1
-            )
+            tag.decreaseCounter()
         }.forEach { tag ->
             repository.deleteTag(tag = tag)
         }

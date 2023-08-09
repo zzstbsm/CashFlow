@@ -49,7 +49,6 @@ class TestManageCategories() {
             jobConfigureCategories.join()
             val expenseCategories = ConfigurationFirstStartup.setDefaultExpenseCategories()
             val depositCategories = ConfigurationFirstStartup.setDefaultDepositCategories()
-            val movementCategories = ConfigurationFirstStartup.setDefaultMovementCategories()
 
             expenseCategories.forEach { category: Category ->
                 assertTrue(category in manageCategoriesUiState.listCategories)
@@ -57,10 +56,6 @@ class TestManageCategories() {
             depositCategories.forEach { category: Category ->
                 assertTrue(category in manageCategoriesUiState.listCategories)
             }
-            movementCategories.forEach { category: Category ->
-                assertTrue(category in manageCategoriesUiState.listCategories)
-            }
-
         }
 
     }

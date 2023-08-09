@@ -1,67 +1,50 @@
 package com.zhengzhou.cashflow.data
 
 import android.os.Parcelable
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.tools.IconsMappedForDB
 import kotlinx.parcelize.Parcelize
-import java.util.*
+import java.util.Date
+import java.util.UUID
 
 @Parcelize
 @Entity(tableName = "wallet")
 data class Wallet(
-    @PrimaryKey val id: UUID = UUID(0L,0L),
+    @PrimaryKey val id: UUID,
     val name: String = "",
     @ColumnInfo(name = "start_amount")
-    val startAmount: Float = 0f,
+    val startAmount: Float,
     @ColumnInfo(name = "icon_id")
-    val iconName: IconsMappedForDB = IconsMappedForDB.HOME,
-    val currency: Currency = Currency.EUR,
+    val iconName: IconsMappedForDB,
+    val currency: Currency,
     @ColumnInfo(name = "creation_date")
-    val creationDate: Date = Date(),
+    val creationDate: Date,
     @ColumnInfo(name = "last_access")
-    val lastAccess: Date = Date(),
+    val lastAccess: Date,
     @ColumnInfo(name = "budget_enabled")
-    val budgetEnabled: Boolean = false,
+    val budgetEnabled: Boolean,
 ) : Parcelable {
 
     companion object {
-        fun emptyWallet() : Wallet {
-            return Wallet().copy(
+        fun newEmpty() : Wallet {
+            return Wallet(
                 id = UUID(0L,0L),
-                // TODO: next line to remove after the implementation of EditWalletScreen
+                name = "",
                 startAmount = 0f,
-                iconName = IconsMappedForDB.WALLET,
+                iconName = IconsMappedForDB.HOME,
+                currency = Currency.EUR,
+                creationDate = Date(),
+                lastAccess = Date(),
+                budgetEnabled = false,
             )
         }
 
         fun loadingWallet() : Wallet {
-            return Wallet().copy(
+            return newEmpty().copy(
                 name = "Loading Wallet"
             )
         }
     }
-}
-
-data class WalletSelection(
-    val wallet: Wallet = Wallet(),
-    var toShow: Boolean = false
-) {
-    fun invertToShow() {
-        toShow = !toShow
-    }
-}
-
-enum class WalletIcon(
-    @StringRes val iconName: Int,
-    @DrawableRes val iconImage: Int
-) {
-    Wallet(
-        iconName = R.string.wallet,
-        iconImage = R.drawable.ic_wallet
-    )
 }

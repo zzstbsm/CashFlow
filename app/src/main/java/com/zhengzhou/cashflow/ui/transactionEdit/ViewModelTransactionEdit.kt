@@ -3,6 +3,7 @@ package com.zhengzhou.cashflow.ui.transactionEdit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.data.Category
+import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.TagEntry
 import com.zhengzhou.cashflow.data.Transaction
@@ -39,35 +40,37 @@ import java.util.UUID
  *
  */
 
-enum class TransactionSaveResult {
-    SUCCESS,
-    NO_CATEGORY,
-    NO_AMOUNT,
-}
-
 data class TransactionEditUiState(
     val isLoading: Boolean = true,
 
-    val wallet: Wallet = Wallet(),
-    val transaction: Transaction = Transaction(),
+    val wallet: Wallet = Wallet.newEmpty(),
+    val transaction: Transaction = Transaction.newEmpty(),
     val currentTagList: List<Tag> = listOf(),
+    val secondaryWallet: Wallet? = null,
 
     val walletList: List<Wallet> = listOf(),
     val categoryList: List<Category> = listOf(),
     val tagListInDB: List<TagEntry> = listOf(),
 
     val amountString: String = "0",
-    val transactionSectionToShow: TransactionSectionToShow = TransactionSectionToShow.AMOUNT,
+    val transactionSectionToShow: TransactionSectionToShow,
 )
 
 class TransactionEditViewModel(
     transactionUUID: UUID,
     transactionType: TransactionType,
+    currency: Currency,
     isBlueprint: Boolean,
     editBlueprint: Boolean,
 ) : ViewModel() {
 
-    private var _uiState = MutableStateFlow(TransactionEditUiState())
+    private var _uiState = MutableStateFlow(
+        TransactionEditUiState(
+            transactionSectionToShow = TransactionEditScreenToChooseFunctionality.first {
+                transactionType in it.transactionTypeList
+            },
+        )
+    )
     val uiState: StateFlow<TransactionEditUiState> = _uiState.asStateFlow()
 
     private var newTransaction: Boolean = false
@@ -80,7 +83,7 @@ class TransactionEditViewModel(
 
     init {
 
-        newTransaction = transactionUUID == UUID(0L,0L)
+        newTransaction = transactionUUID == UUID(0L, 0L)
 
         var isLoadedTransactionFull: Boolean
 
@@ -88,34 +91,37 @@ class TransactionEditViewModel(
         var transaction: Transaction
         var currentTagList: List<Tag> = listOf()
 
-        val jobCollectWalletList = CoroutineScope(Dispatchers.Default)
+        val collectInfoJob = CoroutineScope(Dispatchers.Default)
+
         var walletListCollected = false
         var walletList: List<Wallet> = listOf()
-        val jobCollectCategoryList = CoroutineScope(Dispatchers.Default)
         var categoryListCollected = false
         var categoryList: List<Category> = listOf()
-        val jobCollectTagListInDB = CoroutineScope(Dispatchers.Default)
         var tagListInDBCollected = false
         var tagListInDB: List<TagEntry> = listOf()
 
-        jobCollectWalletList.launch {
-            repository.getWalletList().collect {
-                walletList = it
-                walletListCollected = true
-            }
-        }
-        jobCollectCategoryList.launch {
-            repository.getCategoryList().collect {
-                categoryList = it.filter { category ->
-                    category.transactionTypeId == transactionType.id
+        collectInfoJob.launch {
+            launch {
+                repository.getWalletListByCurrency(
+                    currency = currency
+                ).collect {
+                    walletList = it
+                    walletListCollected = true
                 }
-                categoryListCollected = true
             }
-        }
-        jobCollectTagListInDB.launch {
-            repository.getTagEntryList().collect {
-                tagListInDB = it
-                tagListInDBCollected = true
+            launch {
+                repository.getCategoryList().collect {
+                    categoryList = it.filter { category ->
+                        category.transactionType == transactionType
+                    }
+                    categoryListCollected = true
+                }
+            }
+            launch {
+                repository.getTagEntryList().collect {
+                    tagListInDB = it
+                    tagListInDBCollected = true
+                }
             }
         }
 
@@ -123,16 +129,19 @@ class TransactionEditViewModel(
 
             if (newTransaction) {
 
-                wallet = repository.getWalletLastAccessed() ?: Wallet()
-                transaction = Transaction(
-                    idWallet = wallet.id,
-                    movementType = transactionType,
+                wallet = repository.getWalletLastAccessed() ?: Wallet.newEmpty()
+                transaction = Transaction.newEmpty().copy(
+                    walletId = wallet.id,
+                    transactionType = transactionType,
                     isBlueprint = (isBlueprint && editBlueprint),
                 )
                 isLoadedTransactionFull = true
 
             } else {
-                val (transactionFullForUI, isLoaded) = TransactionFullForUI.load(repository, transactionUUID)
+                val (transactionFullForUI, isLoaded) = TransactionFullForUI.load(
+                    repository,
+                    transactionUUID
+                )
                 wallet = transactionFullForUI.wallet
                 transaction = transactionFullForUI.transaction.copy(
                     isBlueprint = (isBlueprint && editBlueprint)
@@ -148,25 +157,42 @@ class TransactionEditViewModel(
                 delay(10)
             }
 
+            // Data collection completed
+
+            // Set amount
             calculator = Calculator.initialize(
                 when (transactionType) {
                     TransactionType.Deposit -> transaction.amount
                     TransactionType.Expense -> -transaction.amount
-                    else -> 0f // TODO: To handle movement transaction
+                    TransactionType.Move -> -transaction.amount
+                    else -> 0f // Case that should not happen in any case except loading
                 }
             )
-            _uiState.value = TransactionEditUiState(
+
+            // Set secondary wallet
+            val secondaryWallet = if (walletList.size > 1) {
+                walletList.sortedByDescending { it.lastAccess }[1]
+            } else walletList[0]
+
+            _uiState.value = uiState.value.copy(
                 isLoading = false,
 
                 wallet = wallet,
-                transaction = transaction,
+                transaction = if (transactionType == TransactionType.Move) {
+                    transaction.copy(
+                        secondaryWalletId = secondaryWallet.id,
+                        categoryId = categoryList.first().id // There is only one category if it is a transfer
+                    )
+                } else transaction,
+
                 currentTagList = currentTagList,
+                secondaryWallet = secondaryWallet,
 
                 walletList = walletList,
                 categoryList = categoryList.sortedBy { it.name },
                 tagListInDB = tagListInDB,
 
-                amountString = calculator.onScreenString()
+                amountString = calculator.onScreenString(),
             )
         }
 
@@ -178,6 +204,7 @@ class TransactionEditViewModel(
         wallet: Wallet? = null,
         transaction: Transaction? = null,
         currentTagList: List<Tag>? = null,
+        secondaryWallet: Wallet? = null,
 
         walletList: List<Wallet>? = null,
         categoryList: List<Category>? = null,
@@ -197,13 +224,15 @@ class TransactionEditViewModel(
                 wallet = wallet ?: uiState.value.wallet,
                 transaction = transaction ?: uiState.value.transaction,
                 currentTagList = currentTagList ?: uiState.value.currentTagList,
+                secondaryWallet = secondaryWallet ?: uiState.value.secondaryWallet,
 
                 walletList = walletList ?: uiState.value.walletList,
                 categoryList = categoryList ?: uiState.value.categoryList,
                 tagListInDB = tagListInDB ?: uiState.value.tagListInDB,
 
                 amountString = amountString ?: uiState.value.amountString,
-                transactionSectionToShow = transactionSectionToShow ?: uiState.value.transactionSectionToShow,
+                transactionSectionToShow = transactionSectionToShow
+                    ?: uiState.value.transactionSectionToShow,
             )
 
             writingOnUiState = false
@@ -220,7 +249,7 @@ class TransactionEditViewModel(
         }
 
         viewModelScope.launch {
-            if (calculator.onScreenString() in listOf("0.","0",".")) {
+            if (calculator.onScreenString() in listOf("0.", "0", ".")) {
                 setUiState(
                     transaction = uiState.value.transaction.copy(
                         amount = 0f
@@ -228,11 +257,7 @@ class TransactionEditViewModel(
                 )
             } else {
 
-                val sign = when (uiState.value.transaction.movementType) {
-                    TransactionType.Deposit -> 1f
-                    TransactionType.Expense -> -1f
-                    else -> 0f // TODO: to fix
-                }
+                val sign = uiState.value.transaction.transactionType.signInDB
 
                 val toSaveAmount = calculator.onScreenString().toFloat() * sign
                 setUiState(
@@ -251,26 +276,35 @@ class TransactionEditViewModel(
     fun saveTransaction(): TransactionSaveResult {
 
         val transaction: Transaction = uiState.value.transaction
-        val currentTransactionTagList: List<Tag> = uiState.value.currentTagList
 
-        val ifCategoryChosen = transaction.idCategory != UUID(0L,0L)
+        val wallet: Wallet = uiState.value.wallet
+        val category: Category = uiState.value.categoryList.first {
+            it.id == transaction.categoryId
+        }
+        val currentTransactionTagList: List<Tag> = uiState.value.currentTagList
+        val transactionType: TransactionType = uiState.value.transaction.transactionType
+
+        val ifCategoryChosen = transaction.categoryId != UUID(0L, 0L)
         val ifAmountChosen = transaction.amount >= 0.01f || transaction.amount <= -0.01f
 
-        if (!ifAmountChosen) {
-            return TransactionSaveResult.NO_AMOUNT
-        }
-        if (!ifCategoryChosen) {
-            return TransactionSaveResult.NO_CATEGORY
-        }
+        if (
+            TransactionSaveResult.NO_AMOUNT.throwError(
+                checkIfThrow = !ifAmountChosen,
+                transactionType = transactionType
+            )
+        ) return TransactionSaveResult.NO_AMOUNT
+        if (
+            TransactionSaveResult.NO_CATEGORY.throwError(
+                checkIfThrow = !ifCategoryChosen,
+                transactionType = transactionType
+            )
+        ) return TransactionSaveResult.NO_CATEGORY
 
         val transactionFullForUI = TransactionFullForUI(
-            transaction = uiState.value.transaction,
-            wallet = uiState.value.wallet,
-            category = uiState.value.categoryList.first {
-                it.id == uiState.value.transaction.idCategory
-            },
+            transaction = transaction,
+            wallet = wallet,
+            category = category,
             tagList = currentTransactionTagList,
-            location = null,
         )
         viewModelScope.launch {
             transactionFullForUI.save(
@@ -326,43 +360,41 @@ class TransactionEditViewModel(
             currentTagList = newCurrentTagList
         )
     }
+
     fun disableTag(tagIndex: Int?) {
         if (tagIndex != null) {
 
             val tempTagList = uiState.value.currentTagList as MutableList
 
-            tempTagList[tagIndex] = tempTagList[tagIndex].copy(
-                count = tempTagList[tagIndex].count - 1,
-                enabled = false
-            )
+            tempTagList[tagIndex] = tempTagList[tagIndex].decreaseCounter().disableTag()
 
             setUiState(
                 currentTagList = tempTagList
             )
         }
     }
+
     fun enableTag(tagIndex: Int?) {
         if (tagIndex != null) {
             val tempTagList = uiState.value.currentTagList as MutableList
 
-            tempTagList[tagIndex] = tempTagList[tagIndex].copy(
-                count = tempTagList[tagIndex].count + 1,
-                enabled = true
-            )
+            tempTagList[tagIndex] = tempTagList[tagIndex].increaseCounter().enableTag()
 
             setUiState(
                 currentTagList = tempTagList
             )
         }
     }
+
     fun updateCategory(category: Category) {
 
         setUiState(
             transaction = uiState.value.transaction.copy(
-                idCategory = category.id
+                categoryId = category.id
             ),
         )
     }
+
     fun updateDescription(description: String) {
         setUiState(
             transaction = uiState.value.transaction.copy(
@@ -370,6 +402,7 @@ class TransactionEditViewModel(
             )
         )
     }
+
     fun updateTransactionDate(date: Date) {
         setUiState(
             transaction = uiState.value.transaction.copy(
@@ -380,10 +413,19 @@ class TransactionEditViewModel(
 
     fun updateWallet(wallet: Wallet) {
         setUiState(
+            wallet = wallet,
             transaction = uiState.value.transaction.copy(
-                idWallet = wallet.id
+                walletId = wallet.id
             )
         )
     }
 
+    fun updateSecondaryWallet(wallet: Wallet) {
+        setUiState(
+            secondaryWallet = wallet,
+            transaction = uiState.value.transaction.copy(
+                categoryId = wallet.id
+            )
+        )
+    }
 }

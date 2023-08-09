@@ -115,8 +115,8 @@ fun CommonTransactionsScreen(
                 CommonTransactionFloatingActionButtons(
                     wallet = commonTransactionsUiState.walletList.maxByOrNull { wallet ->
                         wallet.lastAccess
-                    } ?: Wallet(),
-                    transaction = Transaction(),
+                    } ?: Wallet.newEmpty(),
+                    transaction = Transaction.newEmpty(),
                     navController = navController,
                 )
             }
@@ -178,8 +178,9 @@ private fun CommonTransactionsNonEmptyList(
                 onEditTransaction = {
                     val transaction = transactionFullForUI.transaction
                     Screen.TransactionEdit.navigate(
-                        transactionType = transaction.movementType,
+                        transactionType = transaction.transactionType,
                         transactionUUID = transaction.id,
+                        currency = transactionFullForUI.wallet.currency,
                         isBlueprint = true,
                         editBlueprint = false,
                         navController = navController,
@@ -188,8 +189,9 @@ private fun CommonTransactionsNonEmptyList(
                 onEditTransactionModel = {
                     val transaction = transactionFullForUI.transaction
                     Screen.TransactionEdit.navigate(
-                        transactionType = transaction.movementType,
+                        transactionType = transaction.transactionType,
                         transactionUUID = transaction.id,
+                        currency = transactionFullForUI.wallet.currency,
                         isBlueprint = true,
                         editBlueprint = true,
                         navController = navController,
@@ -210,16 +212,16 @@ private fun CommonTransactionsNonEmptyList(
 @Composable
 private fun PreviewSingleTransaction() {
     val transactionFullForUI = TransactionFullForUI(
-        transaction = Transaction(
+        transaction = Transaction.newEmpty().copy(
             description = "Description/Title",
             amount = 100f,
-            movementType = TransactionType.Expense,
+            transactionType = TransactionType.Expense,
         ),
-        wallet = Wallet(
+        wallet = Wallet.newEmpty().copy(
             name = "Preview wallet",
             currency = Currency.EUR,
         ),
-        category = Category(
+        category = Category.newEmpty().copy(
             name = "Category",
             iconName = IconsMappedForDB.HOME
         ),
@@ -237,10 +239,10 @@ private fun PreviewSingleTransaction() {
     )
 
     val walletList = listOf(
-        Wallet(
+        Wallet.newEmpty().copy(
             name = "Preview wallet"
         ),
-        Wallet(
+        Wallet.newEmpty().copy(
             name = "Second Wallet"
         )
     )
@@ -354,6 +356,7 @@ private fun CommonTransactionFloatingActionButtons(
                             Screen.TransactionEdit.navigate(
                                 transactionType = TransactionType.Deposit,
                                 transactionUUID = transaction.id,
+                                currency = wallet.currency,
                                 isBlueprint = true,
                                 editBlueprint = true,
                                 navController = navController,
@@ -381,6 +384,7 @@ private fun CommonTransactionFloatingActionButtons(
                             Screen.TransactionEdit.navigate(
                                 transactionType = TransactionType.Expense,
                                 transactionUUID = transaction.id,
+                                currency = wallet.currency,
                                 isBlueprint = true,
                                 editBlueprint = true,
                                 navController = navController,
@@ -408,6 +412,7 @@ private fun CommonTransactionFloatingActionButtons(
                             Screen.TransactionEdit.navigate(
                                 transactionType = TransactionType.Move,
                                 transactionUUID = transaction.id,
+                                currency = wallet.currency,
                                 isBlueprint = true,
                                 editBlueprint = true,
                                 navController = navController,
