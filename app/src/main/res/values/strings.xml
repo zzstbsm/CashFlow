@@ -45,7 +45,6 @@
     <string name="wallet">Wallet</string>
     <string name="balance">Balance: %1$s</string>
     <string name="profile">Profile</string>
-    <string name="wallet_edit">Edit wallet</string>
 
     <!-- Default categories -->
     <string name="bills">To Add Bills</string>
@@ -85,12 +84,15 @@
 
     <!-- Balance Screen -->
     <string name="Balance_all">All</string>
+    <string name="Balance_category">Categories</string>
     <string name="Balance_choose_currency">Choose currency</string>
     <string name="Balance_month">Month</string>
     <string name="Balance_no_transactions">No transactions</string>
     <string name="Balance_no_wallet">No wallets present in the system. Please first add a wallet.</string>
     <string name="Balance_personalized">Personalized</string>
+    <string name="Balance_select_currency">Select currency of the wallets</string>
     <string name="Balance_selected_period_balance">Selected period balance</string>
+    <string name="Balance_transaction">Recent transactions</string>
     <string name="Balance_wallet_name_currency">%1s wallets</string>
     <string name="Balance_week">Week</string>
     <string name="Balance_year">Year</string>

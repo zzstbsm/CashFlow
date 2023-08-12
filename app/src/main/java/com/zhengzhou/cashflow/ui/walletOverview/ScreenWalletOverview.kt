@@ -21,16 +21,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.customUiElements.BottomNavigationBar
+import com.zhengzhou.cashflow.customUiElements.CategoryIcon
+import com.zhengzhou.cashflow.customUiElements.SectionNavigationDrawerSheet
+import com.zhengzhou.cashflow.customUiElements.SectionTopAppBar
+import com.zhengzhou.cashflow.customUiElements.SectionTransactionEntry
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
 import com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.tools.EventMessages
-import com.zhengzhou.cashflow.ui.BottomNavigationBar
-import com.zhengzhou.cashflow.ui.CategoryIcon
-import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
-import com.zhengzhou.cashflow.ui.SectionTopAppBar
-import com.zhengzhou.cashflow.ui.SectionTransactionEntry
 import java.util.UUID
 
 @Composable

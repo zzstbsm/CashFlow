@@ -1,11 +1,13 @@
 package com.zhengzhou.cashflow.ui.transactionEdit
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.zhengzhou.cashflow.customUiElements.SelectIconsGrid
 import com.zhengzhou.cashflow.data.Category
-import com.zhengzhou.cashflow.ui.SelectIconsGrid
 import java.util.UUID
 
 @Composable
@@ -26,7 +28,7 @@ fun ChooseCategorySection(
         categoryList = categoryList,
         currentlyChosenCategoryId = currentlyChosenCategoryId,
         onCategoryChoice = onCategoryChoice,
-        modifier = Modifier.padding(8.dp),
+        modifier = modifier.padding(8.dp),
         buttonModifier = buttonModifier,
     )
 }

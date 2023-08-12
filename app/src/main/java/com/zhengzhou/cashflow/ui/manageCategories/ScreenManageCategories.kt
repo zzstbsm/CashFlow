@@ -43,15 +43,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.customUiElements.BottomNavigationBar
+import com.zhengzhou.cashflow.customUiElements.CategoryIcon
+import com.zhengzhou.cashflow.customUiElements.IconChoiceDialog
+import com.zhengzhou.cashflow.customUiElements.SectionNavigationDrawerSheet
+import com.zhengzhou.cashflow.customUiElements.SectionTopAppBar
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
 import com.zhengzhou.cashflow.tools.IconsMappedForDB
-import com.zhengzhou.cashflow.ui.BottomNavigationBar
-import com.zhengzhou.cashflow.ui.CategoryIcon
-import com.zhengzhou.cashflow.ui.IconChoiceDialog
-import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
-import com.zhengzhou.cashflow.ui.SectionTopAppBar
 
 @Composable
 fun ManageCategoriesScreen(
