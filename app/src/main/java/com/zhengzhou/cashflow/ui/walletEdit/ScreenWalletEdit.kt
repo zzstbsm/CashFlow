@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -23,8 +24,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.data.Currency
+import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.IconsMappedForDB
 import com.zhengzhou.cashflow.ui.CategoryIcon
@@ -126,7 +127,10 @@ fun WalletEditScreen(
                             )
                         }
                     }
-                }
+                },
+                modifier = Modifier.testTag(
+                    WalletEditTestTag.TAG_FLOATING_ACTION_BUTTON
+                )
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_save),
@@ -247,7 +251,9 @@ private fun TextWalletName(
                 walletEditViewModel.updateWallet(name = it)
             }
         },
-        modifier = modifier,
+        modifier = modifier.testTag(
+            WalletEditTestTag.TAG_TEST_FIELD_WALLET_NAME
+        ),
         maxLines = 1,
         isError = (
             walletEditUiState.isErrorWalletNameInUse ||
@@ -278,7 +284,9 @@ private fun TextWalletIcon(
     OutlinedButton(
         onClick = { showDialog = true },
         shape = RoundedCornerShape(4.dp),
-        modifier = modifier,
+        modifier = modifier.testTag(
+            WalletEditTestTag.TAG_ICON_FIELD_ICON
+        ),
     ) {
         CategoryIcon(
             iconName = currentIcon,
@@ -320,7 +328,9 @@ private fun MoneyTextField(
         },
         value = amountOnScreen,
         onValueChange = onValueChange,
-        modifier = modifier,
+        modifier = modifier.testTag(
+            WalletEditTestTag.TAG_TEST_FIELD_WALLET_AMOUNT
+        ),
         maxLines = 1,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Decimal

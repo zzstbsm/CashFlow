@@ -1,27 +1,24 @@
 package com.zhengzhou.cashflow.ui.profile
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.zhengzhou.cashflow.NavigationCurrentScreen
-import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.ReloadPageAfterPopBackStack
-import com.zhengzhou.cashflow.Screen
+import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
+import com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack
+import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.ui.BottomNavigationBar
 import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.ui.SectionTopAppBar
-import kotlinx.coroutines.launch
 
 @Preview
 @Composable

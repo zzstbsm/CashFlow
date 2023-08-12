@@ -2,7 +2,6 @@ package com.zhengzhou.cashflow.ui.walletEdit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
@@ -206,21 +205,4 @@ class WalletEditViewModel(
         }
         return WalletEditSaveResults.SUCCESS
     }
-}
-
-enum class WalletEditSaveResults(
-    val message: Int,
-) {
-    SUCCESS(
-        message = R.string.WalletEdit_wallet_saved
-    ),
-    NON_VALID_NAME(
-        message = R.string.WalletEdit_error_wallet_name_not_valid
-    ),
-    NON_VALID_AMOUNT(
-        message = R.string.WalletEdit_error_amount_non_valid
-    ),
-    NAME_IN_USE(
-        message = R.string.WalletEdit_error_wallet_name_already_in_use
-    )
 }

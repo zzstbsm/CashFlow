@@ -5,7 +5,7 @@ import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import java.util.UUID
 
-class ConfigurationFirstStartup {
+class LoadDefaultCategories {
 
     companion object {
 

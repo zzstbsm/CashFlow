@@ -206,7 +206,7 @@ class WalletOverviewViewModel(
             ).collect { list ->
                 val transactionAndCategoryList = mutableListOf<TransactionAndCategory>()
 
-                list.forEach { transaction ->
+                list.filter { !it.isBlueprint }.forEach { transaction ->
                     val category = repository.getCategory(transaction.categoryId) ?: Category.newEmpty()
 
                     transactionAndCategoryList.add(

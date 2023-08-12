@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.zhengzhou.cashflow.DatabaseRepositoryTest
 import com.zhengzhou.cashflow.data.Wallet
-import com.zhengzhou.cashflow.databaseRepositoryInitializerTest
+import com.zhengzhou.cashflow.database.DatabaseRepository
+import com.zhengzhou.cashflow.database.databaseRepositoryInitializer
 import com.zhengzhou.cashflow.ui.walletEdit.WalletEditUiState
 import com.zhengzhou.cashflow.ui.walletEdit.WalletEditViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +25,7 @@ import java.util.UUID
 @RunWith(AndroidJUnit4::class)
 class TestWalletEdit() {
 
-    private lateinit var repository: DatabaseRepositoryTest
+    private lateinit var repository: DatabaseRepository
     private lateinit var wallet1: Wallet
     private lateinit var wallet2: Wallet
     private lateinit var wallet3: Wallet
@@ -35,7 +35,9 @@ class TestWalletEdit() {
     @Before
     fun createDb() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        repository = databaseRepositoryInitializerTest(context)
+        repository = DatabaseRepository(
+            databaseRepositoryInitializer(context)
+        )
     }
 
     @Before

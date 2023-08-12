@@ -33,7 +33,7 @@ data class Wallet(
                 id = UUID(0L,0L),
                 name = "",
                 startAmount = 0f,
-                iconName = IconsMappedForDB.HOME,
+                iconName = IconsMappedForDB.WALLET,
                 currency = Currency.EUR,
                 creationDate = Date(),
                 lastAccess = Date(),
