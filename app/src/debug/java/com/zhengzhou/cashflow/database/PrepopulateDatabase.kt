@@ -6,7 +6,7 @@ import com.zhengzhou.cashflow.data.TagEntry
 import com.zhengzhou.cashflow.data.TransactionFullForUI
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
-import com.zhengzhou.cashflow.tools.ConfigurationFirstStartup
+import com.zhengzhou.cashflow.tools.LoadDefaultCategories
 import com.zhengzhou.cashflow.tools.IconsMappedForDB
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -198,9 +198,9 @@ class PrepopulateDatabase {
 
     private fun setCategories(): List<Category> {
 
-        return ConfigurationFirstStartup.setDefaultExpenseCategories() +
-                ConfigurationFirstStartup.setDefaultDepositCategories() +
-                ConfigurationFirstStartup.setDefaultMovementCategories()
+        return LoadDefaultCategories.setDefaultExpenseCategories() +
+                LoadDefaultCategories.setDefaultDepositCategories() +
+                LoadDefaultCategories.setDefaultMovementCategories()
     }
 
     private fun setTagEntries(): List<TagEntry> {

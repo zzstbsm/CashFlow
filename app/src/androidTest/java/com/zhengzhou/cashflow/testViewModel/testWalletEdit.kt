@@ -6,7 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
-import com.zhengzhou.cashflow.database.shared.databaseRepositoryInitializer
+import com.zhengzhou.cashflow.database.databaseRepositoryInitializer
 import com.zhengzhou.cashflow.ui.walletEdit.WalletEditUiState
 import com.zhengzhou.cashflow.ui.walletEdit.WalletEditViewModel
 import kotlinx.coroutines.CoroutineScope

@@ -36,13 +36,24 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            applicationIdSuffix '.prod'
+            versionNameSuffix '.prod'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             debuggable false
             jniDebuggable false
             renderscriptDebuggable false
-            versionNameSuffix '.prod'
             signingConfig signingConfigs.release
+            minifyEnabled true
+        }
+        preprod {
+            applicationIdSuffix '.preprod'
+            versionNameSuffix '.preprod'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
+            signingConfig signingConfigs.release
+            minifyEnabled true
         }
         stag {
             applicationIdSuffix '.staging'
@@ -62,9 +73,9 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled false
         }
-        dev_test {
-            applicationIdSuffix '.test'
-            versionNameSuffix '.test'
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '.debug'
             debuggable true
             jniDebuggable true
             renderscriptDebuggable true
@@ -72,6 +83,7 @@ android {
             minifyEnabled false
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17

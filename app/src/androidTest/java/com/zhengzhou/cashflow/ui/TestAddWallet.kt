@@ -45,6 +45,7 @@ class TestAddWallet {
             walletAmount = walletAmount1,
         )
 
+        return
     }
 
     @Test
@@ -66,6 +67,7 @@ class TestAddWallet {
             walletAmount = walletAmount2,
         )
 
+        return
     }
 
     @Test
@@ -85,6 +87,8 @@ class TestAddWallet {
             walletName = walletName1,
             walletAmount = walletAmount1,
         )
+
+        return
     }
 
     @Test
@@ -100,5 +104,7 @@ class TestAddWallet {
         )
         testActions.openDeleteWalletWhenWalletsExist()
         testActions.checkZeroWallets()
+
+        return
     }
 }

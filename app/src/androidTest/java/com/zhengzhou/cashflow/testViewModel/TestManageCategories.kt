@@ -3,7 +3,7 @@ package com.zhengzhou.cashflow.testViewModel
 import android.annotation.SuppressLint
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.zhengzhou.cashflow.data.Category
-import com.zhengzhou.cashflow.tools.ConfigurationFirstStartup
+import com.zhengzhou.cashflow.tools.LoadDefaultCategories
 import com.zhengzhou.cashflow.ui.manageCategories.ManageCategoriesViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +26,7 @@ class TestManageCategories() {
         val coroutineScope = CoroutineScope(Dispatchers.Default)
 
         jobConfigureCategories = coroutineScope.launch {
-            ConfigurationFirstStartup.configureTableCategory()
+            LoadDefaultCategories.configureTableCategory()
         }
     }
 
@@ -47,8 +47,8 @@ class TestManageCategories() {
             }
 
             jobConfigureCategories.join()
-            val expenseCategories = ConfigurationFirstStartup.setDefaultExpenseCategories()
-            val depositCategories = ConfigurationFirstStartup.setDefaultDepositCategories()
+            val expenseCategories = LoadDefaultCategories.setDefaultExpenseCategories()
+            val depositCategories = LoadDefaultCategories.setDefaultDepositCategories()
 
             expenseCategories.forEach { category: Category ->
                 assertTrue(category in manageCategoriesUiState.listCategories)
