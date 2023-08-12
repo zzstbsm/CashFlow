@@ -33,18 +33,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.zhengzhou.cashflow.NavigationAppTestTag
 import com.zhengzhou.cashflow.NavigationCurrentScreen
-import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.Transaction
+import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.IconsMappedForDB
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -77,7 +79,10 @@ fun BottomNavigationBar(
                             navigationCurrentScreen = item,
                             navController = navController,
                         )
-                    }
+                    },
+                    modifier = Modifier.testTag(
+                        NavigationAppTestTag.bottomNavBar(item.route)
+                    )
                 )
             }
     }
@@ -121,7 +126,11 @@ fun SectionNavigationDrawerSheet(
                                 navController = navController,
                             )
                         },
-                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                        modifier = Modifier
+                            .testTag(
+                                NavigationAppTestTag.drawerNavBar(item.route)
+                            )
+                            .padding(NavigationDrawerItemDefaults.ItemPadding)
                     )
                 }
 
@@ -152,7 +161,9 @@ fun SectionTopAppBar(
                         drawerState.open()
                     }
                 },
-                modifier = modifier,
+                modifier = modifier.testTag(
+                    NavigationAppTestTag.TAG_OPEN_NAV_DRAWER
+                ),
             ) {
                 Icon (
                     painter  = painterResource(id = R.drawable.ic_menu),
@@ -361,7 +372,7 @@ fun DropdownTextFieldMenu(
     enabled: Boolean = true,
     expanded: Boolean,
     onChangeExpanded: (Boolean) -> Unit,
-    dropdownMenuContent: @Composable() (ColumnScope.() -> Unit),
+    dropdownMenuContent: @Composable (ColumnScope.() -> Unit),
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
 
@@ -568,7 +579,8 @@ fun IconChoiceDialog(
                         shape = RoundedCornerShape(8.dp),
                         modifier= Modifier
                             .fillMaxWidth()
-                            .padding(4.dp),
+                            .padding(4.dp)
+                            .testTag(icon.name),
                     ) {
                         CategoryIcon(
                             iconName = icon,

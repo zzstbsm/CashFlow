@@ -13,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -124,8 +125,11 @@ fun WalletOverviewAppBarAction(
                     Screen.WalletEdit.navigate(
                         walletID = walletOverviewUiState.wallet.id,
                         navController = navController,
-                    ) 
-                }
+                    )
+                },
+                modifier = Modifier.testTag(
+                    WalletOverviewTestTag.TAG_TOP_APP_BAR_ACTION_EDIT_WALLET
+                )
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_edit),
@@ -133,7 +137,12 @@ fun WalletOverviewAppBarAction(
                 )
             }
             
-            IconButton(onClick = { openMenu = true }) {
+            IconButton(
+                onClick = { openMenu = true },
+                modifier = Modifier.testTag(
+                    WalletOverviewTestTag.TAG_TOP_APP_BAR_OPEN_MENU
+                )
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_more_vert),
                     contentDescription =  stringResource(R.string.accessibility_menu_action_open),
@@ -157,6 +166,9 @@ fun WalletOverviewAppBarAction(
                     navController = navController,
                 )
             },
+            modifier = Modifier.testTag(
+                WalletOverviewTestTag.TAG_DROP_DOWN_MENU_ADD_WALLET
+            )
         )
 
         DropdownMenuItem(
@@ -171,6 +183,9 @@ fun WalletOverviewAppBarAction(
                     EventMessages.sendMessageId(R.string.WalletOverview_cannot_delete_wallet)
                 }
             },
+            modifier = Modifier.testTag(
+                WalletOverviewTestTag.TAG_DROP_DOWN_MENU_DELETE_WALLET
+            )
         )
     }
 }
@@ -211,7 +226,7 @@ fun WalletOverviewMainBody(
 
 @Composable
 private fun CustomCard(
-    content: @Composable() (ColumnScope.() -> Unit),
+    content: @Composable (ColumnScope.() -> Unit),
 ) {
     Card(
         elevation = CardDefaults.elevatedCardElevation(),
@@ -268,6 +283,9 @@ private fun WalletInfoSection(
             },
             color = Color.DarkGray,
             fontWeight = FontWeight.Bold,
+            modifier = Modifier.testTag(
+                WalletOverviewTestTag.TAG_TEXT_WALLET_NAME
+            )
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -277,8 +295,10 @@ private fun WalletInfoSection(
                 text = stringResource(id = R.string.WalletOverview_balance)
             )
             Text(
-                // TODO fix
-                text = walletOverviewViewModel.formatCurrency(walletOverviewUiState.currentAmountInTheWallet)
+                text = walletOverviewViewModel.formatCurrency(walletOverviewUiState.currentAmountInTheWallet),
+                modifier = Modifier.testTag(
+                    WalletOverviewTestTag.TAG_TEXT_WALLET_AMOUNT
+                )
             )
         }
     }
@@ -360,7 +380,10 @@ private fun WalletOverviewFloatingActionButton(
     ExtendedFloatingActionButton(
         onClick = {
             onClick()
-        }
+        },
+        modifier = Modifier.testTag(
+            WalletOverviewTestTag.TAG_FLOATING_ACTION_BUTTON
+        )
     ) {
         Icon(
             painter = painterResource(id = iconId),
