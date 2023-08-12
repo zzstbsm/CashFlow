@@ -24,8 +24,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.Screen
 import com.zhengzhou.cashflow.data.Currency
+import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.IconsMappedForDB
 import com.zhengzhou.cashflow.ui.CategoryIcon

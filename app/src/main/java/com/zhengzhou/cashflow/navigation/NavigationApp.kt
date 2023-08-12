@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow
+package com.zhengzhou.cashflow.navigation
 
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.ui.aboutMe.AboutMeScreen
@@ -112,7 +113,7 @@ fun NavigationApp() {
                 navController = navController,
             )
         }
-        composable(route = Screen.TransactionEdit.route) {backStackEntry ->
+        composable(route = Screen.TransactionEdit.route) { backStackEntry ->
             val transactionTypeId = backStackEntry.arguments?.getString("transactionType")
             val transactionUUIDStr = backStackEntry.arguments?.getString("transactionUUIDStr")
             val currency = Currency.setCurrency(
@@ -138,7 +139,7 @@ fun NavigationApp() {
                 navController = navController,
             )
         }
-        composable(route = Screen.TransactionReport.route) {backStackEntry ->
+        composable(route = Screen.TransactionReport.route) { backStackEntry ->
             val transactionUUIDStr = backStackEntry.arguments?.getString("transactionUUIDStr")
             requireNotNull(transactionUUIDStr) {
                 "Exception: passed walletUUIDStr not valid"

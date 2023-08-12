@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow
+package com.zhengzhou.cashflow.navigation
 
 class NavigationAppTestTag {
     companion object {

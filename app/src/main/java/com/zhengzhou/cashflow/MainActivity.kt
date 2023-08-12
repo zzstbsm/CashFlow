@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalContext
 import com.zhengzhou.cashflow.database.DatabaseRepository
+import com.zhengzhou.cashflow.navigation.NavigationApp
 import com.zhengzhou.cashflow.tools.ApplicationConfigurationService
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.LoadDefaultCategories

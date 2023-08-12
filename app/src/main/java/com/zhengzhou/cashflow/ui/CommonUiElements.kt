@@ -40,12 +40,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.NavigationAppTestTag
-import com.zhengzhou.cashflow.NavigationCurrentScreen
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.Transaction
+import com.zhengzhou.cashflow.navigation.NavigationAppTestTag
+import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.IconsMappedForDB
 import kotlinx.coroutines.launch
