@@ -1,7 +1,6 @@
 package com.zhengzhou.cashflow.ui.balance
 
 import android.text.format.DateFormat
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,15 +12,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Currency
-import com.zhengzhou.cashflow.data.Transaction
-import com.zhengzhou.cashflow.tools.CashFlowTools
 import java.text.NumberFormat
 import java.util.*
 
@@ -35,7 +30,7 @@ fun CreditCardSection(
 
     Card(
         modifier = modifier
-            .height(250.dp),
+            .height(180.dp),
         elevation = CardDefaults.elevatedCardElevation(),
         shape = RoundedCornerShape(16.dp)
     ) {
@@ -57,8 +52,8 @@ fun CreditCardSection(
                 )
                 IconButton(onClick = { showCurrencySelectorDialog = true }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_edit),
-                        contentDescription = stringResource(id = R.string.wallet_edit)
+                        painter = painterResource(id = R.drawable.ic_more_vert),
+                        contentDescription = stringResource(id = R.string.Balance_select_currency)
                     )
                 }
             }
@@ -69,9 +64,6 @@ fun CreditCardSection(
                 balance = balanceUiState.getBalance(),
                 currency = balanceUiState.equivalentWallet.currency,
                 currencyFormatter = balanceViewModel.getCurrencyFormatter(),
-                transactionList = balanceUiState.transactionListToShow.map {
-                    transactionAndCategory -> transactionAndCategory.transaction
-                },
                 modifier = Modifier,
             )
         }
@@ -144,16 +136,11 @@ private fun CardText(
     balance: Float,
     currency: Currency,
     currencyFormatter: NumberFormat,
-    transactionList: List<Transaction>,
     modifier: Modifier = Modifier
 ) {
 
-    val balanceIn = CashFlowTools.balanceFlowIn(transactionList)
-    val balanceOut = CashFlowTools.balanceFlowOut(transactionList)
 
     val formattedBalance = Currency.formatCurrency(currencyFormatter, balance)
-    val formattedIn = Currency.formatCurrency(currencyFormatter,balanceIn)
-    val formattedOut = Currency.formatCurrency(currencyFormatter,balanceOut)
 
     Text(
         text = stringResource(id = R.string.Balance_wallet_name_currency,stringResource(currency.nameCurrency)),
@@ -164,46 +151,5 @@ private fun CardText(
     Text(
         text = stringResource(R.string.balance,formattedBalance)
     )
-    Spacer(modifier = modifier.height(16.dp))
-    MonthlyBalance(
-        cashIn = formattedIn,
-        cashOut = formattedOut
-    )
 
-}
-
-@Composable
-private fun MonthlyBalance(
-    cashIn: String,
-    cashOut: String,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier.fillMaxHeight()
-    ) {
-        Text(
-            text = stringResource(id = R.string.Balance_selected_period_balance)
-        )
-        Row {
-            Image(
-                painter = painterResource(R.drawable.ic_arrow_up),
-                colorFilter = ColorFilter.tint(Color.Green),
-                contentDescription = null
-            )
-            Text(
-                text = cashIn,
-                color = Color.Green
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Image(
-                painter = painterResource(R.drawable.ic_arrow_down),
-                colorFilter = ColorFilter.tint(Color.Red),
-                contentDescription = null
-            )
-            Text(
-                text = cashOut,
-                color = Color.Red
-            )
-        }
-    }
 }

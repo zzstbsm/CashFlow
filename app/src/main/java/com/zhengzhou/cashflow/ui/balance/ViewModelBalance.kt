@@ -29,12 +29,14 @@ data class BalanceUiState(
     val walletList: List<Wallet> = listOf(),
     val currencyList: List<Currency> = listOf(),
     val transactionList: List<TransactionAndCategory> = listOf(),
+    val categoryList: List<Category> = listOf(),
     val transactionListToShow: List<TransactionAndCategory> = listOf(),
 
     val filterStartDate: Date = TimeFilterForSegmentedButton.Month.getStartDate(),
     val filterEndDate: Date = TimeFilterForSegmentedButton.Month.getEndDate(),
     val timeFilter: TimeFilterForSegmentedButton? = TimeFilterForSegmentedButton.Month,
 
+    val shownTab: BalanceTabOptions = BalanceTabOptions.CATEGORIES,
 ) {
 
     fun getBalance(): Float {
@@ -84,12 +86,14 @@ class BalanceViewModel : ViewModel() {
 
     private var writingOnUiState: Boolean = false
 
+    private var jobGetCategoryList: Job
     private var jobGetCurrency: Job
     private var jobGetTransactionList: Job
     private var jobGetWalletList: Job
 
     init {
 
+        jobGetCategoryList = getCategories()
         jobGetCurrency = getCurrencyList()
         jobGetWalletList = getWalletList(uiState.value.equivalentWallet.currency)
         currencyFormatter = Currency.setCurrencyFormatter(uiState.value.equivalentWallet.currency.abbreviation)
@@ -105,13 +109,17 @@ class BalanceViewModel : ViewModel() {
         walletList: List<Wallet>? = null,
         currencyList: List<Currency>? = null,
 
+        categoryList: List<Category>? = null,
+
         transactionList: List<TransactionAndCategory>? = null,
         transactionListToShow: List<TransactionAndCategory>? = null,
 
         filterStartDate: Date? = null,
         filterEndDate: Date? = null,
         timeFilter: TimeFilterForSegmentedButton? = null,
-        setTimeFilter: Boolean = false
+        setTimeFilter: Boolean = false,
+
+        shownTab: BalanceTabOptions? = null,
     ) {
         viewModelScope.launch {
             while (writingOnUiState) delay(5)
@@ -128,18 +136,32 @@ class BalanceViewModel : ViewModel() {
                 walletList = walletList ?: uiState.value.walletList,
                 currencyList = currencyList ?: uiState.value.currencyList,
 
+                categoryList = categoryList ?: uiState.value.categoryList,
+
                 transactionList = transactionList ?: uiState.value.transactionList,
                 transactionListToShow = transactionListToShow ?: uiState.value.transactionListToShow,
 
                 filterStartDate = filterStartDate ?: uiState.value.filterStartDate,
                 filterEndDate = filterEndDate ?: uiState.value.filterEndDate,
                 timeFilter = timeFilterValue,
+
+                shownTab = shownTab ?: uiState.value.shownTab,
             )
 
             writingOnUiState = false
         }
     }
 
+
+    private fun getCategories(): Job {
+        return viewModelScope.launch {
+            repository.getCategoryList().collect { categoryList ->
+                setUiState(
+                    categoryList = categoryList.sortedBy { category: Category -> category.name },
+                )
+            }
+        }
+    }
 
     fun getCurrencyFormatter(): NumberFormat = currencyFormatter
     private fun getCurrencyList(): Job {
@@ -253,6 +275,14 @@ class BalanceViewModel : ViewModel() {
         viewModelScope.launch {
             jobGetTransactionList = getTransactionList()
         }
+    }
+
+    fun selectTabToShow(
+        selectedTab: BalanceTabOptions,
+    ) {
+        setUiState(
+            shownTab = selectedTab,
+        )
     }
 }
 
