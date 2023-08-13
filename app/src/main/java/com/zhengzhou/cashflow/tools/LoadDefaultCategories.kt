@@ -82,6 +82,12 @@ class LoadDefaultCategories {
                     iconName = IconsMappedForDB.GIFT,
                     transactionType = TransactionType.Expense,
                 ),
+                Category(
+                    id = UUID.randomUUID(),
+                    name = "Sport",
+                    iconName = IconsMappedForDB.SPORT,
+                    transactionType = TransactionType.Expense,
+                ),
             )
         }
 
