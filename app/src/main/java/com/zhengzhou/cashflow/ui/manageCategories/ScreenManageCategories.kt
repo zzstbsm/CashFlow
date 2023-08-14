@@ -51,7 +51,6 @@ import com.zhengzhou.cashflow.customUiElements.SectionTopAppBar
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
-import com.zhengzhou.cashflow.tools.IconsMappedForDB
 
 @Composable
 fun ManageCategoriesScreen(
@@ -328,8 +327,8 @@ private fun CategoryEntry(
 
 @Composable
 private fun ChooseCategoryIcon(
-    currentIcon: IconsMappedForDB,
-    onChooseIcon: (IconsMappedForDB) -> Unit,
+    currentIcon: com.zhengzhou.cashflow.themes.IconsMappedForDB,
+    onChooseIcon: (com.zhengzhou.cashflow.themes.IconsMappedForDB) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -352,7 +351,7 @@ private fun ChooseCategoryIcon(
     if (showDialog) {
         IconChoiceDialog(
             text = stringResource(id = R.string.ManageCategories_choose_category_icon),
-            iconList = IconsMappedForDB.values()
+            iconList = com.zhengzhou.cashflow.themes.IconsMappedForDB.values()
                 .toList()
                 .filter { it.category },
             onDismissRequest = { showDialog = false },

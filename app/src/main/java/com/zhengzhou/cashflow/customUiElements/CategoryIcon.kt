@@ -4,11 +4,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import com.zhengzhou.cashflow.tools.IconsMappedForDB
 
 @Composable
 fun CategoryIcon(
-    iconName: IconsMappedForDB,
+    iconName: com.zhengzhou.cashflow.themes.IconsMappedForDB,
     contentDescription: String?,
     modifier: Modifier = Modifier,
 ) {

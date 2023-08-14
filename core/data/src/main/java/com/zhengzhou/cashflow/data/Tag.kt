@@ -3,7 +3,7 @@ package com.zhengzhou.cashflow.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
+import java.util.UUID
 import kotlin.math.min
 
 data class Tag (
@@ -40,14 +40,14 @@ data class Tag (
         ): Tag {
 
             val tagTransaction = TagTransaction(idTransaction = transactionUUID)
-            return this.merge(tagTransaction,tagEntry)!!
+            return merge(tagTransaction,tagEntry)!!
         }
 
     }
 
     fun isNewTag(): Boolean = id == UUID(0L, 0L)
 
-    fun separate(): Pair<TagTransaction,TagEntry> {
+    fun separate(): Pair<TagTransaction, TagEntry> {
 
         val tagTransaction = TagTransaction(
             id = id,

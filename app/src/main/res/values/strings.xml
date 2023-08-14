@@ -32,6 +32,7 @@
 
     <!-- Accessibility strings -->
     <string name="accessibility_add_category">Add category</string>
+    <string name="accessibility_add_tag">Add tag</string>
     <string name="accessibility_close_category">Close category</string>
     <string name="accessibility_menu_navbar">Navigation bar</string>
     <string name="accessibility_menu_navbar_balance">Balance</string>
@@ -46,32 +47,6 @@
     <string name="balance">Balance: %1$s</string>
     <string name="profile">Profile</string>
 
-    <!-- Default categories -->
-    <string name="bills">To Add Bills</string>
-    <string name="clothes">To Add Clothes</string>
-    <string name="eating_out">To Add Eating out</string>
-    <string name="entertainment">To Add Entertainment</string>
-    <string name="food">Food</string>
-    <string name="gifts">To Add Gifts</string>
-    <string name="health">Health</string>
-    <string name="home">Home</string>
-    <string name="pets">To Add Pets</string>
-    <string name="sport">Sport</string>
-    <string name="subscription">To Add Subscriptions</string>
-    <string name="transportation">Transportation</string>
-    <string name="travel">Travel</string>
-    <string name="no_category">No category</string>
-
-    <string name="salary">Salary</string>
-    <string name="savings">Savings</string>
-
-    <!-- Operations on the wallets -->
-    <string name="deposit">Deposit</string>
-    <string name="expense">Expense</string>
-    <string name="move">Movement</string>
-    <string name="new_deposit">New deposit</string>
-    <string name="new_expense">New expense</string>
-    <string name="new_move">New movement</string>
 
     <!-- About me -->
     <string name="AboutMe_description">Greetings from Italy!\nThank you for using CashFlow!\nThis is my first Android application and I hope you like it, I am developing it for fun as side project in my free/spare time.\nFeel free to share it with your friends and relatives!\nIf you like this app/have suggestions/want to leave a feedback, please leave a review on the Play Store!</string>
@@ -145,6 +120,7 @@
 
     <!-- WalletEdit page -->
     <string name="WalletEdit_choose_wallet_icon">Choose wallet icon</string>
+    <string name="WalletEdit_currency">Currency</string>
     <string name="WalletEdit_creation_date">Creation date</string>
     <string name="WalletEdit_error_amount_non_valid">Inserted amount not valid</string>
     <string name="WalletEdit_error_wallet_name_already_in_use">Wallet name already in use</string>
@@ -168,16 +144,9 @@
     <string name="WalletOverview_select_wallet">Select wallet</string>
     <string name="WalletOverview_wallet_deleted">Wallet deleted</string>
 
-    <!-- Supported currencies -->
-    <string name="currency">Currency</string>
-    <string name="currency_eur_name">Euro</string>
-    <string name="currency_usd_name">US dollar</string>
-    <string name="currency_sek_name">Swedish crown</string>
-
     <!-- Other -->
     <string name="empty_group">Empty group</string>
     <string name="err_divide_by_zero">Cannot divide by zero</string>
-    <string name="loading">Loading</string>
     <string name="delete_tag">Delete tag %1s</string>
 
 </resources>

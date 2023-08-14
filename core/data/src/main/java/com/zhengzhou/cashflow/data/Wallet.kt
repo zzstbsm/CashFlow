@@ -1,15 +1,12 @@
 package com.zhengzhou.cashflow.data
 
-import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.zhengzhou.cashflow.tools.IconsMappedForDB
-import kotlinx.parcelize.Parcelize
+import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import java.util.Date
 import java.util.UUID
 
-@Parcelize
 @Entity(tableName = "wallet")
 data class Wallet(
     @PrimaryKey val id: UUID,
@@ -25,7 +22,7 @@ data class Wallet(
     val lastAccess: Date,
     @ColumnInfo(name = "budget_enabled")
     val budgetEnabled: Boolean,
-) : Parcelable {
+) {
 
     companion object {
         fun newEmpty() : Wallet {
@@ -46,5 +43,7 @@ data class Wallet(
                 name = "Loading Wallet"
             )
         }
+
+        fun newWalletId() = UUID(0L,0L)
     }
 }

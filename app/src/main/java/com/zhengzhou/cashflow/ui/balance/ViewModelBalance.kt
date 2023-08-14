@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
-import com.zhengzhou.cashflow.data.TransactionAndCategory
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.dataForUi.TransactionAndCategory
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.TimeTools
 import kotlinx.coroutines.Dispatchers

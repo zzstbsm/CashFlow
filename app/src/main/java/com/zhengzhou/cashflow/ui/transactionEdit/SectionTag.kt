@@ -80,14 +80,14 @@ fun TagSection(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_add),
-                    contentDescription = null, // TODO: add description
+                    contentDescription = stringResource(id = R.string.accessibility_add_tag),
                     modifier = Modifier
                         .size(32.dp),
                 )
             }
         }
         TagListFilter(
-            filteredTagList = TagEntry.tagListFiltered(currentTagText,completeTagList),
+            filteredTagList = TagEntry.tagListFiltered(currentTagText, completeTagList),
             onSelectTag = { selectedTag ->
                 showDropdownMenu = false
                 onChangeText(selectedTag)
@@ -122,9 +122,6 @@ private fun TagListPart(
     tagList: List<Tag>,
     onTagClick: (Int) -> Unit,
 ) {
-
-    // TODO: Problem with refresh the tagList
-
     Row (
         modifier = Modifier
             .fillMaxWidth()

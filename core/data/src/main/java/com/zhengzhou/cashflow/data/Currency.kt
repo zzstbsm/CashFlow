@@ -1,9 +1,8 @@
 package com.zhengzhou.cashflow.data
 
 import androidx.annotation.StringRes
-import com.zhengzhou.cashflow.R
 import java.text.NumberFormat
-import java.util.*
+import java.util.Locale
 
 enum class Currency(
     val locale: Locale,

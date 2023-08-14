@@ -3,11 +3,10 @@ package com.zhengzhou.cashflow.database
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TagEntry
-import com.zhengzhou.cashflow.data.TransactionFullForUI
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
 import com.zhengzhou.cashflow.tools.LoadDefaultCategories
-import com.zhengzhou.cashflow.tools.IconsMappedForDB
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -164,30 +163,30 @@ class PrepopulateDatabase {
     private fun setWallets(date: Date): List<Wallet> {
         return listOf(
             Wallet(
-                id = UUID(0L,0L),
+                id = UUID(0L, 0L),
                 name = "Mastercard",
                 startAmount = 500f,
-                iconName = IconsMappedForDB.WALLET,
+                iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.WALLET,
                 currency = Currency.EUR,
                 creationDate = date,
                 lastAccess = Date(),
                 budgetEnabled = false,
             ),
             Wallet(
-                id = UUID(0L,0L),
+                id = UUID(0L, 0L),
                 name = "Visa",
                 startAmount = 100f,
-                iconName = IconsMappedForDB.WALLET,
+                iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.WALLET,
                 currency = Currency.EUR,
                 creationDate = Date(date.time + 10000),
                 lastAccess = Date(),
                 budgetEnabled = false,
             ),
             Wallet(
-                id = UUID(0L,0L),
+                id = UUID(0L, 0L),
                 name = "Sweden",
                 startAmount = 1000f,
-                iconName = IconsMappedForDB.WALLET,
+                iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.WALLET,
                 currency = Currency.SEK,
                 creationDate = Date(date.time + 20000),
                 lastAccess = Date(),

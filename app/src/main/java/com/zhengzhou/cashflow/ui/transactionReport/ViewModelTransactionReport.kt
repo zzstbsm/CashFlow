@@ -3,7 +3,7 @@ package com.zhengzhou.cashflow.ui.transactionReport
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.data.TransactionFullForUI
+import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.EventMessages
 import kotlinx.coroutines.Job
@@ -19,7 +19,7 @@ data class TransactionReportUiState(
 
     val isLoading: Boolean = true,
 
-)
+    )
 
 class TransactionReportViewModel(
     transactionUUID: UUID,
@@ -58,7 +58,7 @@ class TransactionReportViewModel(
 
     fun loadTransactionReport(transactionUUID: UUID): Job {
         return viewModelScope.launch {
-            val (transactionFullForUI, isLoaded) = TransactionFullForUI.load(repository,transactionUUID)
+            val (transactionFullForUI, isLoaded) = TransactionFullForUI.load(repository, transactionUUID)
             setUiState(
                 transactionFullForUI = transactionFullForUI,
                 isLoading = !isLoaded

@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
-import com.zhengzhou.cashflow.data.TransactionAndCategory
+import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.dataForUi.TransactionAndCategory
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -104,7 +105,7 @@ class WalletOverviewViewModel(
     }
 
     fun formatCurrency(amount: Float) : String {
-        return Currency.formatCurrency(currencyFormatter,amount)
+        return Currency.formatCurrency(currencyFormatter, amount)
     }
 
     private suspend fun getWallet(walletUUID: UUID) {
@@ -203,7 +204,7 @@ class WalletOverviewViewModel(
 
             repository.getTransactionListInWallet(
                 walletUUID = wallet.id,
-            ).collect { list ->
+            ).collect { list: List<Transaction> ->
                 val transactionAndCategoryList = mutableListOf<TransactionAndCategory>()
 
                 list.filter { !it.isBlueprint }.subList(0,min(list.size,3)).forEach { transaction ->
@@ -231,7 +232,7 @@ class WalletOverviewViewModel(
     private fun jobUpdateWalletList(): Job {
         return viewModelScope.launch {
 
-            repository.getWalletList().collect { walletList ->
+            repository.getWalletList().collect { walletList: List<Wallet> ->
                 //_walletList.value = walletList
 
                 setUiState(
@@ -246,8 +247,8 @@ class WalletOverviewViewModel(
             while (writingOnUiState) delay(1)
             var tempAmount = uiState.value.wallet.startAmount
 
-            repository.getTransactionListInWallet(uiState.value.wallet.id).collect {
-                it.forEach { transaction ->
+            repository.getTransactionListInWallet(uiState.value.wallet.id).collect { transactionList: List<Transaction> ->
+                transactionList.forEach { transaction: Transaction ->
                     tempAmount += transaction.amount
                 }
 

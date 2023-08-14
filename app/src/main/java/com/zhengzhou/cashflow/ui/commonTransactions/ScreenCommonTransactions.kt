@@ -40,15 +40,14 @@ import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.Transaction
-import com.zhengzhou.cashflow.data.TransactionFullForUI
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
 import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
 import com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.navigation.Screen
+import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import com.zhengzhou.cashflow.tools.EventMessages
-import com.zhengzhou.cashflow.tools.IconsMappedForDB
-import java.util.UUID
 
 @Composable
 fun CommonTransactionsScreen(
@@ -341,89 +340,35 @@ private fun CommonTransactionFloatingActionButtons(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                ExtendedFloatingActionButton(
-                    text = {
-                        Text(text = stringResource(id = R.string.new_deposit))
-                    },
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_add),
-                            contentDescription = stringResource(id = R.string.new_deposit),
-                        )
-                    },
-                    onClick = {
-                        if (wallet.id != UUID(0L,0L)) {
-                            Screen.TransactionEdit.navigate(
-                                transactionType = TransactionType.Deposit,
-                                transactionUUID = transaction.id,
-                                currency = wallet.currency,
-                                isBlueprint = true,
-                                editBlueprint = true,
-                                navController = navController,
+                TransactionType.getAllActive().forEach { transactionType ->
+                    ExtendedFloatingActionButton(
+                        text = {
+                            Text(text = stringResource(id = transactionType.newText))
+                        },
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = transactionType.iconId),
+                                contentDescription = stringResource(id = transactionType.newText),
                             )
-                        } else {
-                            EventMessages.sendMessageId(R.string.Balance_no_wallet)
-                        }
-                        showDialog = false
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                ExtendedFloatingActionButton(
-                    text = {
-                        Text(text = stringResource(id = R.string.new_expense))
-                    },
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_remove),
-                            contentDescription = stringResource(id = R.string.new_expense),
-                        )
-                    },
-                    onClick = {
-                        if (wallet.id != UUID(0L,0L)) {
-                            Screen.TransactionEdit.navigate(
-                                transactionType = TransactionType.Expense,
-                                transactionUUID = transaction.id,
-                                currency = wallet.currency,
-                                isBlueprint = true,
-                                editBlueprint = true,
-                                navController = navController,
-                            )
-                        } else {
-                            EventMessages.sendMessageId(R.string.Balance_no_wallet)
-                        }
-                        showDialog = false
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                ExtendedFloatingActionButton(
-                    text = {
-                        Text(text = stringResource(id = R.string.new_move))
-                    },
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_transfer),
-                            contentDescription = stringResource(id = R.string.new_move),
-                        )
-                    },
-                    onClick = {
-                        if (wallet.id != UUID(0L,0L)) {
-                            Screen.TransactionEdit.navigate(
-                                transactionType = TransactionType.Move,
-                                transactionUUID = transaction.id,
-                                currency = wallet.currency,
-                                isBlueprint = true,
-                                editBlueprint = true,
-                                navController = navController,
-                            )
-                        } else {
-                            EventMessages.sendMessageId(R.string.Balance_no_wallet)
-                        }
-                        showDialog = false
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                        },
+                        onClick = {
+                            if (wallet.id != Wallet.newWalletId()) {
+                                Screen.TransactionEdit.navigate(
+                                    transactionType = transactionType,
+                                    transactionUUID = transaction.id,
+                                    currency = wallet.currency,
+                                    isBlueprint = false,
+                                    editBlueprint = false,
+                                    navController = navController,
+                                )
+                            } else {
+                                EventMessages.sendMessageId(R.string.Balance_no_wallet)
+                            }
+                            showDialog = false
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }

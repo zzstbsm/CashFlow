@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Transaction
-import com.zhengzhou.cashflow.data.TransactionFullForUI
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.EventMessages
 import kotlinx.coroutines.CoroutineScope
@@ -94,7 +94,7 @@ class CommonTransactionsViewModel(): ViewModel() {
             while (isLoading) delay(5)
 
             transactionList.forEach { transaction ->
-                val (transactionFullForUi, _) = TransactionFullForUI.load(repository,transaction.id)
+                val (transactionFullForUi, _) = TransactionFullForUI.load(repository, transaction.id)
                 transactionFullForUIList.add(transactionFullForUi)
             }
             setUiState(

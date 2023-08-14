@@ -31,7 +31,6 @@ import com.zhengzhou.cashflow.customUiElements.IconChoiceDialog
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.tools.EventMessages
-import com.zhengzhou.cashflow.tools.IconsMappedForDB
 import java.util.Date
 import java.util.UUID
 
@@ -298,7 +297,7 @@ private fun TextWalletIcon(
     if (showDialog) {
         IconChoiceDialog(
             text = stringResource(id = R.string.WalletEdit_choose_wallet_icon),
-            iconList = IconsMappedForDB.values()
+            iconList = com.zhengzhou.cashflow.themes.IconsMappedForDB.values()
                 .toList()
                 .filter { it.wallet },
             onDismissRequest = { showDialog = false },
@@ -354,7 +353,7 @@ private fun TextWalletCurrencyChooser(
     var showDropDownMenu by remember { mutableStateOf(false) }
 
     DropdownTextFieldMenu(
-        label = stringResource(id = R.string.currency),
+        label = stringResource(id = R.string.WalletEdit_currency),
         value = walletEditUiState.wallet.currency.abbreviation,
         expanded = showDropDownMenu,
         onChangeExpanded = { ifShow ->

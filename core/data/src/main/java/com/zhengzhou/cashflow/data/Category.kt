@@ -3,7 +3,7 @@ package com.zhengzhou.cashflow.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.zhengzhou.cashflow.tools.IconsMappedForDB
+import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import java.util.UUID
 
 @Entity(tableName = "category")
@@ -25,7 +25,7 @@ data class Category (
             )
         }
 
-        fun transfer(categoryUUID: UUID): Category{
+        fun transfer(categoryUUID: UUID): Category {
             return newEmpty().copy(
                 id = categoryUUID,
                 iconName = IconsMappedForDB.TRANSFER,

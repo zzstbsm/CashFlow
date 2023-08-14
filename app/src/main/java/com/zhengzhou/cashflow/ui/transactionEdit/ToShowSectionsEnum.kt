@@ -5,7 +5,6 @@ import androidx.annotation.StringRes
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.TransactionType
 
-
 enum class TransactionSectionToShow(
     @StringRes val text: Int,
     @DrawableRes val icon: Int,

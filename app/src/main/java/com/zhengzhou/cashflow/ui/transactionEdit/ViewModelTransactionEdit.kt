@@ -7,9 +7,9 @@ import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.TagEntry
 import com.zhengzhou.cashflow.data.Transaction
-import com.zhengzhou.cashflow.data.TransactionFullForUI
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.Calculator
 import com.zhengzhou.cashflow.tools.KeypadDigit

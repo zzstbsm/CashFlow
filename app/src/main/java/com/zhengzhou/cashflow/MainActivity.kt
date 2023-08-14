@@ -8,7 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalContext
-import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.navigation.NavigationApp
 import com.zhengzhou.cashflow.tools.ApplicationConfigurationService
 import com.zhengzhou.cashflow.tools.EventMessages
@@ -25,7 +24,7 @@ class MainActivity : ComponentActivity() {
 
         setContent{
 
-            val repository = DatabaseRepository.get()
+            val repository = com.zhengzhou.cashflow.database.DatabaseRepository.get()
             val coroutineScope = CoroutineScope(Dispatchers.Default)
             coroutineScope.launch {
                 repository.getCategoryList().collect {
