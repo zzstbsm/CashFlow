@@ -122,6 +122,7 @@ private fun BalanceMainBody(
             modifier = modifier
         )
         BalanceTabOptionsSelector(
+            selectedTab = balanceUiState.shownTab,
             onSelectTab = { balanceViewModel.selectTabToShow(it) }
         )
 

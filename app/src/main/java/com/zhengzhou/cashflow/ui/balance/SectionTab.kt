@@ -14,11 +14,12 @@ import androidx.compose.ui.res.stringResource
 
 @Composable
 fun BalanceTabOptionsSelector(
+    selectedTab: BalanceTabOptions,
     onSelectTab: (BalanceTabOptions) -> Unit
 ) {
 
     var activeTab by remember {
-        mutableIntStateOf(0)
+        mutableIntStateOf(selectedTab.ordinal)
     }
 
     TabRow(selectedTabIndex = activeTab) {
