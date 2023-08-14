@@ -37,6 +37,49 @@ class TestDefaultActions(
 
         composeTestRule.onNodeWithTag(
             testTag = WalletEditTestTag.TAG_TEST_FIELD_WALLET_NAME
+        ).performTextClearance()
+
+        composeTestRule.onNodeWithTag(
+            testTag = WalletEditTestTag.TAG_TEST_FIELD_WALLET_NAME
+        ).performTextInput(
+            walletName
+        )
+
+        composeTestRule.onNodeWithTag(
+            testTag = WalletEditTestTag.TAG_TEST_FIELD_WALLET_AMOUNT
+        ).performTextClearance()
+
+
+        composeTestRule.onNodeWithTag(
+            testTag = WalletEditTestTag.TAG_TEST_FIELD_WALLET_AMOUNT
+        ).performTextInput(
+            walletAmount
+        )
+
+        composeTestRule.onNodeWithTag(
+            testTag = WalletEditTestTag.TAG_FLOATING_ACTION_BUTTON
+        ).performClick()
+    }
+    fun fillWalletExpectingError(
+            walletName: String,
+            walletAmount: String,
+            walletIcon: IconsMappedForDB,
+        ) {
+
+        composeTestRule.onNodeWithTag(
+            testTag = WalletEditTestTag.TAG_ICON_FIELD_ICON
+        ).performClick()
+
+        composeTestRule.onNodeWithTag(
+            testTag = walletIcon.name
+        ).performClick()
+
+        composeTestRule.onNodeWithTag(
+            testTag = WalletEditTestTag.TAG_TEST_FIELD_WALLET_NAME
+        ).performTextClearance()
+
+        composeTestRule.onNodeWithTag(
+            testTag = WalletEditTestTag.TAG_TEST_FIELD_WALLET_NAME
         ).performTextInput(
             walletName
         )
@@ -61,6 +104,16 @@ class TestDefaultActions(
         composeTestRule.onNodeWithTag(
             testTag = WalletOverviewTestTag.TAG_FLOATING_ACTION_BUTTON
         ).assertTextEquals("Select wallet")
+    }
+
+    fun checkError(
+        testTag: String,
+        errorMessage: String,
+    ) {
+        composeTestRule.onNodeWithTag(
+            testTag = testTag,
+            useUnmergedTree = true,
+        ).assertTextEquals(errorMessage)
     }
 
     fun checkShownWallet(
@@ -122,7 +175,7 @@ class TestDefaultActions(
 
     fun openEditWallet() {
         composeTestRule.onNodeWithTag(
-            testTag = WalletOverviewTestTag.TAG_DROP_DOWN_MENU_DELETE_WALLET
+            testTag = WalletOverviewTestTag.TAG_TOP_APP_BAR_ACTION_EDIT_WALLET
         ).performClick()
     }
 

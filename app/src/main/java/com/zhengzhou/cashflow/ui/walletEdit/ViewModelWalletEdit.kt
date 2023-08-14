@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
+import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import com.zhengzhou.cashflow.tools.Calculator
 import com.zhengzhou.cashflow.tools.mapCharToKeypadDigit
 import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
@@ -140,7 +141,7 @@ class WalletEditViewModel(
     fun updateWallet(
         name: String? = null,
         startAmount: Float? = null,
-        iconName: com.zhengzhou.cashflow.themes.IconsMappedForDB? = null,
+        iconName: IconsMappedForDB? = null,
         currency: Currency? = null,
         creationDate: Date? = null,
         lastAccess: Date? = null,

@@ -259,11 +259,17 @@ private fun TextWalletName(
             walletEditUiState.isErrorWalletNameNotValid
         ),
         supportingText = {
-            if (walletEditUiState.isErrorWalletNameNotValid) {
-                Text(stringResource(id = R.string.WalletEdit_error_wallet_name_not_valid))
-            } else if (walletEditUiState.isErrorWalletNameInUse) {
-                Text(stringResource(id = R.string.WalletEdit_error_wallet_name_already_in_use))
-            }
+            Text(
+                text =
+                if (walletEditUiState.isErrorWalletNameNotValid)
+                    stringResource(id = R.string.WalletEdit_error_wallet_name_not_valid)
+                else if (walletEditUiState.isErrorWalletNameInUse)
+                    stringResource(id = R.string.WalletEdit_error_wallet_name_already_in_use)
+                else "",
+                modifier = Modifier.testTag(
+                    tag = WalletEditTestTag.TAG_TEST_FIELD_WALLET_NAME_SUPPORTING_TEXT
+                )
+            )
         }
     )
 }
@@ -336,9 +342,15 @@ private fun MoneyTextField(
         ),
         isError = isError,
         supportingText = {
-            if (isError) {
-                Text(text = stringResource(id = R.string.WalletEdit_error_amount_non_valid))
-            }
+            Text(
+                text =
+                if (isError)
+                    stringResource(id = R.string.WalletEdit_error_amount_non_valid)
+                else "",
+                modifier = Modifier.testTag(
+                    tag = WalletEditTestTag.TAG_TEST_FIELD_WALLET_AMOUNT_SUPPORTING_TEXT
+                )
+            )
         }
     )
 }
