@@ -83,10 +83,8 @@ interface DatabaseDao {
                    "WHERE (id_wallet IN (:idWalletList) AND is_blueprint=0 AND id_secondary_wallet=(:secondaryWalletId)) " +
                    "ORDER BY date DESC")
     fun getTransactionListInListOfWallet(idWalletList: List<UUID>, secondaryWalletId: UUID = UUID(0L, 0L)): Flow<List<Transaction>>
-    @Query("SELECT * FROM movement WHERE (id_wallet=(:idWallet) AND is_blueprint=0) ORDER BY date DESC")
-    fun getTransactionListInWallet(idWallet: UUID): Flow<List<Transaction>>
-    @Query("SELECT * FROM movement WHERE (id_wallet=(:idWallet) OR id_secondary_wallet=(:idWallet) AND is_blueprint=0) ORDER BY date DESC LIMIT :numberOfEntries")
-    fun getTransactionShortListInWallet(idWallet: UUID,numberOfEntries: Int): Flow<List<Transaction>>
+    @Query("SELECT * FROM movement WHERE (id_wallet=(:walletUUID) OR id_secondary_wallet=(:walletUUID) AND is_blueprint=0) ORDER BY date DESC")
+    fun getTransactionListInWallet(walletUUID: UUID): Flow<List<Transaction>>
     @Query("SELECT * FROM movement WHERE is_blueprint != 0")
     fun getTransactionIsBlueprint(): Flow<List<Transaction>>
 

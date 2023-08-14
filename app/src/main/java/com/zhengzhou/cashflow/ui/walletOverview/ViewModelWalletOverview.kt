@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.lang.Integer.min
 import java.text.NumberFormat
 import java.util.Date
 import java.util.UUID
@@ -200,14 +201,14 @@ class WalletOverviewViewModel(
 
             val wallet = uiState.value.wallet
 
-            repository.getTransactionShortListInWallet(
-                wallet.id,
-                3
+            repository.getTransactionListInWallet(
+                walletUUID = wallet.id,
             ).collect { list ->
                 val transactionAndCategoryList = mutableListOf<TransactionAndCategory>()
 
-                list.filter { !it.isBlueprint }.forEach { transaction ->
+                list.filter { !it.isBlueprint }.subList(0,min(list.size,3)).forEach { transaction ->
                     val category = repository.getCategory(transaction.categoryId) ?: Category.newEmpty()
+
 
                     transactionAndCategoryList.add(
                         TransactionAndCategory(

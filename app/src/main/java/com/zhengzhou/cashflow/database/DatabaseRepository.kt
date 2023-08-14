@@ -137,10 +137,8 @@ class DatabaseRepository(
         }
     }
 
-    fun getTransactionListInWallet(idWallet: UUID): Flow<List<Transaction>>
-            = database.databaseDao().getTransactionListInWallet(idWallet)
-    fun getTransactionShortListInWallet(idWallet: UUID,numberOfEntries: Int): Flow<List<Transaction>>
-            = database.databaseDao().getTransactionShortListInWallet(idWallet,numberOfEntries)
+    fun getTransactionListInWallet(walletUUID: UUID): Flow<List<Transaction>>
+            = database.databaseDao().getTransactionListInWallet(walletUUID)
     fun getTransactionIsBlueprint(): Flow<List<Transaction>>
             = database.databaseDao().getTransactionIsBlueprint()
 
