@@ -278,7 +278,7 @@ class TransactionEditViewModel(
         val transaction: Transaction = uiState.value.transaction
 
         val wallet: Wallet = uiState.value.wallet
-        val category: Category = uiState.value.categoryList.first {
+        val category: Category? = uiState.value.categoryList.firstOrNull {
             it.id == transaction.categoryId
         }
         val currentTransactionTagList: List<Tag> = uiState.value.currentTagList
@@ -288,13 +288,13 @@ class TransactionEditViewModel(
         val ifAmountChosen = transaction.amount >= 0.01f || transaction.amount <= -0.01f
 
         if (
-            TransactionSaveResult.NO_AMOUNT.throwError(
+            TransactionSaveResult.NO_AMOUNT.checkIfThrowError(
                 checkIfThrow = !ifAmountChosen,
                 transactionType = transactionType
             )
         ) return TransactionSaveResult.NO_AMOUNT
         if (
-            TransactionSaveResult.NO_CATEGORY.throwError(
+            TransactionSaveResult.NO_CATEGORY.checkIfThrowError(
                 checkIfThrow = !ifCategoryChosen,
                 transactionType = transactionType
             )
@@ -303,7 +303,7 @@ class TransactionEditViewModel(
         val transactionFullForUI = TransactionFullForUI(
             transaction = transaction,
             wallet = wallet,
-            category = category,
+            category = category!!,
             tagList = currentTransactionTagList,
         )
         viewModelScope.launch {

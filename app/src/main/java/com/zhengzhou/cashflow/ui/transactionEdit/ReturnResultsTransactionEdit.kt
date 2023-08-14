@@ -24,7 +24,7 @@ enum class TransactionSaveResult(
         ),
     );
 
-    fun throwError(
+    fun checkIfThrowError(
         checkIfThrow: Boolean,
         transactionType: TransactionType,
     ): Boolean {

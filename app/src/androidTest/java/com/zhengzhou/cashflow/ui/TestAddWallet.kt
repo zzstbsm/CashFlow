@@ -2,8 +2,8 @@ package com.zhengzhou.cashflow.ui
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.zhengzhou.cashflow.MainActivity
-import com.zhengzhou.cashflow.NavigationCurrentScreen
-import com.zhengzhou.cashflow.tools.IconsMappedForDB
+import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
+import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
@@ -31,7 +31,6 @@ class TestAddWallet {
         )
 
         testActions.checkZeroWallets()
-
         testActions.openAddWalletWhenZeroWallets()
 
         testActions.fillWalletAndSave(

@@ -8,11 +8,11 @@ import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.zhengzhou.cashflow.MainActivity
-import com.zhengzhou.cashflow.NavigationAppTestTag
-import com.zhengzhou.cashflow.ui.walletOverview.WalletOverviewTestTag
 import com.zhengzhou.cashflow.data.Currency
-import com.zhengzhou.cashflow.tools.IconsMappedForDB
+import com.zhengzhou.cashflow.navigation.NavigationAppTestTag
+import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import com.zhengzhou.cashflow.ui.walletEdit.WalletEditTestTag
+import com.zhengzhou.cashflow.ui.walletOverview.WalletOverviewTestTag
 import java.text.NumberFormat
 
 class TestDefaultActions(

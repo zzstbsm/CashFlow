@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.UUID
 
-
 data class WalletEditUiState(
     val isLoading: Boolean = true,
 
@@ -61,7 +60,7 @@ class WalletEditViewModel(
         jobLoadWallet = loadWallet(walletUUID = walletUUID)
 
         jobLoadWalletListName = viewModelScope.launch {
-            repository.getWalletListOfNames().collect() {
+            repository.getWalletListOfNames().collect {
                 _walletListName.value = it
             }
         }
