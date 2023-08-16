@@ -34,7 +34,7 @@ data class TransactionFullForUI(
 
             val transaction: Transaction = repository.getTransaction(transactionId = transactionUUID) ?: Transaction.newEmpty()
             val wallet = repository.getWallet(transaction.walletId) ?: Wallet.newEmpty()
-            val category = repository.getCategory(transaction.categoryId) ?: Category.transfer(
+            val category = repository.getCategory(transaction.categoryId) ?: Category.newTransfer(
                 transaction.categoryId
             )
 

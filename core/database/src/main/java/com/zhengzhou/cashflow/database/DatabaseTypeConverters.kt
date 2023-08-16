@@ -20,12 +20,12 @@ internal class TransactionTypeConverters {
 
     @TypeConverter
     fun fromCurrency(currency: Currency): String {
-        return currency.abbreviation
+        return currency.name
     }
 
     @TypeConverter
     fun toCurrency(abbreviation: String): Currency? {
-        return Currency.setCurrency(abbreviation = abbreviation)
+        return Currency.setCurrency(name = abbreviation)
     }
 
     @TypeConverter

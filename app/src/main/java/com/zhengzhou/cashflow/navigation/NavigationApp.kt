@@ -117,7 +117,7 @@ fun NavigationApp() {
             val transactionTypeId = backStackEntry.arguments?.getString("transactionType")
             val transactionUUIDStr = backStackEntry.arguments?.getString("transactionUUIDStr")
             val currency = Currency.setCurrency(
-                abbreviation = backStackEntry.arguments?.getString("currency").toString()
+                name = backStackEntry.arguments?.getString("currency").toString()
             )
             val isBlueprint = backStackEntry.arguments?.getString("isBlueprint").toBoolean()
             val editBlueprint = backStackEntry.arguments?.getString("editBlueprint").toBoolean()
@@ -293,7 +293,7 @@ sealed class Screen(
             isBlueprint: Boolean,
             editBlueprint: Boolean,
         ) = NavigationCurrentScreen.TransactionEdit.route +
-                "/${transactionType.id}/$transactionUUID/${currency.abbreviation}/$isBlueprint/$editBlueprint"
+                "/${transactionType.id}/$transactionUUID/${currency.name}/$isBlueprint/$editBlueprint"
 
         fun navigate(
             transactionType: TransactionType,

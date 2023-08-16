@@ -96,7 +96,7 @@ class BalanceViewModel : ViewModel() {
         jobGetCategoryList = getCategories()
         jobGetCurrency = getCurrencyList()
         jobGetWalletList = getWalletList(uiState.value.equivalentWallet.currency)
-        currencyFormatter = Currency.setCurrencyFormatter(uiState.value.equivalentWallet.currency.abbreviation)
+        currencyFormatter = Currency.setCurrencyFormatter(uiState.value.equivalentWallet.currency.name)
         jobGetTransactionList = getTransactionList()
 
     }
@@ -216,7 +216,7 @@ class BalanceViewModel : ViewModel() {
     }
     private fun getWalletList(currency: Currency): Job {
         return viewModelScope.launch(Dispatchers.IO) {
-            currencyFormatter = Currency.setCurrencyFormatter(currency.abbreviation)
+            currencyFormatter = Currency.setCurrencyFormatter(currency.name)
             setUiState(
                 isLoading = true
             )

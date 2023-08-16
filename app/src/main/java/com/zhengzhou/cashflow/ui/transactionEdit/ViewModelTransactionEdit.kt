@@ -181,7 +181,7 @@ class TransactionEditViewModel(
                 transaction = if (transactionType == TransactionType.Move) {
                     transaction.copy(
                         secondaryWalletId = secondaryWallet.id,
-                        categoryId = categoryList.first().id // There is only one category if it is a transfer
+                        categoryId = categoryList.first().id // There is only one category if it is a newTransfer
                     )
                 } else transaction,
 

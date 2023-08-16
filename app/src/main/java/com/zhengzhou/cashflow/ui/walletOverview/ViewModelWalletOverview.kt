@@ -44,7 +44,7 @@ class WalletOverviewViewModel(
 
     private val repository = DatabaseRepository.get()
 
-    var currencyFormatter: NumberFormat = Currency.setCurrencyFormatter(Currency.EUR.abbreviation)
+    var currencyFormatter: NumberFormat = Currency.setCurrencyFormatter(Currency.EUR.name)
 
     private var retrieveCurrentAmountInWalletJob: Job
     private var retrieveTransactionJob: Job
@@ -92,7 +92,7 @@ class WalletOverviewViewModel(
                 showSelectWallet = showSelectWallet ?: uiState.value.showSelectWallet
             )
             if (wallet != null) {
-                currencyFormatter = Currency.setCurrencyFormatter(wallet.currency.abbreviation)
+                currencyFormatter = Currency.setCurrencyFormatter(wallet.currency.name)
             }
             writingOnUiState = false
         }
@@ -270,7 +270,7 @@ class WalletOverviewViewModel(
                     isLoadingWallet = false
                 )
             }
-            currencyFormatter = Currency.setCurrencyFormatter(uiState.value.wallet.currency.abbreviation)
+            currencyFormatter = Currency.setCurrencyFormatter(uiState.value.wallet.currency.name)
         }
     }
 

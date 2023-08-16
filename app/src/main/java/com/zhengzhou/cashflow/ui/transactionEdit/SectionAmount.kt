@@ -86,7 +86,7 @@ fun AmountTextSection(
                             modifier = modifier.size(24.dp)
                         )
                         Text(
-                            text =  wallet.currency.abbreviation,
+                            text =  wallet.currency.name,
                             style = MaterialTheme.typography.labelMedium,
                         )
                     }

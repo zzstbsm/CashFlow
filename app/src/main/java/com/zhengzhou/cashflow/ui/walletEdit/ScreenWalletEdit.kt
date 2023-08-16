@@ -365,7 +365,7 @@ private fun TextWalletCurrencyChooser(
 
     DropdownTextFieldMenu(
         label = stringResource(id = R.string.WalletEdit_currency),
-        value = walletEditUiState.wallet.currency.abbreviation,
+        value = walletEditUiState.wallet.currency.name,
         expanded = showDropDownMenu,
         onChangeExpanded = { ifShow ->
             showDropDownMenu = ifShow
@@ -382,7 +382,7 @@ private fun TextWalletCurrencyChooser(
                     },
                     text = {
                         Text(
-                            text = currency.abbreviation
+                            text = currency.name
                         )
                     },
                     onClick = {

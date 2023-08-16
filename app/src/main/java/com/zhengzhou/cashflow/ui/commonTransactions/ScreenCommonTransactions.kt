@@ -277,7 +277,7 @@ private fun SingleTransaction(
     val tagList = transactionFullForUI.tagList
     val category = transactionFullForUI.category
 
-    val currencyFormatter = Currency.setCurrencyFormatter(wallet.currency.abbreviation)
+    val currencyFormatter = Currency.setCurrencyFormatter(wallet.currency.name)
 
     Card(
         modifier = Modifier

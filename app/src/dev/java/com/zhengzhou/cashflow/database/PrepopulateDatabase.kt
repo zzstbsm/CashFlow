@@ -1,12 +1,12 @@
 package com.zhengzhou.cashflow.database
 
+import com.zhengzhou.cashflow.LoadDefaultCategories
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TagEntry
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
-import com.zhengzhou.cashflow.tools.LoadDefaultCategories
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
