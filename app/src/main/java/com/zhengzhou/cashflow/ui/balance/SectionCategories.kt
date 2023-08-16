@@ -34,10 +34,11 @@ fun SectionCategoryItem(
     amount: Float,
     category: Category,
     currencyFormatter: NumberFormat,
+    onClick: (Category) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     OutlinedButton(
-        onClick = { },
+        onClick = { onClick(category) },
         modifier = modifier,
         contentPadding = PaddingValues(0.dp),
         shape = RoundedCornerShape(4.dp),

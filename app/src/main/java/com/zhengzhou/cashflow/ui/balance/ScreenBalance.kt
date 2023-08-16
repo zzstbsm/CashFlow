@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -17,6 +18,9 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -28,6 +32,7 @@ import com.zhengzhou.cashflow.customUiElements.BottomNavigationBar
 import com.zhengzhou.cashflow.customUiElements.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.customUiElements.SectionTopAppBar
 import com.zhengzhou.cashflow.data.Transaction
+import com.zhengzhou.cashflow.dataForUi.TransactionAndCategory
 import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
 import com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.navigation.Screen
@@ -112,6 +117,12 @@ private fun BalanceMainBody(
         .fillMaxWidth()
         .padding(horizontal = 32.dp, vertical = 4.dp)
     val lazyGridSpan = 3
+    var showTransactionListDialog by remember {
+        mutableStateOf(false)
+    }
+    var transactionListForDialog by remember {
+        mutableStateOf(listOf<TransactionAndCategory>())
+    }
 
     Column(
         modifier = Modifier.padding(innerPaddingValues)
@@ -192,6 +203,15 @@ private fun BalanceMainBody(
                             amount = amount,
                             category = category,
                             currencyFormatter = balanceViewModel.getCurrencyFormatter(),
+                            onClick = { selectedCategory ->
+                                transactionListForDialog = filteredList.map {
+                                    TransactionAndCategory(
+                                        transaction = it,
+                                        category = selectedCategory,
+                                    )
+                                }
+                                showTransactionListDialog = true
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(8.dp)
@@ -237,4 +257,16 @@ private fun BalanceMainBody(
 
         }
     }
+
+    TransactionsInCategoryAlertDialog(
+        show = showTransactionListDialog,
+        onDismissDialog = { showTransactionListDialog = it},
+        transactionList = transactionListForDialog,
+        currencyFormatter = balanceViewModel.getCurrencyFormatter(),
+        navController = navController,
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.6f)
+            .padding(vertical = 16.dp)
+    )
 }
