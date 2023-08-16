@@ -3,7 +3,7 @@ package com.zhengzhou.cashflow.database
 import android.content.Context
 import androidx.room.Room
 
-fun databaseRepositoryInitializer(
+internal fun databaseRepositoryInitializer(
     context: Context,
 ): RegisterDatabase {
     return Room.inMemoryDatabaseBuilder(

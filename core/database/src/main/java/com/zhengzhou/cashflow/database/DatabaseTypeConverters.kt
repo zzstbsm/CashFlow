@@ -6,7 +6,7 @@ import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import java.util.Date
 
-class TransactionTypeConverters {
+internal class TransactionTypeConverters {
 
     @TypeConverter
     fun fromDate(date: Date): Long {

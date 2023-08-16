@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import java.util.*
 
 @Dao
-interface DatabaseDao {
+internal interface DatabaseDao {
 
     // Category section
     @Query("SELECT * FROM category WHERE id=(:categoryUUID)")

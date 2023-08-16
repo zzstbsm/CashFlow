@@ -5,7 +5,7 @@ import androidx.room.Room
 
 private const val DATABASE_NAME = "Registry_DB"
 
-fun databaseRepositoryInitializer(
+internal fun databaseRepositoryInitializer(
     context: Context,
 ): RegisterDatabase {
     return Room.databaseBuilder(

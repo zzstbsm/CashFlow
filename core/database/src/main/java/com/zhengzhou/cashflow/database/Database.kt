@@ -18,6 +18,6 @@ import com.zhengzhou.cashflow.data.*
     exportSchema = false,
 )
 @TypeConverters(TransactionTypeConverters::class)
-abstract class RegisterDatabase : RoomDatabase() {
+internal abstract class RegisterDatabase : RoomDatabase() {
     abstract fun databaseDao(): DatabaseDao
 }

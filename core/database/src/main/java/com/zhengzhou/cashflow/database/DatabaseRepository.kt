@@ -1,5 +1,6 @@
 package com.zhengzhou.cashflow.database
 
+import android.content.Context
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Tag
@@ -11,19 +12,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import java.util.UUID
 
-/*
-fun databaseRepositoryInitializer(
-    context: Context,
-): RegisterDatabase {
-    return Room.databaseBuilder(
-        context.applicationContext,
-        RegisterDatabase::class.java,
-        DATABASE_NAME
-    ).build()
-}
-*/
-
-class DatabaseRepository(
+class DatabaseRepository private constructor(
     registerDatabase: RegisterDatabase,
 ){
 
@@ -31,9 +20,10 @@ class DatabaseRepository(
 
         private var INSTANCE: DatabaseRepository? = null
 
-        fun initialize(registerDatabase: RegisterDatabase) {
+        fun initialize(context: Context) {
+            val database = databaseRepositoryInitializer(context = context)
             if (INSTANCE == null) {
-                INSTANCE = DatabaseRepository(registerDatabase)
+                INSTANCE = DatabaseRepository(database)
             }
         }
 
