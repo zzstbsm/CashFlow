@@ -24,7 +24,7 @@ In order to make the navigation more enjoyable, the following features will be i
 The project can be compiled based on 5 build types:
 - **debug**: build used to perform automatic ui testing. It does not include any preloaded transaction data.
 - **dev**: build used to perform manual ui testing. It includes preloaded transactions.
-- **staging**: build with the most recent stable release and staging data.
+- **staging**: build with the most recent stable release and staging data. It should be equal to the last working dev build.
 - **preprod**: build used to test the database migration from the last production build if the database version changes.
 - **release**: production build.
 

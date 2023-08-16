@@ -8,11 +8,11 @@ import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.zhengzhou.cashflow.MainActivity
-import com.zhengzhou.cashflow.NavigationAppTestTag
-import com.zhengzhou.cashflow.ui.walletOverview.WalletOverviewTestTag
 import com.zhengzhou.cashflow.data.Currency
-import com.zhengzhou.cashflow.tools.IconsMappedForDB
+import com.zhengzhou.cashflow.navigation.NavigationAppTestTag
+import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import com.zhengzhou.cashflow.ui.walletEdit.WalletEditTestTag
+import com.zhengzhou.cashflow.ui.walletOverview.WalletOverviewTestTag
 import java.text.NumberFormat
 
 class TestDefaultActions(
@@ -34,6 +34,49 @@ class TestDefaultActions(
         composeTestRule.onNodeWithTag(
             testTag = walletIcon.name
         ).performClick()
+
+        composeTestRule.onNodeWithTag(
+            testTag = WalletEditTestTag.TAG_TEST_FIELD_WALLET_NAME
+        ).performTextClearance()
+
+        composeTestRule.onNodeWithTag(
+            testTag = WalletEditTestTag.TAG_TEST_FIELD_WALLET_NAME
+        ).performTextInput(
+            walletName
+        )
+
+        composeTestRule.onNodeWithTag(
+            testTag = WalletEditTestTag.TAG_TEST_FIELD_WALLET_AMOUNT
+        ).performTextClearance()
+
+
+        composeTestRule.onNodeWithTag(
+            testTag = WalletEditTestTag.TAG_TEST_FIELD_WALLET_AMOUNT
+        ).performTextInput(
+            walletAmount
+        )
+
+        composeTestRule.onNodeWithTag(
+            testTag = WalletEditTestTag.TAG_FLOATING_ACTION_BUTTON
+        ).performClick()
+    }
+    fun fillWalletExpectingError(
+            walletName: String,
+            walletAmount: String,
+            walletIcon: IconsMappedForDB,
+        ) {
+
+        composeTestRule.onNodeWithTag(
+            testTag = WalletEditTestTag.TAG_ICON_FIELD_ICON
+        ).performClick()
+
+        composeTestRule.onNodeWithTag(
+            testTag = walletIcon.name
+        ).performClick()
+
+        composeTestRule.onNodeWithTag(
+            testTag = WalletEditTestTag.TAG_TEST_FIELD_WALLET_NAME
+        ).performTextClearance()
 
         composeTestRule.onNodeWithTag(
             testTag = WalletEditTestTag.TAG_TEST_FIELD_WALLET_NAME
@@ -61,6 +104,16 @@ class TestDefaultActions(
         composeTestRule.onNodeWithTag(
             testTag = WalletOverviewTestTag.TAG_FLOATING_ACTION_BUTTON
         ).assertTextEquals("Select wallet")
+    }
+
+    fun checkError(
+        testTag: String,
+        errorMessage: String,
+    ) {
+        composeTestRule.onNodeWithTag(
+            testTag = testTag,
+            useUnmergedTree = true,
+        ).assertTextEquals(errorMessage)
     }
 
     fun checkShownWallet(
@@ -122,7 +175,7 @@ class TestDefaultActions(
 
     fun openEditWallet() {
         composeTestRule.onNodeWithTag(
-            testTag = WalletOverviewTestTag.TAG_DROP_DOWN_MENU_DELETE_WALLET
+            testTag = WalletOverviewTestTag.TAG_TOP_APP_BAR_ACTION_EDIT_WALLET
         ).performClick()
     }
 

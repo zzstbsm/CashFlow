@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Default categories -->
+    <string name="bills">To Add Bills</string>
+    <string name="clothes">To Add Clothes</string>
+    <string name="eating_out">To Add Eating out</string>
+    <string name="entertainment">To Add Entertainment</string>
+    <string name="food">Food</string>
+    <string name="gifts">To Add Gifts</string>
+    <string name="health">Health</string>
+    <string name="home">Home</string>
+    <string name="pets">To Add Pets</string>
+    <string name="sport">Sport</string>
+    <string name="subscription">To Add Subscriptions</string>
+    <string name="transportation">Transportation</string>
+    <string name="travel">Travel</string>
+    <string name="no_category">No category</string>
+
+    <string name="salary">Salary</string>
+    <string name="savings">Savings</string>
+
+</resources>

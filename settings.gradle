@@ -14,3 +14,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Cash Flow"
 include ':app'
+include ':core:data'
+include ':core:database'
+include ':feature:themes'

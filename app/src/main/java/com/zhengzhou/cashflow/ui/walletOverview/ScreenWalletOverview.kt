@@ -7,30 +7,21 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.customUiElements.BottomNavigationBar
+import com.zhengzhou.cashflow.customUiElements.CategoryIcon
+import com.zhengzhou.cashflow.customUiElements.SectionNavigationDrawerSheet
+import com.zhengzhou.cashflow.customUiElements.SectionTopAppBar
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
 import com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.navigation.Screen
-import com.zhengzhou.cashflow.tools.EventMessages
-import com.zhengzhou.cashflow.ui.BottomNavigationBar
-import com.zhengzhou.cashflow.ui.CategoryIcon
-import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
-import com.zhengzhou.cashflow.ui.SectionTopAppBar
-import com.zhengzhou.cashflow.ui.SectionTransactionEntry
 import java.util.UUID
 
 @Composable
@@ -110,87 +101,6 @@ fun WalletOverviewScreen(
 }
 
 @Composable
-fun WalletOverviewAppBarAction(
-    walletOverviewUiState: WalletOverviewUiState,
-    walletOverviewViewModel: WalletOverviewViewModel,
-    navController: NavController,
-) {
-
-    var openMenu by remember { mutableStateOf(false)}
-
-    Row {
-        if (!walletOverviewUiState.ifZeroWallet) {
-            IconButton(
-                onClick = { 
-                    Screen.WalletEdit.navigate(
-                        walletID = walletOverviewUiState.wallet.id,
-                        navController = navController,
-                    )
-                },
-                modifier = Modifier.testTag(
-                    WalletOverviewTestTag.TAG_TOP_APP_BAR_ACTION_EDIT_WALLET
-                )
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_edit),
-                    contentDescription = stringResource(id = R.string.WalletOverview_edit_wallet)
-                )
-            }
-            
-            IconButton(
-                onClick = { openMenu = true },
-                modifier = Modifier.testTag(
-                    WalletOverviewTestTag.TAG_TOP_APP_BAR_OPEN_MENU
-                )
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_more_vert),
-                    contentDescription =  stringResource(R.string.accessibility_menu_action_open),
-                )
-            }
-        }
-    }
-    DropdownMenu(
-        expanded = openMenu,
-        onDismissRequest = {
-            openMenu = false
-        }
-    ) {
-        DropdownMenuItem(
-            text = {
-                Text(text = stringResource(id = R.string.nav_name_wallet_add))
-            },
-            onClick = {
-                Screen.WalletEdit.navigate(
-                    walletID  = UUID(0L,0L),
-                    navController = navController,
-                )
-            },
-            modifier = Modifier.testTag(
-                WalletOverviewTestTag.TAG_DROP_DOWN_MENU_ADD_WALLET
-            )
-        )
-
-        DropdownMenuItem(
-            text = {
-                Text(text = stringResource(id = R.string.nav_name_wallet_delete))
-            },
-            onClick = {
-                openMenu = false
-                if (walletOverviewViewModel.deleteShownWallet() == WalletOverviewReturnResults.CAN_DELETE_WALLET) {
-                    EventMessages.sendMessageId(R.string.WalletOverview_wallet_deleted)
-                } else {
-                    EventMessages.sendMessageId(R.string.WalletOverview_cannot_delete_wallet)
-                }
-            },
-            modifier = Modifier.testTag(
-                WalletOverviewTestTag.TAG_DROP_DOWN_MENU_DELETE_WALLET
-            )
-        )
-    }
-}
-
-@Composable
 fun WalletOverviewMainBody(
     walletOverviewUiState: WalletOverviewUiState,
     walletOverviewViewModel: WalletOverviewViewModel,
@@ -225,8 +135,11 @@ fun WalletOverviewMainBody(
 }
 
 @Composable
-private fun CustomCard(
-    content: @Composable (ColumnScope.() -> Unit),
+private fun OverviewSection(
+    walletOverviewUiState: WalletOverviewUiState,
+    walletOverviewViewModel: WalletOverviewViewModel,
+    navController: NavController,
+    modifier: Modifier = Modifier,
 ) {
     Card(
         elevation = CardDefaults.elevatedCardElevation(),
@@ -238,161 +151,19 @@ private fun CustomCard(
         Column(
             modifier = Modifier.padding(8.dp)
         ) {
-            content()
-        }
-    }
-}
-
-@Composable
-private fun OverviewSection(
-    walletOverviewUiState: WalletOverviewUiState,
-    walletOverviewViewModel: WalletOverviewViewModel,
-    navController: NavController,
-    modifier: Modifier = Modifier,
-) {
-    CustomCard {
-        WalletInfoSection(
-            walletOverviewUiState = walletOverviewUiState,
-            walletOverviewViewModel = walletOverviewViewModel,
-            modifier = modifier,
-        )
-        HorizontalDivider()
-        TransactionListSection(
-            walletOverviewUiState = walletOverviewUiState,
-            walletOverviewViewModel = walletOverviewViewModel,
-            navController = navController,
-            modifier = modifier,
-        )
-    }
-}
-
-@Composable
-private fun WalletInfoSection(
-    walletOverviewUiState: WalletOverviewUiState,
-    walletOverviewViewModel: WalletOverviewViewModel,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier.padding(8.dp)
-    ) {
-        Text(
-            text = if (walletOverviewUiState.ifZeroWallet) {
-                stringResource(id = R.string.WalletOverview_no_wallet)
-            } else {
-                walletOverviewUiState.wallet.name
-            },
-            color = Color.DarkGray,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.testTag(
-                WalletOverviewTestTag.TAG_TEXT_WALLET_NAME
+            WalletInfoSection(
+                walletOverviewUiState = walletOverviewUiState,
+                walletOverviewViewModel = walletOverviewViewModel,
+                modifier = modifier,
             )
-        )
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = stringResource(id = R.string.WalletOverview_balance)
-            )
-            Text(
-                text = walletOverviewViewModel.formatCurrency(walletOverviewUiState.currentAmountInTheWallet),
-                modifier = Modifier.testTag(
-                    WalletOverviewTestTag.TAG_TEXT_WALLET_AMOUNT
-                )
-            )
-        }
-    }
-}
-
-@Composable
-private fun TransactionListSection(
-    walletOverviewUiState: WalletOverviewUiState,
-    walletOverviewViewModel: WalletOverviewViewModel,
-    navController: NavController,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier.padding(8.dp)
-    ) {
-        Text(
-            text = stringResource(
-                id = if (walletOverviewUiState.transactionAndCategoryList.isEmpty()) {
-                    R.string.WalletOverview_no_transactions
-                } else {
-                    R.string.WalletOverview_recent_transactions
-                }
-            ),
-            color = Color.Gray,
-            fontWeight = FontWeight.Bold,
-        )
-
-        if (walletOverviewUiState.transactionAndCategoryList.isNotEmpty()) {
-            walletOverviewUiState.transactionAndCategoryList.forEach { item ->
-                val transaction = item.transaction
-                val category = item.category
-                SectionTransactionEntry(
-                    transaction = transaction,
-                    category = category,
-                    currencyFormatter = walletOverviewViewModel.currencyFormatter,
-                    onClickTransaction = {
-                        Screen.TransactionReport.navigate(
-                            transactionUUID = transaction.id,
-                            navController = navController,
-                        )
-                    },
-                    modifier = modifier,
-                )
-            }
-        }
-    }
-}
-@Composable
-private fun WalletOverviewFloatingActionButton(
-    walletOverviewUiState: WalletOverviewUiState,
-    walletOverviewViewModel: WalletOverviewViewModel,
-    navController: NavController,
-) {
-    
-    val spacerSpaceWidthModifier: Modifier = Modifier.width(8.dp)
-
-    val textId: Int
-    val iconId: Int
-    val onClick: () -> Unit
-
-    if (walletOverviewUiState.ifZeroWallet) {
-        textId = R.string.WalletOverview_add_wallet
-        iconId = R.drawable.ic_add
-        onClick = {
-            Screen.WalletEdit.navigate(
-                walletID = UUID(0L,0L),
+            HorizontalDivider()
+            TransactionListSection(
+                walletOverviewUiState = walletOverviewUiState,
+                walletOverviewViewModel = walletOverviewViewModel,
                 navController = navController,
+                modifier = modifier,
             )
         }
-    } else {
-        textId = R.string.WalletOverview_select_wallet
-        iconId = R.drawable.ic_wallet
-        onClick = {
-            walletOverviewViewModel.updateWalletList()
-            walletOverviewViewModel.showSelectWalletDialog(true)
-        }
-    }
-
-    ExtendedFloatingActionButton(
-        onClick = {
-            onClick()
-        },
-        modifier = Modifier.testTag(
-            WalletOverviewTestTag.TAG_FLOATING_ACTION_BUTTON
-        )
-    ) {
-        Icon(
-            painter = painterResource(id = iconId),
-            contentDescription = stringResource(id = textId),
-        )
-        Spacer(modifier = spacerSpaceWidthModifier)
-        Text(
-            text = stringResource(id = textId)
-        )
     }
 }
 

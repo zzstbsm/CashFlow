@@ -2,7 +2,6 @@ package com.zhengzhou.cashflow.tools
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.zhengzhou.cashflow.Event
 
 class EventMessages {
 
@@ -22,6 +21,19 @@ class EventMessages {
 
         fun sendMessageId(message: Int) {
             statusMessageId.postValue(Event(message))
+        }
+    }
+}
+
+open class Event<out T>(private val content: T) {
+    private var hasBeenHandled = false
+    //  Returns the content and prevents its use again.
+    fun getContentIfNotHandled(): T? {
+        return if (hasBeenHandled) {
+            null
+        } else {
+            hasBeenHandled = true
+            content
         }
     }
 }

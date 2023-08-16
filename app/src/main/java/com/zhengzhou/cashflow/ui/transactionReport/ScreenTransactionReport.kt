@@ -16,6 +16,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -31,13 +32,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.customUiElements.CategoryIcon
+import com.zhengzhou.cashflow.customUiElements.TagListLazyStaggeredHorizontalGrid
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.navigation.Screen
-import com.zhengzhou.cashflow.tools.IconsMappedForDB
-import com.zhengzhou.cashflow.ui.CategoryIcon
-import com.zhengzhou.cashflow.ui.TagListLazyStaggeredHorizontalGrid
+import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import java.util.UUID
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -146,6 +147,10 @@ private fun TransactionReportMainBody(
     val category = transactionReportUiState.transactionFullForUI.category
     val tagList = transactionReportUiState.transactionFullForUI.tagList
 
+    val cardModifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 16.dp, vertical = 8.dp)
+
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -153,9 +158,7 @@ private fun TransactionReportMainBody(
     ) {
         item {
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier = cardModifier
             ) {
                 Column(
                     horizontalAlignment = Alignment.Start,
@@ -211,14 +214,51 @@ private fun TransactionReportMainBody(
         }
         item {
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier = cardModifier
             ) {
-                Text(
-                    text = stringResource(id = R.string.CommonTransactions_tag),
+                OutlinedTextField(
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.TransactionReport_wallet)
+                        )
+                    },
+                    value = wallet.name,
+                    onValueChange = { },
+                    readOnly = true,
+                    leadingIcon = {
+                        CategoryIcon(iconName = wallet.iconName, contentDescription = null)
+                    },
                     modifier = Modifier
                         .padding(horizontal = 8.dp, vertical = 4.dp)
+                        .fillMaxWidth()
+                )
+                OutlinedTextField(
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.TransactionReport_category)
+                        )
+                    },
+                    value = category.name,
+                    onValueChange = { },
+                    readOnly = true,
+                    leadingIcon = {
+                        CategoryIcon(iconName = category.iconName, contentDescription = null)
+                    },
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                        .fillMaxWidth()
+                )
+            }
+        }
+        item {
+            Card(
+                modifier = cardModifier
+            ) {
+                val textModifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                Text(
+                    text = stringResource(id = R.string.CommonTransactions_tag),
+                    modifier = textModifier
                 )
                 TagListLazyStaggeredHorizontalGrid(
                     tagList = tagList,

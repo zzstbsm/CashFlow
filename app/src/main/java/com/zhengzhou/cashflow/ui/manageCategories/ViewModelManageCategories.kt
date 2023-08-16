@@ -7,7 +7,6 @@ import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.EventMessages
-import com.zhengzhou.cashflow.tools.IconsMappedForDB
 import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -115,7 +114,7 @@ class ManageCategoriesViewModel : ViewModel() {
         val newCategory = Category(
             id = UUID.randomUUID(),
             name = "New category",
-            iconName = IconsMappedForDB.HOME,
+            iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.HOME,
             transactionType = transactionType
         )
         viewModelScope.launch {

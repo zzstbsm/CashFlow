@@ -43,15 +43,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.customUiElements.BottomNavigationBar
+import com.zhengzhou.cashflow.customUiElements.CategoryIcon
+import com.zhengzhou.cashflow.customUiElements.IconChoiceDialog
+import com.zhengzhou.cashflow.customUiElements.SectionNavigationDrawerSheet
+import com.zhengzhou.cashflow.customUiElements.SectionTopAppBar
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
-import com.zhengzhou.cashflow.tools.IconsMappedForDB
-import com.zhengzhou.cashflow.ui.BottomNavigationBar
-import com.zhengzhou.cashflow.ui.CategoryIcon
-import com.zhengzhou.cashflow.ui.IconChoiceDialog
-import com.zhengzhou.cashflow.ui.SectionNavigationDrawerSheet
-import com.zhengzhou.cashflow.ui.SectionTopAppBar
 
 @Composable
 fun ManageCategoriesScreen(
@@ -328,8 +327,8 @@ private fun CategoryEntry(
 
 @Composable
 private fun ChooseCategoryIcon(
-    currentIcon: IconsMappedForDB,
-    onChooseIcon: (IconsMappedForDB) -> Unit,
+    currentIcon: com.zhengzhou.cashflow.themes.IconsMappedForDB,
+    onChooseIcon: (com.zhengzhou.cashflow.themes.IconsMappedForDB) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -352,7 +351,7 @@ private fun ChooseCategoryIcon(
     if (showDialog) {
         IconChoiceDialog(
             text = stringResource(id = R.string.ManageCategories_choose_category_icon),
-            iconList = IconsMappedForDB.values()
+            iconList = com.zhengzhou.cashflow.themes.IconsMappedForDB.values()
                 .toList()
                 .filter { it.category },
             onDismissRequest = { showDialog = false },

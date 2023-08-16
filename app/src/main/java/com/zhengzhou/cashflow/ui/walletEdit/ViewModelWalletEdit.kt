@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.DatabaseRepository
+import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import com.zhengzhou.cashflow.tools.Calculator
-import com.zhengzhou.cashflow.tools.IconsMappedForDB
 import com.zhengzhou.cashflow.tools.mapCharToKeypadDigit
 import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.UUID
-
 
 data class WalletEditUiState(
     val isLoading: Boolean = true,
@@ -62,7 +61,7 @@ class WalletEditViewModel(
         jobLoadWallet = loadWallet(walletUUID = walletUUID)
 
         jobLoadWalletListName = viewModelScope.launch {
-            repository.getWalletListOfNames().collect() {
+            repository.getWalletListOfNames().collect {
                 _walletListName.value = it
             }
         }

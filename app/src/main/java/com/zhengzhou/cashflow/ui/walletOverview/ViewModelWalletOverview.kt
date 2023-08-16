@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
-import com.zhengzhou.cashflow.data.TransactionAndCategory
+import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.dataForUi.TransactionAndCategory
 import com.zhengzhou.cashflow.database.DatabaseRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -13,20 +14,21 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.lang.Integer.min
 import java.text.NumberFormat
 import java.util.Date
 import java.util.UUID
 
 data class WalletOverviewUiState(
-    val wallet: Wallet = Wallet.newEmpty(),
+    val wallet: Wallet = Wallet.loadingWallet(),
     val currentAmountInTheWallet: Float = 0f,
-    val isLoading: Boolean = true,
 
     val ifZeroWallet: Boolean = false,
     val walletList: List<Wallet> = listOf(),
+    val transactionAndCategoryList: List<TransactionAndCategory> = listOf(),
 
     val isLoadingWallet: Boolean = true,
-    val transactionAndCategoryList: List<TransactionAndCategory> = listOf(),
+    val isLoadingTransactions: Boolean = false,
 
     val showSelectWallet: Boolean = false,
 )
@@ -46,25 +48,14 @@ class WalletOverviewViewModel(
 
     private var retrieveCurrentAmountInWalletJob: Job
     private var retrieveTransactionJob: Job
+    private var retrieveShownWalletJob: Job
     private var retrieveWalletListJob: Job
 
     init {
         retrieveWalletListJob = jobUpdateWalletList()
 
         // Get wallet to show
-        viewModelScope.launch {
-            if (walletUUID == UUID(0L,0L)) {
-                while (uiState.value.isLoading) {
-                    delay(20)
-                }
-                if (!uiState.value.ifZeroWallet) {
-                    loadLastAccessed()
-                }
-            } else {
-                getWallet(walletUUID)
-            }
-            currencyFormatter = Currency.setCurrencyFormatter(uiState.value.wallet.currency.abbreviation)
-        }
+        retrieveShownWalletJob = jobUpdateCurrentShownWallet(walletUUID = walletUUID)
 
         retrieveTransactionJob = jobUpdateTransaction()
         retrieveCurrentAmountInWalletJob = jobUpdateCurrentAmount()
@@ -73,26 +64,31 @@ class WalletOverviewViewModel(
     private fun setUiState(
         wallet: Wallet? = null,
         currentAmountInTheWallet: Float? = null,
-        isLoading: Boolean? = null,
         ifZeroWallet: Boolean? = null,
         walletList: List<Wallet>? = null,
+
         isLoadingWallet: Boolean? = null,
+        isLoadingTransactions: Boolean? = null,
+
         transactionAndCategoryList: List<TransactionAndCategory>? = null,
         showSelectWallet: Boolean? = null,
     ) {
 
         viewModelScope.launch {
-            while (writingOnUiState) delay(1)
+            while (writingOnUiState) delay(5)
 
             writingOnUiState = true
             _uiState.value = WalletOverviewUiState(
                 wallet = wallet ?: uiState.value.wallet,
                 currentAmountInTheWallet = currentAmountInTheWallet ?: uiState.value.currentAmountInTheWallet,
-                isLoading = isLoading ?: uiState.value.isLoading,
+
                 ifZeroWallet = ifZeroWallet ?: uiState.value.ifZeroWallet,
                 walletList = walletList ?: uiState.value.walletList,
-                isLoadingWallet = isLoadingWallet ?: uiState.value.isLoadingWallet,
                 transactionAndCategoryList = transactionAndCategoryList ?: uiState.value.transactionAndCategoryList,
+
+                isLoadingWallet = isLoadingWallet ?: uiState.value.isLoadingWallet,
+                isLoadingTransactions = isLoadingTransactions ?: uiState.value.isLoadingTransactions,
+
                 showSelectWallet = showSelectWallet ?: uiState.value.showSelectWallet
             )
             if (wallet != null) {
@@ -103,20 +99,13 @@ class WalletOverviewViewModel(
     }
 
     fun formatCurrency(amount: Float) : String {
-        return Currency.formatCurrency(currencyFormatter,amount)
-    }
-
-    private suspend fun getWallet(walletUUID: UUID) {
-        setUiState(
-            wallet = repository.getWallet(walletUUID) ?: Wallet.newEmpty(),
-            isLoading = false
-        )
+        return Currency.formatCurrency(currencyFormatter, amount)
     }
 
     private suspend fun loadLastAccessed() {
         setUiState(
             wallet = repository.getWalletLastAccessed() ?: Wallet.newEmpty(),
-            isLoading = false,
+            isLoadingWallet = false,
         )
         retrieveCurrentAmountInWalletJob.cancel()
         retrieveCurrentAmountInWalletJob = jobUpdateCurrentAmount()
@@ -131,15 +120,16 @@ class WalletOverviewViewModel(
                 repository.deleteWallet(uiState.value.wallet)
                 setUiState(
                     wallet = Wallet.newEmpty(),
-                    isLoading = true
+                    currentAmountInTheWallet = 0f,
+                    isLoadingWallet = true
                 )
                 loadLastAccessed()
                 while (uiState.value.isLoadingWallet) delay(5)
 
-                if (uiState.value.wallet.id == UUID(0L,0L)) {
+                if (uiState.value.wallet.id == Wallet.newWalletId()) {
                     setUiState(
                         ifZeroWallet = true,
-                        isLoading = false
+                        isLoadingWallet = false
                     )
                 }
             }
@@ -152,7 +142,7 @@ class WalletOverviewViewModel(
     fun reloadScreen() {
         viewModelScope.launch {
             setUiState(
-                isLoading = true
+                isLoadingWallet = true
             )
             loadLastAccessed()
         }
@@ -194,45 +184,52 @@ class WalletOverviewViewModel(
 
     private fun jobUpdateTransaction(): Job {
         return viewModelScope.launch {
-            while (uiState.value.isLoading) {
-                delay(5)
-            }
+
+            while (uiState.value.isLoadingTransactions) delay(5)
+
+            setUiState(
+                isLoadingTransactions = false,
+            )
 
             val wallet = uiState.value.wallet
 
-            repository.getTransactionShortListInWallet(
-                wallet.id,
-                3
-            ).collect { list ->
-                val transactionAndCategoryList = mutableListOf<TransactionAndCategory>()
+            if (wallet.id != Wallet.newWalletId()) {
 
-                list.filter { !it.isBlueprint }.forEach { transaction ->
-                    val category = repository.getCategory(transaction.categoryId) ?: Category.newEmpty()
+                repository.getTransactionListInWallet(
+                    walletUUID = wallet.id,
+                ).collect { list: List<Transaction> ->
+                    val transactionAndCategoryList = mutableListOf<TransactionAndCategory>()
 
-                    transactionAndCategoryList.add(
-                        TransactionAndCategory(
-                            transaction = if (wallet.id == transaction.secondaryWalletId) {
-                                transaction.copy(
-                                    amount = -transaction.amount
+                    list.filter { !it.isBlueprint }.subList(0, min(list.size, 3))
+                        .forEach { transaction ->
+                            val category = repository.getCategory(transaction.categoryId)
+                                ?: Category.newEmpty()
+
+
+                            transactionAndCategoryList.add(
+                                TransactionAndCategory(
+                                    transaction = if (wallet.id == transaction.secondaryWalletId) {
+                                        transaction.copy(
+                                            amount = -transaction.amount
+                                        )
+                                    } else transaction,
+                                    category = category,
                                 )
-                            } else transaction,
-                            category = category,
-                        )
+                            )
+                        }
+
+                    setUiState(
+                        transactionAndCategoryList = transactionAndCategoryList,
+                        isLoadingTransactions = false,
                     )
                 }
-
-                setUiState(
-                    transactionAndCategoryList = transactionAndCategoryList
-                )
             }
         }
     }
     private fun jobUpdateWalletList(): Job {
         return viewModelScope.launch {
 
-            repository.getWalletList().collect { walletList ->
-                //_walletList.value = walletList
-
+            repository.getWalletList().collect { walletList: List<Wallet> ->
                 setUiState(
                     ifZeroWallet = walletList.isEmpty(),
                     walletList = walletList.sortedBy { it.name }
@@ -242,18 +239,38 @@ class WalletOverviewViewModel(
     }
     private fun jobUpdateCurrentAmount(): Job {
         return viewModelScope.launch {
-            while (writingOnUiState) delay(1)
+
             var tempAmount = uiState.value.wallet.startAmount
 
-            repository.getTransactionListInWallet(uiState.value.wallet.id).collect {
-                it.forEach { transaction ->
-                    tempAmount += transaction.amount
-                }
+            if (uiState.value.wallet.id != Wallet.newWalletId()) {
+                repository.getTransactionListInWallet(uiState.value.wallet.id)
+                    .collect { transactionList: List<Transaction> ->
+                        transactionList.forEach { transaction: Transaction ->
+                            tempAmount += transaction.amount
+                        }
 
+                        setUiState(
+                            currentAmountInTheWallet = tempAmount
+                        )
+                    }
+            }
+        }
+    }
+
+    private fun jobUpdateCurrentShownWallet(walletUUID: UUID): Job {
+        return viewModelScope.launch {
+            if (walletUUID == Wallet.newWalletId()) {
+                while (uiState.value.isLoadingWallet) delay(5)
+                if (!uiState.value.ifZeroWallet) {
+                    loadLastAccessed()
+                }
+            } else {
                 setUiState(
-                    currentAmountInTheWallet = tempAmount
+                    wallet = repository.getWallet(walletUUID) ?: Wallet.newEmpty(),
+                    isLoadingWallet = false
                 )
             }
+            currencyFormatter = Currency.setCurrencyFormatter(uiState.value.wallet.currency.abbreviation)
         }
     }
 
