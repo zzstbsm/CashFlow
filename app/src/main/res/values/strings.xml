@@ -147,8 +147,6 @@
     <string name="WalletOverview_wallet_deleted">Wallet deleted</string>
 
     <!-- Other -->
-    <string name="empty_group">Empty group</string>
-    <string name="err_divide_by_zero">Cannot divide by zero</string>
     <string name="delete_tag">Delete tag %1s</string>
 
 </resources>

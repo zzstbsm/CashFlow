@@ -9,9 +9,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalContext
 import com.zhengzhou.cashflow.navigation.NavigationApp
-import com.zhengzhou.cashflow.tools.ApplicationConfigurationService
-import com.zhengzhou.cashflow.tools.EventMessages
-import com.zhengzhou.cashflow.tools.LoadDefaultCategories
 import com.zhengzhou.cashflow.tools.PreloadTransactions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,14 +38,14 @@ class MainActivity : ComponentActivity() {
             }
 
             val context = LocalContext.current
-            context.startService(Intent(context,ApplicationConfigurationService::class.java))
+            context.startService(Intent(context, ApplicationConfigurationService::class.java))
 
-            EventMessages.messageId.observe(this) {
+            com.zhengzhou.cashflow.tools.EventMessages.messageId.observe(this) {
                 it.getContentIfNotHandled()?.let { message ->
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 }
             }
-            EventMessages.message.observe(this) {
+            com.zhengzhou.cashflow.tools.EventMessages.message.observe(this) {
                 it.getContentIfNotHandled()?.let { message ->
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 }

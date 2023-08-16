@@ -1,13 +1,12 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'com.google.devtools.ksp'
-    id 'org.jetbrains.kotlin.plugin.parcelize'
 }
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 
 android {
 
@@ -21,22 +20,18 @@ android {
         }
     }
 
-    namespace 'com.zhengzhou.cashflow'
+    namespace 'com.zhengzhou.cashflow.tools'
+    compileSdk 33
 
     defaultConfig {
-        applicationId "com.zhengzhou.cashflow"
-        minSdk 26
-        targetSdk 34
-        compileSdk 34
-        versionCode 2
-        versionName "0.2.0"
+        minSdk 24
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
         release {
-            applicationIdSuffix '.prod'
             versionNameSuffix '.prod'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             debuggable false
@@ -46,7 +41,6 @@ android {
             minifyEnabled true
         }
         preprod {
-            applicationIdSuffix '.preprod'
             versionNameSuffix '.preprod'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             debuggable false
@@ -56,7 +50,6 @@ android {
             minifyEnabled true
         }
         stag {
-            applicationIdSuffix '.staging'
             versionNameSuffix '.staging'
             debuggable true
             jniDebuggable true
@@ -65,7 +58,6 @@ android {
             minifyEnabled false
         }
         dev {
-            applicationIdSuffix '.dev'
             versionNameSuffix '.dev'
             debuggable true
             jniDebuggable true
@@ -74,7 +66,6 @@ android {
             minifyEnabled false
         }
         debug {
-            applicationIdSuffix '.debug'
             versionNameSuffix '.debug'
             debuggable true
             jniDebuggable true
@@ -91,46 +82,16 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-    buildFeatures {
-        compose true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.4.4'
-    }
 }
 
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.10.1'
-
-    implementation 'androidx.compose.foundation:foundation:1.5.0'
-    implementation 'androidx.compose.runtime:runtime:1.5.0'
-    implementation 'androidx.compose.ui:ui:1.5.0'
-    implementation 'androidx.compose.ui:ui-tooling:1.5.0'
-
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
-    implementation "androidx.navigation:navigation-compose:2.7.0"
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
-
-    implementation "androidx.compose.material3:material3:1.2.0-alpha04"
-    implementation "androidx.compose.material3:material3-window-size-class:1.2.0-alpha04"
-
-    implementation 'androidx.activity:activity-compose:1.7.2'
-
-    implementation 'androidx.room:room-runtime:2.5.2'
-    implementation 'androidx.room:room-ktx:2.5.2'
+    implementation project(path: ':core:data')
+    implementation 'androidx.lifecycle:lifecycle-livedata-core-ktx:2.6.1'
     implementation 'androidx.test.ext:junit-ktx:1.1.5'
 
-    implementation 'com.google.code.gson:gson:2.10.1'
-    implementation project(path: ':core:data')
-    implementation project(path: ':core:database')
-    implementation project(path: ':feature:themes')
-    implementation project(path: ':tools')
-
-    ksp 'androidx.room:room-compiler:2.5.2'
-
     testImplementation 'junit:junit:4.13.2'
-
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.5.0'
+    androidTestImplementation 'junit:junit:4.13.2'
 
 }
