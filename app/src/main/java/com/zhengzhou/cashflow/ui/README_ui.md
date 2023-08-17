@@ -9,7 +9,7 @@ fun DefaultScreen(
     navController: NavController
 ) {
 
-    val screenViewModel: viewModel = viewModel {
+    val screenViewModel: ViewModel = viewModel {
         ScreenViewModel(
             *args
         )
