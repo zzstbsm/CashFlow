@@ -164,7 +164,7 @@ private fun CommonTransactionsNonEmptyList(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .padding(innerPadding)
-            .fillMaxSize()
+            .fillMaxWidth()
     ) {
         items(commonTransactionsUiState.transactionFullForUIList.size) {position ->
             val transactionFullForUI = commonTransactionsUiState.transactionFullForUIList[position]

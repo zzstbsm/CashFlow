@@ -22,6 +22,7 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.ui.aboutMe.AboutMeScreen
+import com.zhengzhou.cashflow.ui.allTransactions.AllTransactionsScreen
 import com.zhengzhou.cashflow.ui.balance.BalanceScreen
 import com.zhengzhou.cashflow.ui.commonTransactions.CommonTransactionsScreen
 import com.zhengzhou.cashflow.ui.manageCategories.ManageCategoriesScreen
@@ -49,6 +50,29 @@ fun NavigationApp() {
                 setCurrentScreen = { screen ->
                     currentScreen = screen
                 },
+                navController = navController,
+            )
+        }
+        composable(route = Screen.AllTransactions.route) {navBackStackEntry ->
+            val walletUUID = navBackStackEntry.arguments?.getString(NavigationKeys.keyWalletUUID)
+            val categoryUUID = navBackStackEntry.arguments?.getString(NavigationKeys.keyCategoryUUID)
+            val currency = Currency.setCurrency(
+                name = navBackStackEntry.arguments?.getString(NavigationKeys.keyCurrencyName).toString()
+            )
+            requireNotNull(walletUUID) {
+                "Exception: passed transactionType not valid"
+            }
+            requireNotNull(categoryUUID) {
+                "Exception: passed updateTransaction not valid"
+            }
+            requireNotNull(currency) {
+                "Exception: passed currency not valid"
+            }
+
+            AllTransactionsScreen(
+                walletUUID = UUID.fromString(walletUUID),
+                categoryUUID = UUID.fromString(categoryUUID),
+                currency = currency,
                 navController = navController,
             )
         }
@@ -89,10 +113,10 @@ fun NavigationApp() {
             )
         }
         composable(route = Screen.WalletEdit.route) { navBackStackEntry ->
-            val walletUUIDStr = navBackStackEntry.arguments?.getString("walletUUIDStr")
+            val walletUUID = navBackStackEntry.arguments?.getString(NavigationKeys.keyWalletUUID)
 
             WalletEditScreen(
-                walletUUID = UUID.fromString(walletUUIDStr),
+                walletUUID = UUID.fromString(walletUUID),
                 navController = navController,
             )
         }
@@ -100,7 +124,7 @@ fun NavigationApp() {
 
             val walletUUID = UUID.fromString(
                 (navBackStackEntry.savedStateHandle.get<String?>(
-                    Screen.WalletOverview.keyWalletUUID()
+                    NavigationKeys.keyWalletUUID
                 ) ?: UUID(0L,0L)).toString()
             )
 
@@ -114,25 +138,27 @@ fun NavigationApp() {
             )
         }
         composable(route = Screen.TransactionEdit.route) { backStackEntry ->
-            val transactionTypeId = backStackEntry.arguments?.getString("transactionType")
-            val transactionUUIDStr = backStackEntry.arguments?.getString("transactionUUIDStr")
-            val currency = Currency.setCurrency(
-                name = backStackEntry.arguments?.getString("currency").toString()
+            val transactionType = TransactionType.setTransaction(
+                id = backStackEntry.arguments?.getInt(NavigationKeys.keyTransactionTypeID)
             )
-            val isBlueprint = backStackEntry.arguments?.getString("isBlueprint").toBoolean()
-            val editBlueprint = backStackEntry.arguments?.getString("editBlueprint").toBoolean()
-            requireNotNull(transactionTypeId) {
+            val transactionUUID = backStackEntry.arguments?.getString(NavigationKeys.keyTransactionUUID)
+            val currency = Currency.setCurrency(
+                name = backStackEntry.arguments?.getString(NavigationKeys.keyCurrencyName).toString()
+            )
+            val isBlueprint = backStackEntry.arguments?.getString(NavigationKeys.keyIsBlueprint).toBoolean()
+            val editBlueprint = backStackEntry.arguments?.getString(NavigationKeys.keyEditBlueprint).toBoolean()
+            requireNotNull(transactionType) {
                 "Exception: passed transactionType not valid"
             }
-            requireNotNull(transactionUUIDStr) {
+            requireNotNull(transactionUUID) {
                 "Exception: passed updateTransaction not valid"
             }
             requireNotNull(currency) {
                 "Exception: passed currency not valid"
             }
             TransactionEditScreen(
-                transactionType = TransactionType.setTransaction(transactionTypeId.toInt())!!,
-                transactionUUID = UUID.fromString(transactionUUIDStr),
+                transactionType = transactionType,
+                transactionUUID = UUID.fromString(transactionUUID),
                 currency = currency,
                 isBlueprint = isBlueprint,
                 editBlueprint = editBlueprint,
@@ -140,12 +166,12 @@ fun NavigationApp() {
             )
         }
         composable(route = Screen.TransactionReport.route) { backStackEntry ->
-            val transactionUUIDStr = backStackEntry.arguments?.getString("transactionUUIDStr")
-            requireNotNull(transactionUUIDStr) {
+            val transactionUUID = backStackEntry.arguments?.getString(NavigationKeys.keyTransactionUUID)
+            requireNotNull(transactionUUID) {
                 "Exception: passed walletUUIDStr not valid"
             }
             TransactionReportScreen(
-                transactionUUID = UUID.fromString(transactionUUIDStr),
+                transactionUUID = UUID.fromString(transactionUUID),
                 navController = navController
             )
         }
@@ -230,24 +256,26 @@ enum class NavigationCurrentScreen(
     /*
      * Not present in the navigation bar
      */
-
-    WalletEdit(
-        optionName = R.string.nav_name_wallet_edit,
-        accessibilityText = null,
-        route = "WalletEdit",
+    AllTransactions(
+        optionName = R.string.nav_name_all_transactions,
+        accessibilityText = R.string.nav_name_all_transactions,
+        route = "AllTransactions",
     ),
     TransactionEdit(
         optionName = R.string.nav_name_transaction_edit,
         accessibilityText = null,
         route = "TransactionEdit",
-        routeActive = false,
     ),
     TransactionReport(
         optionName = R.string.nav_name_transaction_report,
-        accessibilityText = null,
+        accessibilityText = R.string.nav_name_transaction_report,
         route = "TransactionReport",
-        routeActive = false
-    )
+    ),
+    WalletEdit(
+        optionName = R.string.nav_name_wallet_edit,
+        accessibilityText = R.string.nav_name_wallet_edit,
+        route = "WalletEdit",
+    ),
     ;
     fun navigateTab(navController: NavController) {
         navController.navigate(this.route)
@@ -265,6 +293,35 @@ sealed class Screen(
     object AboutMe: Screen(
         route = NavigationCurrentScreen.AboutMe.route
     )
+    object AllTransactions: Screen(
+        route = NavigationCurrentScreen.AllTransactions.route +
+                "/{${NavigationKeys.keyWalletUUID}}" +
+                "/{${NavigationKeys.keyCategoryUUID}}" +
+                "/{${NavigationKeys.keyCurrencyName}}"
+    ) {
+        private fun createRoute(
+            walletUUID: UUID,
+            categoryUUID: UUID,
+            currency: Currency,
+        ): String = NavigationCurrentScreen.AllTransactions.route +
+                "/${walletUUID}/${categoryUUID}/${currency.name}"
+
+        fun navigate(
+            walletUUID: UUID = UUID(0L,0L),
+            categoryUUID: UUID = UUID(0L,0L),
+            currency: Currency,
+            navController: NavController,
+        ) {
+            navController.navigate(
+                createRoute(
+                    walletUUID = walletUUID,
+                    categoryUUID = categoryUUID,
+                    currency = currency,
+                )
+            )
+        }
+
+    }
     object Balance: Screen(
         route = NavigationCurrentScreen.Balance.route,
     )
@@ -280,11 +337,11 @@ sealed class Screen(
 
     object TransactionEdit: Screen(
         route = NavigationCurrentScreen.TransactionEdit.route +
-                "/{transactionType}" +
-                "/{transactionUUIDStr}" +
-                "/{currency}" +
-                "/{isBlueprint}" +
-                "/{editBlueprint}",
+                "/{${NavigationKeys.keyTransactionTypeID}}" +
+                "/{${NavigationKeys.keyTransactionUUID}}" +
+                "/{${NavigationKeys.keyCurrencyName}}" +
+                "/{${NavigationKeys.keyIsBlueprint}}" +
+                "/{${NavigationKeys.keyEditBlueprint}}",
     ) {
         private fun createRoute(
             transactionType: TransactionType,
@@ -316,11 +373,12 @@ sealed class Screen(
     }
     object TransactionReport: Screen(
         route = NavigationCurrentScreen.TransactionReport.route +
-                "/{transactionUUIDStr}",
+                "/{${NavigationKeys.keyTransactionUUID}}",
     ) {
         private fun createRoute(
             transactionUUID: UUID,
-        ) = NavigationCurrentScreen.TransactionReport.route + "/$transactionUUID"
+        ) = NavigationCurrentScreen.TransactionReport.route +
+                "/$transactionUUID"
 
         fun navigate(
             transactionUUID: UUID,
@@ -335,7 +393,7 @@ sealed class Screen(
     }
     object WalletEdit: Screen(
         route = NavigationCurrentScreen.WalletEdit.route +
-                "/{walletUUIDStr}",
+                "/{${NavigationKeys.keyWalletUUID}}",
     ) {
         private fun createRoute(
             walletID: UUID,
@@ -357,7 +415,7 @@ sealed class Screen(
     object WalletOverview: Screen(
         route = NavigationCurrentScreen.WalletOverview.route,
     ) {
-        fun keyWalletUUID() : String = "walletUUIDStr"
+        const val handleKeyWalletUUID : String = "walletUUID"
     }
 }
 

@@ -3,6 +3,7 @@ package com.zhengzhou.cashflow.ui.walletOverview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -51,6 +52,19 @@ fun TransactionListSection(
                         )
                     },
                     modifier = modifier,
+                )
+            }
+            TextButton(
+                onClick = {
+                    Screen.AllTransactions.navigate(
+                        walletUUID = walletOverviewUiState.wallet.id,
+                        currency = walletOverviewUiState.wallet.currency,
+                        navController = navController,
+                    )
+                }
+            ) {
+                Text(
+                    text = "See all"
                 )
             }
         }

@@ -116,7 +116,7 @@ fun WalletEditScreen(
                             navController.previousBackStackEntry
                                 ?.savedStateHandle
                                 ?.set(
-                                    Screen.WalletOverview.keyWalletUUID(),
+                                    Screen.WalletOverview.handleKeyWalletUUID,
                                     walletEditUiState.wallet.id.toString()
                                 )
                             navController.popBackStack(
