@@ -139,7 +139,7 @@ fun NavigationApp() {
         }
         composable(route = Screen.TransactionEdit.route) { backStackEntry ->
             val transactionType = TransactionType.setTransaction(
-                id = backStackEntry.arguments?.getInt(NavigationKeys.keyTransactionTypeID)
+                id = backStackEntry.arguments?.getString(NavigationKeys.keyTransactionTypeID)?.toInt()
             )
             val transactionUUID = backStackEntry.arguments?.getString(NavigationKeys.keyTransactionUUID)
             val currency = Currency.setCurrency(
