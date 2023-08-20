@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalNavigationDrawer
@@ -100,17 +100,10 @@ fun ManageCategoriesScreen(
                 )
             },
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                        val transactionType = manageCategoriesUiState.transactionType
-                        manageCategoriesViewModel.createCategory(transactionType)
-                    }
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_add),
-                        contentDescription = stringResource(id = R.string.accessibility_add_category)
-                    )
-                }
+                ManageCategoriesFloatingActionButton(
+                    manageCategoriesUiState = manageCategoriesUiState,
+                    manageCategoriesViewModel = manageCategoriesViewModel,
+                )
             }
         )
     }
@@ -250,6 +243,11 @@ private fun CategoryEntry(
         }
 
         if (ifOpen) {
+
+            CategoryOccurrences(
+                categoryOccurrences = categoryOccurrences
+            )
+
             EditCategoryDetailsSection(
                 category = category,
                 newCategoryName = newCategoryName,
@@ -260,7 +258,6 @@ private fun CategoryEntry(
                 onEditCategoryIcon = {
                     newCategoryIcon = it
                 },
-                categoryOccurrences = categoryOccurrences,
                 horizontalPadding = horizontalPadding,
                 onDeleteCategory = onDeleteCategory,
                 onSaveNewCategory = onSaveNewCategory,
@@ -329,5 +326,24 @@ private fun CategoryOpenSectionArrow(
             painter = icon,
             contentDescription = contentDescription,
         )
+    }
+}
+
+@Composable
+private fun CategoryOccurrences(
+    categoryOccurrences: Int,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        HorizontalDivider()
+        Text(
+            text = stringResource(id = R.string.ManageCategories_occurrences) + ": $categoryOccurrences",
+        )
+        HorizontalDivider()
     }
 }

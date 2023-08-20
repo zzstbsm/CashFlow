@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -40,7 +39,6 @@ fun EditCategoryDetailsSection(
     onEditCategoryName: (String) ->Unit,
     newCategoryIcon: IconsMappedForDB,
     onEditCategoryIcon: (IconsMappedForDB) -> Unit,
-    categoryOccurrences: Int,
     horizontalPadding: Dp,
     onDeleteCategory: (Category) -> Unit,
     onSaveNewCategory: (Category) -> Unit,
@@ -55,13 +53,6 @@ fun EditCategoryDetailsSection(
             vertical = 8.dp,
         )
     ) {
-        HorizontalDivider()
-        Text(
-            text = stringResource(id = R.string.ManageCategories_occurrences) + ": $categoryOccurrences",
-            modifier = Modifier.padding(4.dp)
-        )
-
-        HorizontalDivider()
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.Bottom,

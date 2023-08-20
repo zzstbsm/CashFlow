@@ -87,6 +87,7 @@
     <string name="ManageCategories_choose_category_icon">Choose category icon</string>
     <string name="ManageCategories_edit_category">Edit category</string>
     <string name="ManageCategories_loading_category_occurrences">Loading category occurrences, please wait or reload</string>
+    <string name="ManageCategories_new_category">New category</string>
     <string name="ManageCategories_occurrences">Occurrences</string>
 
     <!-- TransactionEdit page strings -->
