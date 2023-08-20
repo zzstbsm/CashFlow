@@ -100,6 +100,8 @@ class CommonTransactionsViewModel(): ViewModel() {
             setUiState(
                 isLoading = false,
                 transactionFullForUIList = transactionFullForUIList
+                    .sortedBy { it.transaction.description }
+                    .sortedBy { it.transaction.transactionType }
             )
 
         }
