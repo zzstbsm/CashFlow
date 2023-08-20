@@ -17,6 +17,7 @@
     <string name="nav_back">Go back</string>
 
     <string name="nav_name_about_me">About CashFlow</string>
+    <string name="nav_name_all_transactions">All transactions</string>
     <string name="nav_name_balance">Balance</string>
     <string name="nav_name_common_transactions_short">Common</string>
     <string name="nav_name_common_transactions">Common transactions</string>
@@ -56,6 +57,9 @@
     <string name="AboutMe_LinkedIn_link">https://www.linkedin.com/in/zhou-zheng-974b14167/</string>
     <string name="AboutMe_donate">Make a donation to the project</string>
     <string name="AboutMe_donate_dialog">Thank you for showing support for the project!\n\nUnfortunately, for the Google policies, I am not authorized to keep the direct link to the donation page. However, you can check my GitHub page.</string>
+
+    <!-- AllTransactions -->
+    <string name="AllTransactions_TopAppBar">Transaction list</string>
 
     <!-- Balance Screen -->
     <string name="Balance_all">All</string>
@@ -147,8 +151,6 @@
     <string name="WalletOverview_wallet_deleted">Wallet deleted</string>
 
     <!-- Other -->
-    <string name="empty_group">Empty group</string>
-    <string name="err_divide_by_zero">Cannot divide by zero</string>
     <string name="delete_tag">Delete tag %1s</string>
 
 </resources>

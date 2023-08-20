@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.tools
+package com.zhengzhou.cashflow
 
 import android.app.Service
 import android.content.Intent

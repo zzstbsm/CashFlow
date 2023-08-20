@@ -1,38 +1,10 @@
-package com.zhengzhou.cashflow.tools
+package com.zhengzhou.cashflow.tools.calculator
 
-import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.tools.EventMessages
+import com.zhengzhou.cashflow.tools.R
 import kotlin.math.roundToInt
 
 class Calculator {
-
-    private enum class Operations(
-        val op: String
-    ) {
-        No(
-            op = ""
-        ),
-        Sum(
-            op = "+"
-        ),
-        Subtraction(
-            op = "-"
-        ),
-        Multiplication(
-            op = "\u00D7"
-        ),
-        Division(
-            op = "\u00F7"
-        ),
-    }
-
-    private data class CalculatorState(
-        var amountInMemory: String = "0",
-        var amountOnScreen: String = "0",
-        var currentOperation: String = Operations.No.op,
-        var numberOfDecimals: Int = 0,
-        var isDecimal: Boolean = false,
-        var canOverwrite: Boolean = false
-    )
 
     private var state = CalculatorState()
 
@@ -56,7 +28,7 @@ class Calculator {
                 Operations.Division.op -> {
                     // Divide only if it is not by zero
                     if (state.amountOnScreen.toFloat() == 0f) {
-                        EventMessages.sendMessageId(R.string.err_divide_by_zero) // TODO: Insert in string.xml
+                        EventMessages.sendMessageId(R.string.Calculator_err_divide_by_zero)
                         state.amountOnScreen.toFloat()
                     } else {
                         state.amountInMemory.toFloat() / state.amountOnScreen.toFloat()
@@ -217,21 +189,4 @@ class Calculator {
             return calculator
         }
     }
-}
-
-fun mapCharToKeypadDigit(
-    digit: Char
-): KeypadDigit? {
-    val keyList: List<KeypadDigit> = enumValues<KeypadDigit>().toList().filter { key ->
-        !key.operation
-    }
-    if (digit == '.' || digit == ',') {
-        return KeypadDigit.KeyDot
-    }
-
-    keyList.forEach { key ->
-        if (key.value == digit.toString()) return key
-    }
-
-    return null
 }

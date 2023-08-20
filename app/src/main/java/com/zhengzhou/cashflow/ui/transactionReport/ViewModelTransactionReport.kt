@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
 import com.zhengzhou.cashflow.database.DatabaseRepository
-import com.zhengzhou.cashflow.tools.EventMessages
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -76,6 +75,6 @@ class TransactionReportViewModel(
                 }
             ).delete(repository)
         }
-        EventMessages.sendMessageId(R.string.TransactionReport_transaction_deleted)
+        com.zhengzhou.cashflow.tools.EventMessages.sendMessageId(R.string.TransactionReport_transaction_deleted)
     }
 }

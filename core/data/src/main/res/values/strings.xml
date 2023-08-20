@@ -11,8 +11,14 @@
     <string name="new_move">New movement</string>
 
     <!-- Supported currencies -->
+    <string name="currency_aud_name">Australian Dollar</string>
+    <string name="currency_cad_name">Canadian Dollar</string>
+    <string name="currency_gbp_name">British Pound</string>
     <string name="currency_eur_name">Euro</string>
-    <string name="currency_usd_name">US dollar</string>
-    <string name="currency_sek_name">Swedish crown</string>
+    <string name="currency_inr_name">Indian Rupee</string>
+    <string name="currency_jpy_name">Japanese Yen</string>
+    <string name="currency_rub_name">Russian Ruble</string>
+    <string name="currency_usd_name">US Dollar</string>
+    <string name="currency_sek_name">Swedish Krona</string>
 
 </resources>

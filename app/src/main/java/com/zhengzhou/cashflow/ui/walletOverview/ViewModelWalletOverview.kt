@@ -44,7 +44,7 @@ class WalletOverviewViewModel(
 
     private val repository = DatabaseRepository.get()
 
-    var currencyFormatter: NumberFormat = Currency.setCurrencyFormatter(Currency.EUR.abbreviation)
+    var currencyFormatter: NumberFormat = Currency.setCurrencyFormatter(Currency.EUR.name)
 
     private var retrieveCurrentAmountInWalletJob: Job
     private var retrieveTransactionJob: Job
@@ -92,7 +92,7 @@ class WalletOverviewViewModel(
                 showSelectWallet = showSelectWallet ?: uiState.value.showSelectWallet
             )
             if (wallet != null) {
-                currencyFormatter = Currency.setCurrencyFormatter(wallet.currency.abbreviation)
+                currencyFormatter = Currency.setCurrencyFormatter(wallet.currency.name)
             }
             writingOnUiState = false
         }
@@ -200,23 +200,25 @@ class WalletOverviewViewModel(
                 ).collect { list: List<Transaction> ->
                     val transactionAndCategoryList = mutableListOf<TransactionAndCategory>()
 
-                    list.filter { !it.isBlueprint }.subList(0, min(list.size, 3))
-                        .forEach { transaction ->
-                            val category = repository.getCategory(transaction.categoryId)
-                                ?: Category.newEmpty()
+                    list.filter { !it.isBlueprint }.let { filteredList ->
+                        filteredList.subList(0, min(filteredList.size, 3))
+                            .forEach { transaction ->
+                                val category = repository.getCategory(transaction.categoryId)
+                                    ?: Category.newEmpty()
 
 
-                            transactionAndCategoryList.add(
-                                TransactionAndCategory(
-                                    transaction = if (wallet.id == transaction.secondaryWalletId) {
-                                        transaction.copy(
-                                            amount = -transaction.amount
-                                        )
-                                    } else transaction,
-                                    category = category,
+                                transactionAndCategoryList.add(
+                                    TransactionAndCategory(
+                                        transaction = if (wallet.id == transaction.secondaryWalletId) {
+                                            transaction.copy(
+                                                amount = -transaction.amount
+                                            )
+                                        } else transaction,
+                                        category = category,
+                                    )
                                 )
-                            )
-                        }
+                            }
+                    }
 
                     setUiState(
                         transactionAndCategoryList = transactionAndCategoryList,
@@ -240,17 +242,15 @@ class WalletOverviewViewModel(
     private fun jobUpdateCurrentAmount(): Job {
         return viewModelScope.launch {
 
-            var tempAmount = uiState.value.wallet.startAmount
-
             if (uiState.value.wallet.id != Wallet.newWalletId()) {
                 repository.getTransactionListInWallet(uiState.value.wallet.id)
                     .collect { transactionList: List<Transaction> ->
-                        transactionList.forEach { transaction: Transaction ->
-                            tempAmount += transaction.amount
-                        }
-
                         setUiState(
-                            currentAmountInTheWallet = tempAmount
+                            currentAmountInTheWallet = transactionList.filter {
+                                !it.isBlueprint
+                            }.map {
+                                if (it.secondaryWalletId == uiState.value.wallet.id) -it.amount else it.amount
+                            }.sum() + uiState.value.wallet.startAmount
                         )
                     }
             }
@@ -270,7 +270,7 @@ class WalletOverviewViewModel(
                     isLoadingWallet = false
                 )
             }
-            currencyFormatter = Currency.setCurrencyFormatter(uiState.value.wallet.currency.abbreviation)
+            currencyFormatter = Currency.setCurrencyFormatter(uiState.value.wallet.currency.name)
         }
     }
 

@@ -28,8 +28,8 @@ android {
         minSdk 26
         targetSdk 34
         compileSdk 34
-        versionCode 2
-        versionName "0.2.0"
+        versionCode 4
+        versionName "0.4.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -125,6 +125,7 @@ dependencies {
     implementation project(path: ':core:data')
     implementation project(path: ':core:database')
     implementation project(path: ':feature:themes')
+    implementation project(path: ':tools')
 
     ksp 'androidx.room:room-compiler:2.5.2'
 

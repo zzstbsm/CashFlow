@@ -24,7 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".tools.ApplicationConfigurationService" />
+        <service android:name=".ApplicationConfigurationService" />
     </application>
 
 </manifest>

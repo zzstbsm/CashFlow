@@ -19,7 +19,7 @@ class TestDefaultActions(
     private val composeTestRule: AndroidComposeTestRule<ActivityScenarioRule<MainActivity>, MainActivity>
 ) {
 
-    private val currencyFormatter: NumberFormat = Currency.setCurrencyFormatter(Currency.EUR.abbreviation)
+    private val currencyFormatter: NumberFormat = Currency.setCurrencyFormatter(Currency.EUR.name)
 
     fun fillWalletAndSave(
         walletName: String,

@@ -30,7 +30,6 @@ import com.zhengzhou.cashflow.customUiElements.DropdownTextFieldMenu
 import com.zhengzhou.cashflow.customUiElements.IconChoiceDialog
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.navigation.Screen
-import com.zhengzhou.cashflow.tools.EventMessages
 import java.util.Date
 import java.util.UUID
 
@@ -104,20 +103,20 @@ fun WalletEditScreen(
                 onClick = {
 
                     if (walletEditUiState.isErrorWalletNameInUse) {
-                        EventMessages.sendMessageId(R.string.WalletEdit_error_wallet_name_already_in_use)
+                        com.zhengzhou.cashflow.tools.EventMessages.sendMessageId(R.string.WalletEdit_error_wallet_name_already_in_use)
                     } else if (walletEditUiState.isErrorWalletNameNotValid) {
-                        EventMessages.sendMessageId(R.string.WalletEdit_error_wallet_name_not_valid)
+                        com.zhengzhou.cashflow.tools.EventMessages.sendMessageId(R.string.WalletEdit_error_wallet_name_not_valid)
                     } else {
 
                         val walletEditSaveResults: WalletEditSaveResults = walletEditViewModel.saveWallet()
-                        EventMessages.sendMessageId(walletEditSaveResults.message)
+                        com.zhengzhou.cashflow.tools.EventMessages.sendMessageId(walletEditSaveResults.message)
                         val ifSuccess = walletEditSaveResults == WalletEditSaveResults.SUCCESS
 
                         if (ifSuccess) {
                             navController.previousBackStackEntry
                                 ?.savedStateHandle
                                 ?.set(
-                                    Screen.WalletOverview.keyWalletUUID(),
+                                    Screen.WalletOverview.handleKeyWalletUUID,
                                     walletEditUiState.wallet.id.toString()
                                 )
                             navController.popBackStack(
@@ -366,7 +365,7 @@ private fun TextWalletCurrencyChooser(
 
     DropdownTextFieldMenu(
         label = stringResource(id = R.string.WalletEdit_currency),
-        value = walletEditUiState.wallet.currency.abbreviation,
+        value = walletEditUiState.wallet.currency.name,
         expanded = showDropDownMenu,
         onChangeExpanded = { ifShow ->
             showDropDownMenu = ifShow
@@ -383,7 +382,7 @@ private fun TextWalletCurrencyChooser(
                     },
                     text = {
                         Text(
-                            text = currency.abbreviation
+                            text = currency.name
                         )
                     },
                     onClick = {

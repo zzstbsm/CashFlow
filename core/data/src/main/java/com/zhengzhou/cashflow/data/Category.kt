@@ -25,7 +25,7 @@ data class Category (
             )
         }
 
-        fun transfer(categoryUUID: UUID): Category {
+        fun newTransfer(categoryUUID: UUID): Category {
             return newEmpty().copy(
                 id = categoryUUID,
                 iconName = IconsMappedForDB.TRANSFER,

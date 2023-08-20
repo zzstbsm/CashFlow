@@ -164,7 +164,7 @@ private fun CommonTransactionsNonEmptyList(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .padding(innerPadding)
-            .fillMaxSize()
+            .fillMaxWidth()
     ) {
         items(commonTransactionsUiState.transactionFullForUIList.size) {position ->
             val transactionFullForUI = commonTransactionsUiState.transactionFullForUIList[position]
@@ -277,7 +277,7 @@ private fun SingleTransaction(
     val tagList = transactionFullForUI.tagList
     val category = transactionFullForUI.category
 
-    val currencyFormatter = Currency.setCurrencyFormatter(wallet.currency.abbreviation)
+    val currencyFormatter = Currency.setCurrencyFormatter(wallet.currency.name)
 
     Card(
         modifier = Modifier
@@ -357,8 +357,8 @@ private fun CommonTransactionFloatingActionButtons(
                                     transactionType = transactionType,
                                     transactionUUID = transaction.id,
                                     currency = wallet.currency,
-                                    isBlueprint = false,
-                                    editBlueprint = false,
+                                    isBlueprint = true,
+                                    editBlueprint = true,
                                     navController = navController,
                                 )
                             } else {

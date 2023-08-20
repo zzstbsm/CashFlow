@@ -11,8 +11,8 @@ import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
 import com.zhengzhou.cashflow.database.DatabaseRepository
-import com.zhengzhou.cashflow.tools.Calculator
-import com.zhengzhou.cashflow.tools.KeypadDigit
+import com.zhengzhou.cashflow.tools.calculator.Calculator
+import com.zhengzhou.cashflow.tools.calculator.KeypadDigit
 import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -181,7 +181,7 @@ class TransactionEditViewModel(
                 transaction = if (transactionType == TransactionType.Move) {
                     transaction.copy(
                         secondaryWalletId = secondaryWallet.id,
-                        categoryId = categoryList.first().id // There is only one category if it is a transfer
+                        categoryId = categoryList.first().id // There is only one category if it is a newTransfer
                     )
                 } else transaction,
 

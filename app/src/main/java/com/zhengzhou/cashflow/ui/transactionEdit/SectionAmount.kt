@@ -31,10 +31,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.customUiElements.CategoryIcon
+import com.zhengzhou.cashflow.customUiElements.KeypadDigitButton
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
-import com.zhengzhou.cashflow.tools.KeypadDigit
-import com.zhengzhou.cashflow.tools.KeypadDigitButton
+import com.zhengzhou.cashflow.tools.calculator.KeypadDigit
 
 @Composable
 fun AmountTextSection(
@@ -86,7 +86,7 @@ fun AmountTextSection(
                             modifier = modifier.size(24.dp)
                         )
                         Text(
-                            text =  wallet.currency.abbreviation,
+                            text =  wallet.currency.name,
                             style = MaterialTheme.typography.labelMedium,
                         )
                     }

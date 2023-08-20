@@ -11,9 +11,9 @@
         -->
     </cloud-backup>
     <!--
-    <device-transfer>
+    <device-newTransfer>
         <include .../>
         <exclude .../>
-    </device-transfer>
+    </device-newTransfer>
     -->
 </data-extraction-rules>

@@ -41,7 +41,7 @@ enum class TransactionType (
 
     companion object {
         fun setTransaction(
-            id: Int
+            id: Int?
         ): TransactionType? {
 
             // Return the type of transaction

@@ -18,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.navigation.Screen
-import com.zhengzhou.cashflow.tools.EventMessages
 import java.util.UUID
 
 @Composable
@@ -90,9 +89,9 @@ fun WalletOverviewAppBarAction(
             onClick = {
                 openMenu = false
                 if (walletOverviewViewModel.deleteShownWallet() == WalletOverviewReturnResults.CAN_DELETE_WALLET) {
-                    EventMessages.sendMessageId(R.string.WalletOverview_wallet_deleted)
+                    com.zhengzhou.cashflow.tools.EventMessages.sendMessageId(R.string.WalletOverview_wallet_deleted)
                 } else {
-                    EventMessages.sendMessageId(R.string.WalletOverview_cannot_delete_wallet)
+                    com.zhengzhou.cashflow.tools.EventMessages.sendMessageId(R.string.WalletOverview_cannot_delete_wallet)
                 }
             },
             modifier = Modifier.testTag(

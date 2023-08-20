@@ -178,7 +178,7 @@ private fun TransactionReportMainBody(
                     ) {
                         Text(
                             text = Currency.formatCurrency(
-                                currency = Currency.setCurrencyFormatter(wallet.currency.abbreviation),
+                                currency = Currency.setCurrencyFormatter(wallet.currency.name),
                                 amount = transaction.amount,
                             ),
                             fontStyle = FontStyle.Normal,
