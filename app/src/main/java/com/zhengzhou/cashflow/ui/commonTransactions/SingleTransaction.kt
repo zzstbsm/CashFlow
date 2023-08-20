@@ -48,7 +48,7 @@ fun SingleTransactionVisibleSection(
     onOpenTransaction: (Boolean) -> Unit,
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.SpaceAround,
         modifier = Modifier
             .fillMaxWidth()

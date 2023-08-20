@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.customUiElements.CategoryIcon
@@ -48,7 +49,11 @@ fun SectionCategoryItem(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth().padding(8.dp)
         ) {
-            Text(text = category.name)
+            Text(
+                text = category.name,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+            )
             Text(text = Currency.formatCurrency(currencyFormatter, amount))
             CategoryIcon(
                 iconName = category.iconName,
