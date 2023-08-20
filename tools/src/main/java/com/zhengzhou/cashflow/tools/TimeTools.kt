@@ -2,20 +2,9 @@ package com.zhengzhou.cashflow.tools
 
 import java.util.Calendar
 import java.util.Date
-import java.util.TimeZone
 
 class TimeTools {
     companion object {
-
-        fun getToday() : Date {
-
-            val calendar = Calendar.getInstance()
-            calendar.time = Date()
-            calendar.timeZone = TimeZone.getTimeZone("UTC")
-            calendar.add(Calendar.MILLISECOND,TimeZone.getDefault().getOffset(calendar.timeInMillis))
-
-            return calendar.time
-        }
 
         fun getFirstDayOfCurrentMonth() : Date {
 
@@ -26,9 +15,6 @@ class TimeTools {
             calendar.set(Calendar.MINUTE,0)
             calendar.set(Calendar.SECOND,0)
             calendar.set(Calendar.MILLISECOND,0)
-
-            calendar.timeZone = TimeZone.getTimeZone("UTC")
-            calendar.add(Calendar.MILLISECOND,TimeZone.getDefault().getOffset(calendar.timeInMillis))
 
             return calendar.time
         }
@@ -57,9 +43,6 @@ class TimeTools {
                 Calendar.MILLISECOND,
                 0,
             )
-
-            calendar.timeZone = TimeZone.getTimeZone("UTC")
-            calendar.add(Calendar.MILLISECOND,TimeZone.getDefault().getOffset(calendar.timeInMillis))
 
             return calendar.time
         }
