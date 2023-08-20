@@ -357,8 +357,8 @@ private fun CommonTransactionFloatingActionButtons(
                                     transactionType = transactionType,
                                     transactionUUID = transaction.id,
                                     currency = wallet.currency,
-                                    isBlueprint = false,
-                                    editBlueprint = false,
+                                    isBlueprint = true,
+                                    editBlueprint = true,
                                     navController = navController,
                                 )
                             } else {
