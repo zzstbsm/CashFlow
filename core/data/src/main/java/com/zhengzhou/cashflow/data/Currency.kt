@@ -87,9 +87,9 @@ enum class Currency(
             return currency.format(amount)
         }
 
-        fun setCurrencyFormatter(currencyString: String) : NumberFormat {
+        fun setCurrencyFormatter(currencyName: String) : NumberFormat {
 
-            val currency: Currency? = setCurrency(currencyString)
+            val currency: Currency? = setCurrency(currencyName)
 
             return if (currency != null) {
                 NumberFormat.getCurrencyInstance(currency.locale)

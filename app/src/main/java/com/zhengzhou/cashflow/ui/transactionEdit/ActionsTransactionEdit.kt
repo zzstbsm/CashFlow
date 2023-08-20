@@ -1,6 +1,7 @@
 package com.zhengzhou.cashflow.ui.transactionEdit
 
 import androidx.navigation.NavController
+import com.zhengzhou.cashflow.tools.EventMessages
 
 class TransactionEditActions {
     companion object {
@@ -13,7 +14,7 @@ class TransactionEditActions {
 
             if (saveTransactionSuccessful) navController.popBackStack()
 
-            com.zhengzhou.cashflow.tools.EventMessages.sendMessageId(saveTransactionResult.errorMessage)
+            EventMessages.sendMessageId(saveTransactionResult.errorMessage)
         }
     }
 }

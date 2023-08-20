@@ -1,9 +1,5 @@
 package com.zhengzhou.cashflow.ui.allTransactions
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -13,13 +9,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.customUiElements.LoadingLayer
 import com.zhengzhou.cashflow.data.Currency
+import com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack
+import com.zhengzhou.cashflow.navigation.Screen
 import java.util.UUID
 
 @Composable
@@ -39,6 +37,12 @@ fun AllTransactionsScreen(
     }
     val allTransactionsUiState by allTransactionsViewModel.uiState.collectAsState()
 
+    ReloadPageAfterPopBackStack(
+        pageRoute = Screen.AllTransactions.route,
+        navController = navController,
+        onPopBackStack = { }
+    )
+
     Scaffold(
         topBar = {
             AllTransactionsTopAppBar(
@@ -46,6 +50,15 @@ fun AllTransactionsScreen(
             )
         },
         content = { innerPadding ->
+
+            if (allTransactionsUiState.isLoading) {
+                LoadingLayer(
+                    onDismissRequest = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
             AllTransactionsMainBody(
                 allTransactionsUiState = allTransactionsUiState,
                 allTransactionsViewModel = allTransactionsViewModel,
@@ -78,21 +91,4 @@ fun AllTransactionsTopAppBar(
             }
         }
     )
-}
-
-@Composable
-fun AllTransactionsMainBody(
-    allTransactionsUiState: AllTransactionsUiState,
-    allTransactionsViewModel: AllTransactionsViewModel,
-    innerPadding: PaddingValues,
-    navController: NavController,
-) {
-    Column(
-        modifier = Modifier.padding(innerPadding)
-    ) {
-        LazyColumn{
-
-        }
-    }
-
 }
