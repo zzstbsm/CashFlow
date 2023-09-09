@@ -39,8 +39,8 @@ fun SelectTimeFilter(
 
             val currentSelected = element == currentTimeFilter
             SegmentedButton(
-                shape = SegmentedButtonDefaults.shape(
-                    position = index,
+                shape = SegmentedButtonDefaults.itemShape(
+                    index = index,
                     count = timeFilterList.size,
                 ),
                 onCheckedChange = {
