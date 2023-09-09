@@ -1,6 +1,8 @@
 package com.zhengzhou.cashflow.database
 
 import androidx.room.*
+import com.zhengzhou.cashflow.data.BudgetPerCategory
+import com.zhengzhou.cashflow.data.BudgetPerPeriod
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Location
@@ -13,6 +15,26 @@ import java.util.*
 
 @Dao
 internal interface DatabaseDao {
+
+    // BudgetPerCategorySection
+    @Query("SELECT * FROM budget_per_category WHERE id=(:budgetPerCategoryUUID)")
+    suspend fun getBudgetPerCategory(budgetPerCategoryUUID: UUID): BudgetPerCategory?
+    @Insert(entity = BudgetPerCategory::class, onConflict = OnConflictStrategy.ABORT)
+    suspend fun addBudgetPerCategory(budgetPerCategory: BudgetPerCategory)
+    @Update(entity = BudgetPerCategory::class)
+    suspend fun updateBudgetPerCategory(budgetPerCategory: BudgetPerCategory)
+    @Delete(entity = BudgetPerCategory::class)
+    suspend fun deleteBudgetPerCategory(budgetPerCategory: BudgetPerCategory)
+
+    // BudgetPerPeriod section
+    @Query("SELECT * FROM budget_per_period WHERE id=(:budgetPerPeriodUUID)")
+    suspend fun getBudgetPerPeriod(budgetPerPeriodUUID: UUID): BudgetPerPeriod?
+    @Insert(entity = BudgetPerPeriod::class, onConflict = OnConflictStrategy.ABORT)
+    suspend fun addBudgetPerPeriod(budgetPerPeriod: BudgetPerPeriod)
+    @Update(entity = BudgetPerPeriod::class)
+    suspend fun updateBudgetPerPeriod(budgetPerPeriod: BudgetPerPeriod)
+    @Delete(entity = BudgetPerPeriod::class)
+    suspend fun deleteBudgetPerPeriod(budgetPerPeriod: BudgetPerPeriod)
 
     // Category section
     @Query("SELECT * FROM category WHERE id=(:categoryUUID)")
