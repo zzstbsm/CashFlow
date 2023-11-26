@@ -203,13 +203,13 @@ class WalletOverviewViewModel(
                     list.filter { !it.isBlueprint }.let { filteredList ->
                         filteredList.subList(0, min(filteredList.size, 3))
                             .forEach { transaction ->
-                                val category = repository.getCategory(transaction.categoryId)
+                                val category = repository.getCategory(transaction.categoryUUID)
                                     ?: Category.newEmpty()
 
 
                                 transactionAndCategoryList.add(
                                     TransactionAndCategory(
-                                        transaction = if (wallet.id == transaction.secondaryWalletId) {
+                                        transaction = if (wallet.id == transaction.secondaryWalletUUID) {
                                             transaction.copy(
                                                 amount = -transaction.amount
                                             )
@@ -249,7 +249,7 @@ class WalletOverviewViewModel(
                             currentAmountInTheWallet = transactionList.filter {
                                 !it.isBlueprint
                             }.map {
-                                if (it.secondaryWalletId == uiState.value.wallet.id) -it.amount else it.amount
+                                if (it.secondaryWalletUUID == uiState.value.wallet.id) -it.amount else it.amount
                             }.sum() + uiState.value.wallet.startAmount
                         )
                     }

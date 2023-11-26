@@ -192,7 +192,7 @@ private fun BalanceMainBody(
 
                         val category = categoryList[position]
                         val filteredList = transactionList.filter {
-                            it.categoryId == category.id
+                            it.categoryUUID == category.id
                         }
                         val existTransactionsInCurrentCategory = filteredList.isNotEmpty()
                         val amount = if (existTransactionsInCurrentCategory) {

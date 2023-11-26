@@ -8,8 +8,8 @@ import kotlin.math.min
 
 data class Tag (
     val id: UUID = UUID(0L,0L),
-    val idTransaction: UUID = UUID(0L,0L),
-    val idTag: UUID = UUID(0L,0L),
+    val transactionUUID: UUID = UUID(0L, 0L),
+    val tagUUID: UUID = UUID(0L, 0L),
     val name: String = "",
     val count: Int = 0,
     val enabled: Boolean = false,
@@ -26,8 +26,8 @@ data class Tag (
 
             return Tag(
                 id = tagTransaction.id,
-                idTransaction = tagTransaction.idTransaction,
-                idTag = tagEntry.id,
+                transactionUUID = tagTransaction.transactionUUID,
+                tagUUID = tagEntry.id,
                 name = tagEntry.name,
                 count = tagEntry.count,
                 enabled = true,
@@ -39,7 +39,7 @@ data class Tag (
             tagEntry: TagEntry
         ): Tag {
 
-            val tagTransaction = TagTransaction(idTransaction = transactionUUID)
+            val tagTransaction = TagTransaction(transactionUUID = transactionUUID)
             return merge(tagTransaction,tagEntry)!!
         }
 
@@ -51,11 +51,11 @@ data class Tag (
 
         val tagTransaction = TagTransaction(
             id = id,
-            idTransaction = idTransaction,
-            idTag = idTag
+            transactionUUID = transactionUUID,
+            tagUUID = tagUUID
         )
         val tagEntry = TagEntry(
-            id = idTag,
+            id = tagUUID,
             name = name,
             count = count,
         )
@@ -90,9 +90,9 @@ data class Tag (
 data class TagTransaction (
     @PrimaryKey val id: UUID = UUID(0L,0L),
     @ColumnInfo(name = "id_movement")
-    val idTransaction: UUID = UUID(0L,0L),
+    val transactionUUID: UUID = UUID(0L, 0L),
     @ColumnInfo(name = "id_tag")
-    val idTag: UUID = UUID(0L,0L),
+    val tagUUID: UUID = UUID(0L, 0L),
 )
 
 @Entity(tableName = "tag_entry")

@@ -195,7 +195,7 @@ class BalanceViewModel : ViewModel() {
                 val transactionCategoryGroup: MutableList<TransactionAndCategory> = mutableListOf()
 
                 transactionList.forEach { transaction ->
-                    val category = repository.getCategory(transaction.categoryId) ?: Category.newEmpty()
+                    val category = repository.getCategory(transaction.categoryUUID) ?: Category.newEmpty()
                     transactionCategoryGroup.add(
                         TransactionAndCategory(
                             transaction = transaction,

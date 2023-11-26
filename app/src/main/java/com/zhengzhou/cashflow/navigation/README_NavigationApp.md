@@ -38,7 +38,7 @@ Do the same as in the navigation bar drawer, but by setting `bottomActive = true
 ## Navigable screens
 
 ### `Balance`
-Shows the total balance in all the wallets with the same currency.
+Shows the total balance in all the wallets with the same currency. The default screen uses the euro.
 
 ### `ManageCategories`
 Manages the categories saved in the database.
@@ -47,12 +47,13 @@ Manages the categories saved in the database.
 Manages the profile. So far it is empty.
 
 ### `WalletEdit`
-Screen that handles the initialization of a new wallet or the edit of an old one.
+Screen that handles the initialization of a new wallet or the edit of an old one. One can select the icon, name, initial amount in the wallet, creation date, currency and set the budget.
 
 ### `WalletOverview`
-Shows all the details of a single wallet.
+Shows all the details of a single wallet with a short list of the most recent transactions and the current amount in it.
 
 ### `TransactionEdit`
 Screen that handles a transition (add or edit) and saves it in the database.
 
 ### `TransactionReport`
+Screen that summarize one transaction: it contains the description of the transaction, its wallet, category and tags.

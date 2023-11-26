@@ -133,16 +133,16 @@ class AllTransactionsViewModel(
     ): List<TransactionAndCategory> {
         return transactionList.filter {
             if (walletUUID != UUID(0L,0L)) {
-                it.walletId == walletUUID || it.secondaryWalletId == walletUUID
+                it.walletUUID == walletUUID || it.secondaryWalletUUID == walletUUID
             } else true
         }.filter {
             if (categoryUUID != UUID(0L,0L)) {
-                it.categoryId == categoryUUID
+                it.categoryUUID == categoryUUID
             } else true
         }.sortedByDescending { it.date }.map {
             TransactionAndCategory(
                 transaction = it,
-                category = repository.getCategory(it.categoryId) ?: Category.newEmpty()
+                category = repository.getCategory(it.categoryUUID) ?: Category.newEmpty()
             )
         }
     }

@@ -279,7 +279,7 @@ private fun TransferMovementTypeSection(
         TransactionSectionToShow.CATEGORY -> {
             ChooseCategorySection(
                 categoryList = transactionEditUiState.categoryList,
-                currentlyChosenCategoryId = transactionEditUiState.transaction.categoryId,
+                currentlyChosenCategoryId = transactionEditUiState.transaction.categoryUUID,
                 onCategoryChoice = { category ->
                     transactionEditViewModel.updateCategory(category)
                 }

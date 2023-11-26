@@ -33,9 +33,9 @@ data class TransactionFullForUI(
             val jobRetrieveTagTransaction = CoroutineScope(Dispatchers.Default)
 
             val transaction: Transaction = repository.getTransaction(transactionId = transactionUUID) ?: Transaction.newEmpty()
-            val wallet = repository.getWallet(transaction.walletId) ?: Wallet.newEmpty()
-            val category = repository.getCategory(transaction.categoryId) ?: Category.newTransfer(
-                transaction.categoryId
+            val wallet = repository.getWallet(transaction.walletUUID) ?: Wallet.newEmpty()
+            val category = repository.getCategory(transaction.categoryUUID) ?: Category.newTransfer(
+                transaction.categoryUUID
             )
 
             var  tagList: List<Tag> = listOf()
@@ -79,13 +79,13 @@ data class TransactionFullForUI(
             return TransactionFullForUI(
                 transaction = Transaction(
                     id = UUID(0L, 0L),
-                    walletId = wallet.id,
-                    secondaryWalletId = secondaryWallet.id,
+                    walletUUID = wallet.id,
+                    secondaryWalletUUID = secondaryWallet.id,
                     amount = amount,
                     date = date,
-                    categoryId = category.id,
+                    categoryUUID = category.id,
                     description = description,
-                    locationId = location?.id,
+                    locationUUID = location?.id,
                     transactionType = transactionType,
                     isBlueprint = isBlueprint,
                 ),
@@ -130,7 +130,7 @@ data class TransactionFullForUI(
         // Save tags
         currentTagList = currentTagList.map {
             it.copy(
-                idTransaction = currentTransaction.id,
+                transactionUUID = currentTransaction.id,
             )
         }
         currentTagList.forEach { tag ->

@@ -131,7 +131,7 @@ class TransactionEditViewModel(
 
                 wallet = repository.getWalletLastAccessed() ?: Wallet.newEmpty()
                 transaction = Transaction.newEmpty().copy(
-                    walletId = wallet.id,
+                    walletUUID = wallet.id,
                     transactionType = transactionType,
                     isBlueprint = (isBlueprint && editBlueprint),
                 )
@@ -180,8 +180,8 @@ class TransactionEditViewModel(
                 wallet = wallet,
                 transaction = if (transactionType == TransactionType.Move) {
                     transaction.copy(
-                        secondaryWalletId = secondaryWallet.id,
-                        categoryId = categoryList.first().id // There is only one category if it is a newTransfer
+                        secondaryWalletUUID = secondaryWallet.id,
+                        categoryUUID = categoryList.first().id // There is only one category if it is a newTransfer
                     )
                 } else transaction,
 
@@ -279,12 +279,12 @@ class TransactionEditViewModel(
 
         val wallet: Wallet = uiState.value.wallet
         val category: Category? = uiState.value.categoryList.firstOrNull {
-            it.id == transaction.categoryId
+            it.id == transaction.categoryUUID
         }
         val currentTransactionTagList: List<Tag> = uiState.value.currentTagList
         val transactionType: TransactionType = uiState.value.transaction.transactionType
 
-        val ifCategoryChosen = transaction.categoryId != UUID(0L, 0L)
+        val ifCategoryChosen = transaction.categoryUUID != UUID(0L, 0L)
         val ifAmountChosen = transaction.amount >= 0.01f || transaction.amount <= -0.01f
 
         if (
@@ -390,7 +390,7 @@ class TransactionEditViewModel(
 
         setUiState(
             transaction = uiState.value.transaction.copy(
-                categoryId = category.id
+                categoryUUID = category.id
             ),
         )
     }
@@ -415,7 +415,7 @@ class TransactionEditViewModel(
         setUiState(
             wallet = wallet,
             transaction = uiState.value.transaction.copy(
-                walletId = wallet.id
+                walletUUID = wallet.id
             )
         )
     }
@@ -424,7 +424,7 @@ class TransactionEditViewModel(
         setUiState(
             secondaryWallet = wallet,
             transaction = uiState.value.transaction.copy(
-                categoryId = wallet.id
+                categoryUUID = wallet.id
             )
         )
     }
