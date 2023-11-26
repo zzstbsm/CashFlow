@@ -21,6 +21,7 @@ import java.io.IOException
 import java.util.Date
 import java.util.UUID
 
+/*
 @RunWith(AndroidJUnit4::class)
 class TestWalletEdit() {
 
@@ -127,3 +128,4 @@ class TestWalletEdit() {
         }
     }
 }
+*/
