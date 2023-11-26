@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -165,7 +165,7 @@ private fun AboutMeMainBody(
     }
 
     if (showMakeDonationDialog) {
-        AlertDialog(onDismissRequest = onDismissDialog) {
+        BasicAlertDialog(onDismissRequest = onDismissDialog) {
             Card(
                 shape = RoundedCornerShape(32.dp),
                 modifier = Modifier.fillMaxWidth(),

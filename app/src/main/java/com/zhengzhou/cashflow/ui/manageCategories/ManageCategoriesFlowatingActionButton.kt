@@ -1,6 +1,6 @@
 package com.zhengzhou.cashflow.ui.manageCategories
 
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -39,18 +39,18 @@ fun ManageCategoriesFloatingActionButton(
     }
 
     if (showDialog) {
-        AlertDialog(
-            onDismissRequest = { showDialog = false }
+        BasicAlertDialog(onDismissRequest = { showDialog = false }
         ) {
             Card {
-                val defaultNewCategoryName = stringResource(id = R.string.ManageCategories_new_category)
+                val defaultNewCategoryName =
+                    stringResource(id = R.string.ManageCategories_new_category)
                 var newCategoryName by remember {
                     mutableStateOf(defaultNewCategoryName)
                 }
                 var newCategoryIcon by remember {
                     mutableStateOf(IconsMappedForDB.HOME)
                 }
-                
+
                 EditCategoryDetailsSection(
                     category = Category.newEmpty(),
                     newCategoryName = newCategoryName,

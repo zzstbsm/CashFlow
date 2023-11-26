@@ -177,7 +177,7 @@ private fun SelectWalletDialog(
 ) {
 
     if (toShow) {
-        AlertDialog(onDismissRequest = onDismissDialog) {
+        BasicAlertDialog(onDismissRequest = onDismissDialog) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -211,8 +211,10 @@ private fun SelectWalletDialog(
                                     modifier = Modifier
                                         .size(32.dp)
                                 )
-                                Spacer(modifier = Modifier
-                                    .width(16.dp))
+                                Spacer(
+                                    modifier = Modifier
+                                        .width(16.dp)
+                                )
                                 Text(text = wallet.name)
                             }
                         }

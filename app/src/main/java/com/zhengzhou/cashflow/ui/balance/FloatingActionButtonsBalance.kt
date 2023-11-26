@@ -3,7 +3,7 @@ package com.zhengzhou.cashflow.ui.balance
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
@@ -47,7 +47,7 @@ fun BalanceFloatingActionButtons(
 
     if (showDialog) {
 
-        AlertDialog(onDismissRequest = { showDialog = false }) {
+        BasicAlertDialog(onDismissRequest = { showDialog = false }) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.fillMaxWidth()

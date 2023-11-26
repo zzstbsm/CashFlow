@@ -90,7 +90,7 @@ private fun SelectGroupCurrency(
 ) {
 
     if (toShow) {
-        AlertDialog(onDismissRequest = onDismissDialog) {
+        BasicAlertDialog(onDismissRequest = onDismissDialog) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -119,8 +119,10 @@ private fun SelectGroupCurrency(
                                     .padding(8.dp),
                             ) {
                                 Text(text = currency.iconEmojiUnicode)
-                                Spacer(modifier = Modifier
-                                    .width(16.dp))
+                                Spacer(
+                                    modifier = Modifier
+                                        .width(16.dp)
+                                )
                                 Text(text = stringResource(currency.nameCurrency))
                             }
                         }

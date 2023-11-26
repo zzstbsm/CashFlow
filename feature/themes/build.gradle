@@ -21,7 +21,7 @@ android {
     }
 
     namespace 'com.zhengzhou.cashflow.themes'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         minSdk 24
@@ -32,42 +32,32 @@ android {
 
     buildTypes {
         release {
-            versionNameSuffix '.prod'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            debuggable false
             jniDebuggable false
             renderscriptDebuggable false
             signingConfig signingConfigs.release
             minifyEnabled true
         }
         preprod {
-            versionNameSuffix '.preprod'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            debuggable false
             jniDebuggable false
             renderscriptDebuggable false
             signingConfig signingConfigs.release
             minifyEnabled true
         }
         stag {
-            versionNameSuffix '.staging'
-            debuggable true
             jniDebuggable true
             renderscriptDebuggable true
             signingConfig signingConfigs.debug
             minifyEnabled false
         }
         dev {
-            versionNameSuffix '.dev'
-            debuggable true
             jniDebuggable true
             renderscriptDebuggable true
             signingConfig signingConfigs.debug
             minifyEnabled false
         }
         debug {
-            versionNameSuffix '.debug'
-            debuggable true
             jniDebuggable true
             renderscriptDebuggable true
             signingConfig signingConfigs.debug
@@ -86,7 +76,7 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.core:core-ktx:1.12.0'
 
     testImplementation 'junit:junit:4.13.2'
 
