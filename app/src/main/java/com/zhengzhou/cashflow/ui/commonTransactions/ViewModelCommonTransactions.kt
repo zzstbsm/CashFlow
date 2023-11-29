@@ -6,7 +6,6 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
-import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.EventMessages
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

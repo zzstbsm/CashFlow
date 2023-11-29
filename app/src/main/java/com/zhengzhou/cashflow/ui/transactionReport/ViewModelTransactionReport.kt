@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
-import com.zhengzhou.cashflow.database.DatabaseRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

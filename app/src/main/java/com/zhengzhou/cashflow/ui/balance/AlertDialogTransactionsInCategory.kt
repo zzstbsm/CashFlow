@@ -13,9 +13,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.customUiElements.SectionTransactionEntry
+import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.dataForUi.TransactionAndCategory
 import com.zhengzhou.cashflow.navigation.Screen
-import java.text.NumberFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,7 +23,7 @@ fun TransactionsInCategoryAlertDialog(
     show: Boolean,
     onDismissDialog: (Boolean) -> Unit,
     transactionList: List<TransactionAndCategory>,
-    currencyFormatter: NumberFormat,
+    currency: Currency,
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
@@ -47,7 +47,7 @@ fun TransactionsInCategoryAlertDialog(
                             SectionTransactionEntry(
                                 transaction = transaction.transaction,
                                 category = transaction.category,
-                                currencyFormatter = currencyFormatter,
+                                currency = currency,
                                 onClickTransaction = {
                                     Screen.TransactionReport.navigate(
                                         transactionUUID = transaction.transaction.id,

@@ -6,20 +6,19 @@ import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.dataForUi.TransactionAndCategory
-import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.TimeTools
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.text.NumberFormat
 import java.util.Calendar
 import java.util.UUID
 
 data class AllTransactionsUiState(
     val isLoading: Boolean = true,
 
+    val currency: Currency = Currency.getDefaultCurrency(),
     val transactionListToShow: List<TransactionAndCategory> = listOf(),
     val dateTabWithIndexList: List<DateTabWithIndex> = listOf(),
     val shownTab: Int = -1
@@ -35,13 +34,10 @@ class AllTransactionsViewModel(
     val uiState: StateFlow<AllTransactionsUiState> = _uiState.asStateFlow()
 
     private var writingOnUiState: Boolean = false
-    private val currencyFormatter: NumberFormat
 
     val repository = DatabaseRepository.get()
 
     init {
-
-        currencyFormatter = Currency.setCurrencyFormatter(currencyName = currency.name)
 
         viewModelScope.launch {
             repository.getWalletListByCurrency(currency).collect { walletList ->
@@ -58,6 +54,7 @@ class AllTransactionsViewModel(
 
                     setUiState(
                         isLoading = false,
+                        currency = currency,
                         transactionListToShow = transactionListToShow,
                         dateTabWithIndexList = dateTabWithIndexList,
                         shownTab = dateTabWithIndexList.size-1,
@@ -71,6 +68,7 @@ class AllTransactionsViewModel(
     private fun setUiState(
         isLoading: Boolean? = null,
 
+        currency: Currency? = null,
         transactionListToShow: List<TransactionAndCategory>? = null,
         dateTabWithIndexList: List<DateTabWithIndex>? = null,
         shownTab: Int? = null,
@@ -83,6 +81,7 @@ class AllTransactionsViewModel(
             _uiState.value = uiState.value.copy(
                 isLoading = isLoading ?: uiState.value.isLoading,
 
+                currency = currency ?: uiState.value.currency,
                 transactionListToShow = transactionListToShow ?: uiState.value.transactionListToShow,
                 dateTabWithIndexList = dateTabWithIndexList ?: uiState.value.dateTabWithIndexList,
                 shownTab = shownTab ?: uiState.value.shownTab,
@@ -146,8 +145,6 @@ class AllTransactionsViewModel(
             )
         }
     }
-
-    fun getCurrencyFormatter() = currencyFormatter
 
     fun updateShownTab(tabIndex: Int) {
         setUiState(

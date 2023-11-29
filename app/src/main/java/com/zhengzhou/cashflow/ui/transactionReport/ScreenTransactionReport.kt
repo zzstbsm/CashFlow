@@ -34,11 +34,11 @@ import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.customUiElements.CategoryIcon
 import com.zhengzhou.cashflow.customUiElements.TagListLazyStaggeredHorizontalGrid
-import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.themes.IconsMappedForDB
+import com.zhengzhou.cashflow.tools.CurrencyFormatter
 import java.util.UUID
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -177,9 +177,9 @@ private fun TransactionReportMainBody(
                             .fillMaxWidth()
                     ) {
                         Text(
-                            text = Currency.formatCurrency(
-                                currency = Currency.setCurrencyFormatter(wallet.currency.name),
-                                amount = transaction.amount,
+                            text = CurrencyFormatter.formatCurrency(
+                                currency = wallet.currency,
+                                amount = transaction.amount
                             ),
                             fontStyle = FontStyle.Normal,
                             style = MaterialTheme.typography.headlineLarge,

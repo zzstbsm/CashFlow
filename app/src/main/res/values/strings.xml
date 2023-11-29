@@ -149,6 +149,7 @@
     <string name="WalletOverview_no_wallet">No wallet</string>
     <string name="WalletOverview_recent_transactions">Recent transactions</string>
     <string name="WalletOverview_select_wallet">Select wallet</string>
+    <string name="WalletOverview_see_all">See all</string>
     <string name="WalletOverview_wallet_deleted">Wallet deleted</string>
 
     <!-- Other -->

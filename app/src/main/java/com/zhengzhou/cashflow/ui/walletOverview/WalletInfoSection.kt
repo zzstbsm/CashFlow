@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.tools.CurrencyFormatter
 
 @Composable
 fun WalletInfoSection(
@@ -44,7 +45,7 @@ fun WalletInfoSection(
                 text = stringResource(id = R.string.WalletOverview_balance)
             )
             Text(
-                text = walletOverviewViewModel.formatCurrency(walletOverviewUiState.currentAmountInTheWallet),
+                text = CurrencyFormatter.formatCurrency(walletOverviewUiState.wallet.currency,walletOverviewUiState.currentAmountInTheWallet),
                 modifier = Modifier.testTag(
                     WalletOverviewTestTag.TAG_TEXT_WALLET_AMOUNT
                 )

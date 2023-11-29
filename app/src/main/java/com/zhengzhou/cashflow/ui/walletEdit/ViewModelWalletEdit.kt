@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Wallet
-import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import com.zhengzhou.cashflow.tools.calculator.Calculator
 import com.zhengzhou.cashflow.tools.calculator.mapCharToKeypadDigit
@@ -19,29 +18,22 @@ import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.UUID
 
-data class WalletEditUiState(
-    val isLoading: Boolean = true,
 
-    val amountOnScreen: String = "",
-    val isErrorAmountOnScreen: Boolean = false,
-
-    val isErrorWalletNameInUse: Boolean = false,
-    val isErrorWalletNameNotValid: Boolean = false,
-
-    val wallet: Wallet = Wallet.loadingWallet(),
-)
 
 class WalletEditViewModel(
     walletUUID: UUID,
 ): ViewModel() {
 
-    private var _newWallet = true
+    private var _newWallet = walletUUID == UUID(0L,0L)
+    private var _wallet = MutableStateFlow(Wallet.loadingWallet())
+    val wallet: StateFlow<Wallet> = _wallet.asStateFlow()
+
     private var _budgetEnabledWhenLoaded: Boolean = false
 
     private var writingOnUiState: Boolean = false
 
     private var _walletListName = MutableStateFlow(listOf<String>())
-    val walletListName: StateFlow<List<String>> = _walletListName.asStateFlow()
+    private val walletListName: StateFlow<List<String>> = _walletListName.asStateFlow()
 
     private var _uiState = MutableStateFlow(WalletEditUiState())
     val uiState: StateFlow<WalletEditUiState> = _uiState.asStateFlow()
@@ -76,7 +68,6 @@ class WalletEditViewModel(
         isErrorWalletNameInUse: Boolean? = null,
         isErrorWalletNameNotValid: Boolean? = null,
 
-        wallet: Wallet? = null,
     ) {
         viewModelScope.launch {
             while (writingOnUiState) delay(5)
@@ -91,7 +82,6 @@ class WalletEditViewModel(
                 isErrorWalletNameInUse = isErrorWalletNameInUse ?: uiState.value.isErrorWalletNameInUse,
                 isErrorWalletNameNotValid = isErrorWalletNameNotValid ?: uiState.value.isErrorWalletNameNotValid,
 
-                wallet = wallet ?: uiState.value.wallet,
             )
 
             writingOnUiState = false
@@ -101,21 +91,14 @@ class WalletEditViewModel(
     private fun loadWallet(walletUUID: UUID): Job {
         return viewModelScope.launch(Dispatchers.IO) {
 
-
-            val retrievedWallet = if (_newWallet) {
+            _wallet.value = if (_newWallet) {
                 Wallet.newEmpty()
             } else {
                 repository.getWallet(walletUUID) ?: Wallet.newEmpty()
             }
 
-            setUiState(
-                wallet = retrievedWallet,
-                isLoading = false,
-            )
-            _budgetEnabledWhenLoaded = uiState.value.wallet.budgetEnabled
-
-            calculator = Calculator.initialize(uiState.value.wallet.startAmount)
-            updateAmountOnScreen(amount = retrievedWallet.startAmount.toString())
+            calculator = Calculator.initialize(wallet.value.startAmount)
+            updateAmountOnScreen(amount = wallet.value.startAmount.toString())
 
         }
     }
@@ -147,15 +130,14 @@ class WalletEditViewModel(
         lastAccess: Date? = null,
         budgetEnabled: Boolean? = null,
     ) {
-        val wallet = uiState.value.wallet
-        val newWalletForUi = wallet.copy(
-            name = name ?: wallet.name,
-            startAmount = startAmount ?: wallet.startAmount,
-            iconName = iconName ?: wallet.iconName,
-            currency = currency ?: wallet.currency,
-            creationDate = creationDate ?: wallet.creationDate,
-            lastAccess = lastAccess ?: wallet.lastAccess,
-            budgetEnabled = budgetEnabled ?: wallet.budgetEnabled,
+        val newWalletForUi = wallet.value.copy(
+            name = name ?: wallet.value.name,
+            startAmount = startAmount ?: wallet.value.startAmount,
+            iconName = iconName ?: wallet.value.iconName,
+            currency = currency ?: wallet.value.currency,
+            creationDate = creationDate ?: wallet.value.creationDate,
+            lastAccess = lastAccess ?: wallet.value.lastAccess,
+            budgetEnabled = budgetEnabled ?: wallet.value.budgetEnabled,
         )
 
         val isErrorWalletNameInUse = if (name == null) uiState.value.isErrorWalletNameInUse else {

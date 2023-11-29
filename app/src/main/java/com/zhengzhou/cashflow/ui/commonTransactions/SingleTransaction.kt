@@ -34,14 +34,14 @@ import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.Wallet
-import java.text.NumberFormat
+import com.zhengzhou.cashflow.tools.CurrencyFormatter
 
 
 @Composable
 fun SingleTransactionVisibleSection(
     transaction: Transaction,
     category: Category,
-    currencyFormatter: NumberFormat,
+    currency: Currency,
     onCreateTransaction: () -> Unit,
     onEditTransaction: () -> Unit,
     ifTransactionOpen: Boolean,
@@ -57,7 +57,7 @@ fun SingleTransactionVisibleSection(
         SingleTransactionDescriptionPart(
             transaction = transaction,
             category = category,
-            currencyFormatter = currencyFormatter,
+            currency = currency,
             onDescriptionSectionClick = { onOpenTransaction(!ifTransactionOpen) },
             modifier = Modifier.weight(3f),
         )
@@ -75,8 +75,8 @@ fun SingleTransactionVisibleSection(
 @Composable
 private fun SingleTransactionDescriptionPart(
     transaction: Transaction,
+    currency: Currency,
     category: Category,
-    currencyFormatter: NumberFormat,
     onDescriptionSectionClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -102,7 +102,7 @@ private fun SingleTransactionDescriptionPart(
                 contentDescription = null,
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = Currency.formatCurrency(currencyFormatter, transaction.amount))
+            Text(text = CurrencyFormatter.formatCurrency(currency, transaction.amount))
         }
     }
 }

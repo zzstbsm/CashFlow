@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Currency
-import java.text.NumberFormat
+import com.zhengzhou.cashflow.tools.CurrencyFormatter
 import java.util.*
 
 @Composable
@@ -63,7 +63,6 @@ fun CreditCardSection(
             CardText(
                 balance = balanceUiState.getBalance(),
                 currency = balanceUiState.equivalentWallet.currency,
-                currencyFormatter = balanceViewModel.getCurrencyFormatter(),
                 modifier = Modifier,
             )
         }
@@ -137,12 +136,11 @@ private fun SelectGroupCurrency(
 private fun CardText(
     balance: Float,
     currency: Currency,
-    currencyFormatter: NumberFormat,
     modifier: Modifier = Modifier
 ) {
 
 
-    val formattedBalance = Currency.formatCurrency(currencyFormatter, balance)
+    val formattedBalance = CurrencyFormatter.formatCurrency(currency, balance)
 
     Text(
         text = stringResource(id = R.string.Balance_wallet_name_currency,stringResource(currency.nameCurrency)),

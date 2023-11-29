@@ -28,13 +28,13 @@ import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.tools.CashFlowTools
-import java.text.NumberFormat
+import com.zhengzhou.cashflow.tools.CurrencyFormatter
 
 @Composable
 fun SectionCategoryItem(
     amount: Float,
     category: Category,
-    currencyFormatter: NumberFormat,
+    currency: Currency,
     onClick: (Category) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -54,7 +54,7 @@ fun SectionCategoryItem(
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
-            Text(text = Currency.formatCurrency(currencyFormatter, amount))
+            Text(text = CurrencyFormatter.formatCurrency(currency, amount))
             CategoryIcon(
                 iconName = category.iconName,
                 contentDescription = category.name
@@ -65,7 +65,7 @@ fun SectionCategoryItem(
 
 @Composable
 fun BalanceInSelectedPeriod(
-    currencyFormatter: NumberFormat,
+    currency: Currency,
     transactionList: List<Transaction>,
     modifier: Modifier = Modifier,
 ) {
@@ -73,8 +73,8 @@ fun BalanceInSelectedPeriod(
     val balanceIn = CashFlowTools.balanceFlowIn(transactionList)
     val balanceOut = CashFlowTools.balanceFlowOut(transactionList)
 
-    val formattedIn = Currency.formatCurrency(currencyFormatter, balanceIn)
-    val formattedOut = Currency.formatCurrency(currencyFormatter, balanceOut)
+    val formattedIn = CurrencyFormatter.formatCurrency(currency, balanceIn)
+    val formattedOut = CurrencyFormatter.formatCurrency(currency, balanceOut)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

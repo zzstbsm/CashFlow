@@ -93,7 +93,7 @@ fun AllTransactionsMainBody(
                 TransactionEntry(
                     transaction = transaction,
                     category = category,
-                    currencyFormatter = allTransactionsViewModel.getCurrencyFormatter(),
+                    currency = allTransactionsUiState.currency,
                     onClickTransaction = {
                         Screen.TransactionReport.navigate(
                             transactionUUID = transaction.id,

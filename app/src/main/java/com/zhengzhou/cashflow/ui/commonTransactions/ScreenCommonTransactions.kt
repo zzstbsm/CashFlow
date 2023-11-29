@@ -277,8 +277,6 @@ private fun SingleTransaction(
     val tagList = transactionFullForUI.tagList
     val category = transactionFullForUI.category
 
-    val currencyFormatter = Currency.setCurrencyFormatter(wallet.currency.name)
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -295,7 +293,7 @@ private fun SingleTransaction(
             SingleTransactionVisibleSection(
                 transaction = transaction,
                 category = category,
-                currencyFormatter = currencyFormatter,
+                currency = wallet.currency,
                 onCreateTransaction = onCreateTransaction,
                 onEditTransaction = onEditTransaction,
                 ifTransactionOpen = ifOpen,

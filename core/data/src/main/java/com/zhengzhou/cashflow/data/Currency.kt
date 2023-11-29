@@ -1,7 +1,6 @@
 package com.zhengzhou.cashflow.data
 
 import androidx.annotation.StringRes
-import java.text.NumberFormat
 import java.util.Locale
 
 enum class Currency(
@@ -63,6 +62,10 @@ enum class Currency(
             }
         }
 
+        fun getDefaultCurrency(): Currency {
+            return EUR
+        }
+
         fun setCurrency(
             name: String
         ) : Currency? {
@@ -79,24 +82,5 @@ enum class Currency(
             return null
 
         }
-
-        fun formatCurrency(
-            currency : NumberFormat,
-            amount : Float,
-        ) : String {
-            return currency.format(amount)
-        }
-
-        fun setCurrencyFormatter(currencyName: String) : NumberFormat {
-
-            val currency: Currency? = setCurrency(currencyName)
-
-            return if (currency != null) {
-                NumberFormat.getCurrencyInstance(currency.locale)
-            } else {
-                NumberFormat.getCurrencyInstance()
-            }
-        }
-
     }
 }

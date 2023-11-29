@@ -22,14 +22,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.data.Category
+import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Transaction
-import java.text.NumberFormat
+import com.zhengzhou.cashflow.tools.CurrencyFormatter
 
 @Composable
 fun SectionTransactionEntry(
     transaction: Transaction,
     category: Category,
-    currencyFormatter: NumberFormat,
+    currency: Currency,
     onClickTransaction: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -73,7 +74,7 @@ fun SectionTransactionEntry(
                         modifier = modifier.weight(1f)
                     )
                     Text(
-                        text = currencyFormatter.format(transaction.amount),
+                        text = CurrencyFormatter.formatCurrency(currency,transaction.amount),
                         style = firstLineStyle,
                         textAlign = TextAlign.End,
                         color = if (transaction.amount >= 0) {

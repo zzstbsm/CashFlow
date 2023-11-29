@@ -7,7 +7,6 @@ import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.dataForUi.TransactionAndCategory
-import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.tools.TimeTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -16,7 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.text.NumberFormat
 import java.util.Calendar
 import java.util.Date
 
@@ -82,8 +80,6 @@ class BalanceViewModel : ViewModel() {
     private var _uiState = MutableStateFlow(BalanceUiState())
     val uiState: StateFlow<BalanceUiState> = _uiState.asStateFlow()
 
-    private var currencyFormatter: NumberFormat
-
     private var writingOnUiState: Boolean = false
 
     private var jobGetCategoryList: Job
@@ -96,7 +92,6 @@ class BalanceViewModel : ViewModel() {
         jobGetCategoryList = getCategories()
         jobGetCurrency = getCurrencyList()
         jobGetWalletList = getWalletList(uiState.value.equivalentWallet.currency)
-        currencyFormatter = Currency.setCurrencyFormatter(uiState.value.equivalentWallet.currency.name)
         jobGetTransactionList = getTransactionList()
 
     }
@@ -163,7 +158,6 @@ class BalanceViewModel : ViewModel() {
         }
     }
 
-    fun getCurrencyFormatter(): NumberFormat = currencyFormatter
     private fun getCurrencyList(): Job {
         return viewModelScope.launch(Dispatchers.IO) {
             // Collect all wallets
@@ -216,7 +210,6 @@ class BalanceViewModel : ViewModel() {
     }
     private fun getWalletList(currency: Currency): Job {
         return viewModelScope.launch(Dispatchers.IO) {
-            currencyFormatter = Currency.setCurrencyFormatter(currency.name)
             setUiState(
                 isLoading = true
             )

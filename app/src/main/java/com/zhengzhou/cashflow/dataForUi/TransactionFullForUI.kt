@@ -7,7 +7,6 @@ import com.zhengzhou.cashflow.data.TagEntry
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
-import com.zhengzhou.cashflow.database.DatabaseRepository
 import com.zhengzhou.cashflow.ui.transactionEdit.TransactionSaveResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

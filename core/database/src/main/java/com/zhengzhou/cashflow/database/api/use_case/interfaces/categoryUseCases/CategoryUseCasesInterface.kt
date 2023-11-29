@@ -1,0 +1,5 @@
+package com.zhengzhou.cashflow.database.api.use_case.interfaces.categoryUseCases
+
+import com.zhengzhou.cashflow.database.api.use_case.interfaces.categoryUseCases.features.AddCategoryInterface
+
+interface CategoryUseCasesInterface: AddCategoryInterface

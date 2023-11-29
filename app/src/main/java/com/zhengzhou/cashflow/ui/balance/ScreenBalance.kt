@@ -124,6 +124,8 @@ private fun BalanceMainBody(
         mutableStateOf(listOf<TransactionAndCategory>())
     }
 
+    val wallet = balanceUiState.equivalentWallet
+
     Column(
         modifier = Modifier.padding(innerPaddingValues)
     ) {
@@ -174,7 +176,6 @@ private fun BalanceMainBody(
             when (balanceUiState.shownTab) {
 
                 BalanceTabOptions.CATEGORIES -> {
-                    val currencyFormatter = balanceViewModel.getCurrencyFormatter()
                     val transactionList =
                         balanceUiState.transactionListToShow.map { transactionAndCategory ->
                             transactionAndCategory.transaction
@@ -183,7 +184,7 @@ private fun BalanceMainBody(
 
                     item(span = { GridItemSpan(lazyGridSpan) }) {
                         BalanceInSelectedPeriod(
-                            currencyFormatter = currencyFormatter,
+                            currency = wallet.currency,
                             transactionList = transactionList,
                         )
                     }
@@ -202,7 +203,7 @@ private fun BalanceMainBody(
                         SectionCategoryItem(
                             amount = amount,
                             category = category,
-                            currencyFormatter = balanceViewModel.getCurrencyFormatter(),
+                            currency = wallet.currency,
                             onClick = { selectedCategory ->
                                 transactionListForDialog = filteredList.map {
                                     TransactionAndCategory(
@@ -242,7 +243,7 @@ private fun BalanceMainBody(
                         TransactionEntry(
                             transaction = transactionCategoryGroup.transaction,
                             category = transactionCategoryGroup.category,
-                            currencyFormatter = balanceViewModel.getCurrencyFormatter(),
+                            currency = wallet.currency,
                             onClickTransaction = {
                                 Screen.TransactionReport.navigate(
                                     transactionUUID = transactionCategoryGroup.transaction.id,
@@ -262,7 +263,7 @@ private fun BalanceMainBody(
         show = showTransactionListDialog,
         onDismissDialog = { showTransactionListDialog = it},
         transactionList = transactionListForDialog,
-        currencyFormatter = balanceViewModel.getCurrencyFormatter(),
+        currency = wallet.currency,
         navController = navController,
         modifier = Modifier
             .fillMaxWidth()

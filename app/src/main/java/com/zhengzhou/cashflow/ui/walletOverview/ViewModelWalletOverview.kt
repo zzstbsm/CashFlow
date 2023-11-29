@@ -3,11 +3,9 @@ package com.zhengzhou.cashflow.ui.walletOverview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.data.Category
-import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.dataForUi.TransactionAndCategory
-import com.zhengzhou.cashflow.database.DatabaseRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +13,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.lang.Integer.min
-import java.text.NumberFormat
 import java.util.Date
 import java.util.UUID
 
@@ -44,8 +41,6 @@ class WalletOverviewViewModel(
 
     private val repository = DatabaseRepository.get()
 
-    var currencyFormatter: NumberFormat = Currency.setCurrencyFormatter(Currency.EUR.name)
-
     private var retrieveCurrentAmountInWalletJob: Job
     private var retrieveTransactionJob: Job
     private var retrieveShownWalletJob: Job
@@ -61,6 +56,16 @@ class WalletOverviewViewModel(
         retrieveCurrentAmountInWalletJob = jobUpdateCurrentAmount()
     }
 
+    fun reloadScreen() {
+        viewModelScope.launch {
+            setUiState(
+                isLoadingWallet = true
+            )
+            loadLastAccessed()
+        }
+        retrieveCurrentAmountInWalletJob.cancel()
+        retrieveCurrentAmountInWalletJob = jobUpdateCurrentAmount()
+    }
     private fun setUiState(
         wallet: Wallet? = null,
         currentAmountInTheWallet: Float? = null,
@@ -91,15 +96,8 @@ class WalletOverviewViewModel(
 
                 showSelectWallet = showSelectWallet ?: uiState.value.showSelectWallet
             )
-            if (wallet != null) {
-                currencyFormatter = Currency.setCurrencyFormatter(wallet.currency.name)
-            }
             writingOnUiState = false
         }
-    }
-
-    fun formatCurrency(amount: Float) : String {
-        return Currency.formatCurrency(currencyFormatter, amount)
     }
 
     private suspend fun loadLastAccessed() {
@@ -139,16 +137,6 @@ class WalletOverviewViewModel(
 
     }
 
-    fun reloadScreen() {
-        viewModelScope.launch {
-            setUiState(
-                isLoadingWallet = true
-            )
-            loadLastAccessed()
-        }
-        retrieveCurrentAmountInWalletJob.cancel()
-        retrieveCurrentAmountInWalletJob = jobUpdateCurrentAmount()
-    }
 
     fun selectWallet(wallet: Wallet) {
 
@@ -256,7 +244,6 @@ class WalletOverviewViewModel(
             }
         }
     }
-
     private fun jobUpdateCurrentShownWallet(walletUUID: UUID): Job {
         return viewModelScope.launch {
             if (walletUUID == Wallet.newWalletId()) {
@@ -270,7 +257,6 @@ class WalletOverviewViewModel(
                     isLoadingWallet = false
                 )
             }
-            currencyFormatter = Currency.setCurrencyFormatter(uiState.value.wallet.currency.name)
         }
     }
 

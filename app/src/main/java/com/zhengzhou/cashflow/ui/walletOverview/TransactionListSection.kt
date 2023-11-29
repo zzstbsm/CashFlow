@@ -44,7 +44,7 @@ fun TransactionListSection(
                 SectionTransactionEntry(
                     transaction = transaction,
                     category = category,
-                    currencyFormatter = walletOverviewViewModel.currencyFormatter,
+                    currency = walletOverviewUiState.wallet.currency,
                     onClickTransaction = {
                         Screen.TransactionReport.navigate(
                             transactionUUID = transaction.id,
@@ -64,7 +64,7 @@ fun TransactionListSection(
                 }
             ) {
                 Text(
-                    text = "See all"
+                    text = stringResource(id = R.string.WalletOverview_see_all)
                 )
             }
         }
