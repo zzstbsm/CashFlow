@@ -30,7 +30,6 @@ import com.zhengzhou.cashflow.customUiElements.DateSelector
 import com.zhengzhou.cashflow.customUiElements.DropdownTextFieldMenu
 import com.zhengzhou.cashflow.customUiElements.IconChoiceDialog
 import com.zhengzhou.cashflow.data.Currency
-import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import java.util.Date
 
 @Composable
@@ -159,7 +158,7 @@ private fun TextWalletIcon(
     if (showDialog) {
         IconChoiceDialog(
             text = stringResource(id = R.string.WalletEdit_choose_wallet_icon),
-            iconList = IconsMappedForDB.values()
+            iconList = com.zhengzhou.cashflow.themes.IconsMappedForDB.values()
                 .toList()
                 .filter { it.wallet },
             onDismissRequest = { showDialog = false },

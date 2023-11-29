@@ -19,9 +19,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.about_me.AboutMeScreen
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
-import com.zhengzhou.cashflow.ui.aboutMe.AboutMeScreen
 import com.zhengzhou.cashflow.ui.allTransactions.AllTransactionsScreen
 import com.zhengzhou.cashflow.ui.balance.BalanceScreen
 import com.zhengzhou.cashflow.ui.commonTransactions.CommonTransactionsScreen
@@ -45,7 +45,7 @@ fun NavigationApp() {
     val navController = rememberNavController()
     NavHost(navController, startDestination = startDestination) {
         composable(route = Screen.AboutMe.route) {
-            AboutMeScreen(
+            com.zhengzhou.cashflow.about_me.AboutMeScreen(
                 currentScreen = currentScreen,
                 setCurrentScreen = { screen ->
                     currentScreen = screen

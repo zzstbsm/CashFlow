@@ -29,7 +29,6 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.customUiElements.CategoryIcon
 import com.zhengzhou.cashflow.customUiElements.IconChoiceDialog
 import com.zhengzhou.cashflow.data.Category
-import com.zhengzhou.cashflow.themes.IconsMappedForDB
 
 
 @Composable
@@ -37,8 +36,8 @@ fun EditCategoryDetailsSection(
     category: Category,
     newCategoryName: String,
     onEditCategoryName: (String) ->Unit,
-    newCategoryIcon: IconsMappedForDB,
-    onEditCategoryIcon: (IconsMappedForDB) -> Unit,
+    newCategoryIcon: com.zhengzhou.cashflow.themes.IconsMappedForDB,
+    onEditCategoryIcon: (com.zhengzhou.cashflow.themes.IconsMappedForDB) -> Unit,
     horizontalPadding: Dp,
     onDeleteCategory: (Category) -> Unit,
     onSaveNewCategory: (Category) -> Unit,
@@ -94,8 +93,8 @@ fun EditCategoryDetailsSection(
 
 @Composable
 private fun ChooseCategoryIcon(
-    currentIcon: IconsMappedForDB,
-    onChooseIcon: (IconsMappedForDB) -> Unit,
+    currentIcon: com.zhengzhou.cashflow.themes.IconsMappedForDB,
+    onChooseIcon: (com.zhengzhou.cashflow.themes.IconsMappedForDB) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -118,7 +117,7 @@ private fun ChooseCategoryIcon(
     if (showDialog) {
         IconChoiceDialog(
             text = stringResource(id = R.string.ManageCategories_choose_category_icon),
-            iconList = IconsMappedForDB.values().toList()
+            iconList = com.zhengzhou.cashflow.themes.IconsMappedForDB.values().toList()
                 .toList()
                 .filter { it.category },
             onDismissRequest = { showDialog = false },

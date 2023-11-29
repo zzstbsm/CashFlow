@@ -2,7 +2,6 @@ package com.zhengzhou.cashflow
 
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
-import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import java.util.UUID
 
 class LoadDefaultCategories {
@@ -31,61 +30,61 @@ class LoadDefaultCategories {
                 Category(
                     id = UUID.randomUUID(),
                     name = "Groceries",
-                    iconName = IconsMappedForDB.GROCERY,
+                    iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.GROCERY,
                     transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Eating out",
-                    iconName = IconsMappedForDB.EATING_OUT,
+                    iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.EATING_OUT,
                     transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Health",
-                    iconName = IconsMappedForDB.HEALTH,
+                    iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.HEALTH,
                     transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Transportation",
-                    iconName = IconsMappedForDB.TRANSPORTATION,
+                    iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.TRANSPORTATION,
                     transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Travel",
-                    iconName = IconsMappedForDB.TRAVEL,
+                    iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.TRAVEL,
                     transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Home",
-                    iconName = IconsMappedForDB.HOME,
+                    iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.HOME,
                     transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Subscriptions",
-                    iconName = IconsMappedForDB.SUBSCRIPTION,
+                    iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.SUBSCRIPTION,
                     transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Entertainment",
-                    iconName = IconsMappedForDB.ENTERTAINMENT,
+                    iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.ENTERTAINMENT,
                     transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Gift",
-                    iconName = IconsMappedForDB.GIFT,
+                    iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.GIFT,
                     transactionType = TransactionType.Expense,
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Sport",
-                    iconName = IconsMappedForDB.SPORT,
+                    iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.SPORT,
                     transactionType = TransactionType.Expense,
                 ),
             )
@@ -96,13 +95,13 @@ class LoadDefaultCategories {
                 Category(
                     id = UUID.randomUUID(),
                     name = "Salary",
-                    iconName = IconsMappedForDB.SALARY,
+                    iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.SALARY,
                     transactionType = TransactionType.Deposit
                 ),
                 Category(
                     id = UUID.randomUUID(),
                     name = "Deposit",
-                    iconName = IconsMappedForDB.WALLET,
+                    iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.WALLET,
                     transactionType = TransactionType.Deposit
                 ),
             )
@@ -113,7 +112,7 @@ class LoadDefaultCategories {
                 Category(
                     id = UUID.randomUUID(),
                     name = "Transfer",
-                    iconName = IconsMappedForDB.TRANSFER,
+                    iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.TRANSFER,
                     transactionType = TransactionType.Move
                 ),
             )

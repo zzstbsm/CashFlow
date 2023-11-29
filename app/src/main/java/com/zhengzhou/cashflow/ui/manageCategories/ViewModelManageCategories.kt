@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
-import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
 import kotlinx.coroutines.Job
@@ -112,7 +111,7 @@ class ManageCategoriesViewModel : ViewModel() {
 
     fun createCategory(
         name: String,
-        iconName: IconsMappedForDB,
+        iconName: com.zhengzhou.cashflow.themes.IconsMappedForDB,
         transactionType: TransactionType
     ) {
         val newCategory = Category(

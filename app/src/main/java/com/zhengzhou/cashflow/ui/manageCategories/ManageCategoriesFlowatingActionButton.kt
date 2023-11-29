@@ -15,7 +15,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
-import com.zhengzhou.cashflow.themes.IconsMappedForDB
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +47,7 @@ fun ManageCategoriesFloatingActionButton(
                     mutableStateOf(defaultNewCategoryName)
                 }
                 var newCategoryIcon by remember {
-                    mutableStateOf(IconsMappedForDB.HOME)
+                    mutableStateOf(com.zhengzhou.cashflow.themes.IconsMappedForDB.HOME)
                 }
 
                 EditCategoryDetailsSection(
@@ -74,7 +73,7 @@ fun ManageCategoriesFloatingActionButton(
                         showDialog = false
                     },
                     onUndoChanges = {
-                        newCategoryIcon = IconsMappedForDB.HOME
+                        newCategoryIcon = com.zhengzhou.cashflow.themes.IconsMappedForDB.HOME
                         newCategoryName = defaultNewCategoryName
                     },
                 )

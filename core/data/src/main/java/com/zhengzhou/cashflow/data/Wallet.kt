@@ -14,7 +14,7 @@ data class Wallet(
     @ColumnInfo(name = "start_amount")
     val startAmount: Float,
     @ColumnInfo(name = "icon_id")
-    val iconName: IconsMappedForDB,
+    val iconName: com.zhengzhou.cashflow.themes.IconsMappedForDB,
     val currency: Currency,
     @ColumnInfo(name = "creation_date")
     val creationDate: Date,
@@ -30,7 +30,7 @@ data class Wallet(
                 id = UUID(0L,0L),
                 name = "",
                 startAmount = 0f,
-                iconName = IconsMappedForDB.WALLET,
+                iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.WALLET,
                 currency = Currency.EUR,
                 creationDate = Date(),
                 lastAccess = Date(),

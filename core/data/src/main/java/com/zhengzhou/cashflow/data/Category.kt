@@ -11,7 +11,7 @@ data class Category (
     @PrimaryKey val id: UUID,
     var name: String,
     @ColumnInfo(name = "id_icon")
-    val iconName: IconsMappedForDB,
+    val iconName: com.zhengzhou.cashflow.themes.IconsMappedForDB,
     @ColumnInfo(name = "movement_type")
     val transactionType: TransactionType,
 ) {
@@ -20,7 +20,7 @@ data class Category (
             return Category(
                 id = UUID(0L,0L),
                 name = "",
-                iconName = IconsMappedForDB.LOADING,
+                iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.LOADING,
                 transactionType = TransactionType.Loading,
             )
         }
@@ -28,7 +28,7 @@ data class Category (
         fun newTransfer(categoryUUID: UUID): Category {
             return newEmpty().copy(
                 id = categoryUUID,
-                iconName = IconsMappedForDB.TRANSFER,
+                iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.TRANSFER,
                 transactionType = TransactionType.Move
             )
         }

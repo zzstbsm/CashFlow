@@ -48,16 +48,6 @@
     <string name="balance">Balance: %1$s</string>
     <string name="profile">Profile</string>
 
-
-    <!-- About me -->
-    <string name="AboutMe_description">Greetings from Italy!\nThank you for using CashFlow!\nThis is my first Android application and I hope you like it, I am developing it for fun as side project in my free/spare time.\nFeel free to share it with your friends and relatives!\nIf you like this app/have suggestions/want to leave a feedback, please leave a review on the Play Store!</string>
-    <string name="AboutMe_GitHub">GitHub: zzstbsm</string>
-    <string name="AboutMe_GitHub_link">https://github.com/zzstbsm/CashFlow</string>
-    <string name="AboutMe_LinkedIn">LinkedIn: Zhou Zheng</string>
-    <string name="AboutMe_LinkedIn_link">https://www.linkedin.com/in/zhou-zheng-974b14167/</string>
-    <string name="AboutMe_donate">Make a donation to the project</string>
-    <string name="AboutMe_donate_dialog">Thank you for showing support for the project!\n\nUnfortunately, for the Google policies, I am not authorized to keep the direct link to the donation page. However, you can check my GitHub page.</string>
-
     <!-- AllTransactions -->
     <string name="AllTransactions_TopAppBar">Transaction list</string>
 

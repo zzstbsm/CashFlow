@@ -79,7 +79,7 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.room:room-common:2.6.0'
-    implementation project(path: ':feature:themes')
+    implementation project(path: ':feature:total_balance')
 
     testImplementation 'junit:junit:4.13.2'
 

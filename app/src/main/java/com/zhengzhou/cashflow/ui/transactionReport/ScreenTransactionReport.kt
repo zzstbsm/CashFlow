@@ -37,7 +37,6 @@ import com.zhengzhou.cashflow.customUiElements.TagListLazyStaggeredHorizontalGri
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.navigation.Screen
-import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import com.zhengzhou.cashflow.tools.CurrencyFormatter
 import java.util.UUID
 
@@ -186,7 +185,7 @@ private fun TransactionReportMainBody(
                             modifier = Modifier
                                 .weight(5f)
                         )
-                        if (category.iconName == IconsMappedForDB.LOADING) {
+                        if (category.iconName == com.zhengzhou.cashflow.themes.IconsMappedForDB.LOADING) {
                             CircularProgressIndicator(
                                 modifier = Modifier
                                     .weight(1f)

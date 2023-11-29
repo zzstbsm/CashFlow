@@ -124,7 +124,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation project(path: ':core:data')
     implementation project(path: ':core:database')
-    implementation project(path: ':feature:themes')
+    implementation project(path: ':core:themes')
+    implementation project(path: ':feature:total_balance')
     implementation project(path: ':tools')
 
     ksp 'androidx.room:room-compiler:2.6.0'

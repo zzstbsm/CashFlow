@@ -45,7 +45,6 @@ import com.zhengzhou.cashflow.customUiElements.SectionTopAppBar
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
-import com.zhengzhou.cashflow.themes.IconsMappedForDB
 
 @Composable
 fun ManageCategoriesScreen(
@@ -305,7 +304,7 @@ private fun CategoryOpenSectionArrow(
     ifOpen: Boolean,
     category: Category,
     onOpenCategory: (Category?) -> Unit,
-    onSetNewCategory: (String,IconsMappedForDB) -> Unit,
+    onSetNewCategory: (String, com.zhengzhou.cashflow.themes.IconsMappedForDB) -> Unit,
     modifier: Modifier = Modifier
 ) {
 

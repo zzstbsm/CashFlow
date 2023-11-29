@@ -46,7 +46,6 @@ import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
 import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
 import com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.navigation.Screen
-import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import com.zhengzhou.cashflow.tools.EventMessages
 
 @Composable
@@ -222,7 +221,7 @@ private fun PreviewSingleTransaction() {
         ),
         category = Category.newEmpty().copy(
             name = "Category",
-            iconName = IconsMappedForDB.HOME
+            iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.HOME
         ),
         tagList = listOf(
             Tag(
