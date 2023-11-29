@@ -6,18 +6,15 @@ import com.zhengzhou.cashflow.database.data.data_source.dao.RepositoryDao
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
-internal open class CategoryImplementation(
+internal class CategoryImplementation(
     private val dao: RepositoryDao
 ) : CategoryInterface {
 
     override suspend fun getCategory(categoryUUID: UUID) : Category? {
         return dao.getCategory(categoryUUID = categoryUUID)
     }
-    override suspend fun addCategory(category: Category): Category {
-
-        val initializedCategory = category.copy(id = UUID.randomUUID())
-        dao.addCategory(initializedCategory)
-        return initializedCategory
+    override suspend fun addCategory(category: Category) {
+        dao.addCategory(category = category)
     }
     override suspend fun updateCategory(category: Category) {
         dao.updateCategory(category)

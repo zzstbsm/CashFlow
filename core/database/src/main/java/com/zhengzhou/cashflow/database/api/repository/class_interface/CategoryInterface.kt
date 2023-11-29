@@ -12,11 +12,9 @@ interface CategoryInterface {
     suspend fun getCategory(categoryUUID: UUID) : Category?
 
     /**
-     * Add a new category in the data source and return the same category with a new id.
-     * @param category Category to add
-     * @return Category with the new id
+     * Insert a new category in the data source.
      */
-    suspend fun addCategory(category: Category): Category
+    suspend fun addCategory(category: Category)
 
     /**
      * Update a category in the data source

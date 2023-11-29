@@ -7,6 +7,7 @@ import java.util.UUID
 interface TagEntryInterface {
     suspend fun addTagEntry(tagEntry: TagEntry)
     suspend fun deleteTagEntry(tagEntry: TagEntry)
+    suspend fun updateTagEntry(tagEntry: TagEntry)
     suspend fun getTagEntry(tagEntryUUID: UUID): TagEntry?
     fun getTagEntryList(): Flow<List<TagEntry>>
 

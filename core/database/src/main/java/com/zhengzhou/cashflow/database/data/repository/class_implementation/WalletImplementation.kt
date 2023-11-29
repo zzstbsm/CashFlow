@@ -7,7 +7,7 @@ import com.zhengzhou.cashflow.database.data.data_source.dao.RepositoryDao
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
-internal open class WalletImplementation(
+internal class WalletImplementation(
     private val dao: RepositoryDao
 ) : WalletInterface {
     override suspend fun getWallet(walletUUID: UUID): Wallet? {

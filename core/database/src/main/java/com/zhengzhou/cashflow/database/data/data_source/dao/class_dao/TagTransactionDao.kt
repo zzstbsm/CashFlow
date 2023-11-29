@@ -23,5 +23,5 @@ internal interface TagTransactionDao {
 
     // Custom query based on the application
     @Query("SELECT * FROM tag_transaction WHERE id_movement=(:transactionUUID)")
-    fun getTagTransactionFromTransaction(transactionUUID: UUID): Flow<List<TagTransaction>>
+    fun getTagTransactionListFromTransaction(transactionUUID: UUID): Flow<List<TagTransaction>>
 }
