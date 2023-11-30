@@ -16,15 +16,12 @@ import androidx.navigation.compose.rememberNavController
 import com.zhengzhou.cashflow.customUiElements.BottomNavigationBar
 import com.zhengzhou.cashflow.customUiElements.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.customUiElements.SectionTopAppBar
-import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
-import com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack
-import com.zhengzhou.cashflow.navigation.Screen
 
 @Preview
 @Composable
 private fun ProfileScreenPreview(){
     ProfileScreen(
-        currentScreen = NavigationCurrentScreen.Profile,
+        currentScreen = com.zhengzhou.cashflow.navigation.NavigationCurrentScreen.Profile,
         setCurrentScreen = { },
         navController = rememberNavController()
     )
@@ -32,8 +29,8 @@ private fun ProfileScreenPreview(){
 
 @Composable
 fun ProfileScreen(
-    currentScreen: NavigationCurrentScreen,
-    setCurrentScreen: (NavigationCurrentScreen) -> Unit,
+    currentScreen: com.zhengzhou.cashflow.navigation.NavigationCurrentScreen,
+    setCurrentScreen: (com.zhengzhou.cashflow.navigation.NavigationCurrentScreen) -> Unit,
     navController: NavController,
 ) {
     val profileViewModel: ProfileViewModel = viewModel()
@@ -41,11 +38,11 @@ fun ProfileScreen(
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-    ReloadPageAfterPopBackStack(
-        pageRoute = Screen.Profile.route,
+    com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack(
+        pageRoute = com.zhengzhou.cashflow.navigation.Screen.Profile.route,
         navController = navController,
     ) {
-        setCurrentScreen(NavigationCurrentScreen.Profile)
+        setCurrentScreen(com.zhengzhou.cashflow.navigation.NavigationCurrentScreen.Profile)
     }
 
     ModalNavigationDrawer(

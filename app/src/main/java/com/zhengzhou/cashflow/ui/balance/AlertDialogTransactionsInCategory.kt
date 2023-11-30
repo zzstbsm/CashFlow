@@ -15,7 +15,6 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.customUiElements.SectionTransactionEntry
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.dataForUi.TransactionAndCategory
-import com.zhengzhou.cashflow.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +48,7 @@ fun TransactionsInCategoryAlertDialog(
                                 category = transaction.category,
                                 currency = currency,
                                 onClickTransaction = {
-                                    Screen.TransactionReport.navigate(
+                                    com.zhengzhou.cashflow.navigation.Screen.TransactionReport.navigate(
                                         transactionUUID = transaction.transaction.id,
                                         navController = navController,
                                     )

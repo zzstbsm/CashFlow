@@ -39,14 +39,14 @@ internal class TransactionTypeConverters {
     }
 
     @TypeConverter
-    fun fromIconsMappedForDB(icon: com.zhengzhou.cashflow.themes.IconsMappedForDB): String {
+    fun fromIconsMappedForDB(icon: IconsMappedForDB): String {
         return "${icon.name}-DEFAULT"
     }
 
     @TypeConverter
-    fun toIconsMappedForDB(name: String): com.zhengzhou.cashflow.themes.IconsMappedForDB? {
+    fun toIconsMappedForDB(name: String): IconsMappedForDB? {
         val splitName = name.split("-")[0]
-        return com.zhengzhou.cashflow.themes.IconsMappedForDB.setIcon(splitName)
+        return IconsMappedForDB.setIcon(splitName)
     }
 
 }

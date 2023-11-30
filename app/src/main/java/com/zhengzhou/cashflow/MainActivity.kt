@@ -8,7 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalContext
-import com.zhengzhou.cashflow.navigation.NavigationApp
 import com.zhengzhou.cashflow.tools.PreloadTransactions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +33,7 @@ class MainActivity : ComponentActivity() {
             PreloadTransactions.load()
 
             MaterialTheme {
-                NavigationApp()
+                com.zhengzhou.cashflow.navigation.NavigationApp()
             }
 
             val context = LocalContext.current

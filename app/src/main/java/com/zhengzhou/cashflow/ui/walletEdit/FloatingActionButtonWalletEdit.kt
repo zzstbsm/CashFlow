@@ -8,7 +8,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.tools.EventMessages
 
 @Composable
@@ -34,11 +33,11 @@ fun WalletEditFloatingActionButton(
                     navController.previousBackStackEntry
                         ?.savedStateHandle
                         ?.set(
-                            Screen.WalletOverview.handleKeyWalletUUID,
+                            com.zhengzhou.cashflow.navigation.Screen.WalletOverview.handleKeyWalletUUID,
                             walletEditUiState.wallet.id.toString()
                         )
                     navController.popBackStack(
-                        route = Screen.WalletOverview.route,
+                        route = com.zhengzhou.cashflow.navigation.Screen.WalletOverview.route,
                         inclusive = false
                     )
                 }

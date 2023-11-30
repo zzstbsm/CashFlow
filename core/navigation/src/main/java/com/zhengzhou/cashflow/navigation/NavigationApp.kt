@@ -18,7 +18,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.about_me.AboutMeScreen
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
@@ -53,7 +52,7 @@ fun NavigationApp() {
                 navController = navController,
             )
         }
-        composable(route = Screen.AllTransactions.route) {navBackStackEntry ->
+        composable(route = Screen.AllTransactions.route) { navBackStackEntry ->
             val walletUUID = navBackStackEntry.arguments?.getString(NavigationKeys.keyWalletUUID)
             val categoryUUID = navBackStackEntry.arguments?.getString(NavigationKeys.keyCategoryUUID)
             val currency = Currency.setCurrency(

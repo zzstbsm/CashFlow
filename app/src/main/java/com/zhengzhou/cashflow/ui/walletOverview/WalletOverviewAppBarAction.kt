@@ -17,7 +17,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.navigation.Screen
 import java.util.UUID
 
 @Composable
@@ -33,7 +32,7 @@ fun WalletOverviewAppBarAction(
         if (!walletOverviewUiState.ifZeroWallet) {
             IconButton(
                 onClick = {
-                    Screen.WalletEdit.navigate(
+                    com.zhengzhou.cashflow.navigation.Screen.WalletEdit.navigate(
                         walletID = walletOverviewUiState.wallet.id,
                         navController = navController,
                     )
@@ -72,7 +71,7 @@ fun WalletOverviewAppBarAction(
                 Text(text = stringResource(id = R.string.nav_name_wallet_add))
             },
             onClick = {
-                Screen.WalletEdit.navigate(
+                com.zhengzhou.cashflow.navigation.Screen.WalletEdit.navigate(
                     walletID = UUID(0L, 0L),
                     navController = navController,
                 )

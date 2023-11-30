@@ -43,15 +43,12 @@ import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
-import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
-import com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack
-import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.tools.EventMessages
 
 @Composable
 fun CommonTransactionsScreen(
-    currentScreen: NavigationCurrentScreen,
-    setCurrentScreen: (NavigationCurrentScreen) -> Unit,
+    currentScreen: com.zhengzhou.cashflow.navigation.NavigationCurrentScreen,
+    setCurrentScreen: (com.zhengzhou.cashflow.navigation.NavigationCurrentScreen) -> Unit,
     navController: NavController
 ) {
 
@@ -61,11 +58,11 @@ fun CommonTransactionsScreen(
     val commonTransactionsUiState by commonTransactionsViewModel.uiState.collectAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-    ReloadPageAfterPopBackStack(
-        pageRoute = Screen.CommonTransactions.route,
+    com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack(
+        pageRoute = com.zhengzhou.cashflow.navigation.Screen.CommonTransactions.route,
         navController = navController,
     ) {
-        setCurrentScreen(NavigationCurrentScreen.CommonTransactions)
+        setCurrentScreen(com.zhengzhou.cashflow.navigation.NavigationCurrentScreen.CommonTransactions)
         commonTransactionsViewModel.reloadScreen()
     }
 
@@ -175,7 +172,7 @@ private fun CommonTransactionsNonEmptyList(
                 },
                 onEditTransaction = {
                     val transaction = transactionFullForUI.transaction
-                    Screen.TransactionEdit.navigate(
+                    com.zhengzhou.cashflow.navigation.Screen.TransactionEdit.navigate(
                         transactionType = transaction.transactionType,
                         transactionUUID = transaction.id,
                         currency = transactionFullForUI.wallet.currency,
@@ -186,7 +183,7 @@ private fun CommonTransactionsNonEmptyList(
                 },
                 onEditTransactionModel = {
                     val transaction = transactionFullForUI.transaction
-                    Screen.TransactionEdit.navigate(
+                    com.zhengzhou.cashflow.navigation.Screen.TransactionEdit.navigate(
                         transactionType = transaction.transactionType,
                         transactionUUID = transaction.id,
                         currency = transactionFullForUI.wallet.currency,
@@ -350,7 +347,7 @@ private fun CommonTransactionFloatingActionButtons(
                         },
                         onClick = {
                             if (wallet.id != Wallet.newWalletId()) {
-                                Screen.TransactionEdit.navigate(
+                                com.zhengzhou.cashflow.navigation.Screen.TransactionEdit.navigate(
                                     transactionType = transactionType,
                                     transactionUUID = transaction.id,
                                     currency = wallet.currency,

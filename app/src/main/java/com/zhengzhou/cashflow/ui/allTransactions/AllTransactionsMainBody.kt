@@ -24,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.ui.balance.TransactionEntry
 import kotlinx.coroutines.launch
 
@@ -95,7 +94,7 @@ fun AllTransactionsMainBody(
                     category = category,
                     currency = allTransactionsUiState.currency,
                     onClickTransaction = {
-                        Screen.TransactionReport.navigate(
+                        com.zhengzhou.cashflow.navigation.Screen.TransactionReport.navigate(
                             transactionUUID = transaction.id,
                             navController = navController
                         )

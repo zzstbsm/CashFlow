@@ -33,14 +33,11 @@ import com.zhengzhou.cashflow.customUiElements.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.customUiElements.SectionTopAppBar
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.dataForUi.TransactionAndCategory
-import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
-import com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack
-import com.zhengzhou.cashflow.navigation.Screen
 
 @Composable
 fun BalanceScreen(
-    currentScreen: NavigationCurrentScreen,
-    setCurrentScreen: (NavigationCurrentScreen) -> Unit,
+    currentScreen: com.zhengzhou.cashflow.navigation.NavigationCurrentScreen,
+    setCurrentScreen: (com.zhengzhou.cashflow.navigation.NavigationCurrentScreen) -> Unit,
     navController: NavController
 ) {
 
@@ -50,11 +47,11 @@ fun BalanceScreen(
     val balanceUiState by balanceViewModel.uiState.collectAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-    ReloadPageAfterPopBackStack(
-        pageRoute = Screen.Balance.route,
+    com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack(
+        pageRoute = com.zhengzhou.cashflow.navigation.Screen.Balance.route,
         navController = navController,
     ) {
-        setCurrentScreen(NavigationCurrentScreen.Balance)
+        setCurrentScreen(com.zhengzhou.cashflow.navigation.NavigationCurrentScreen.Balance)
     }
 
     ModalNavigationDrawer(
@@ -245,7 +242,7 @@ private fun BalanceMainBody(
                             category = transactionCategoryGroup.category,
                             currency = wallet.currency,
                             onClickTransaction = {
-                                Screen.TransactionReport.navigate(
+                                com.zhengzhou.cashflow.navigation.Screen.TransactionReport.navigate(
                                     transactionUUID = transactionCategoryGroup.transaction.id,
                                     navController = navController,
                                 )

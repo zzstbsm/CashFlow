@@ -21,20 +21,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.navigation.NavigationAppTestTag
-import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
 import com.zhengzhou.cashflow.tools.EventMessages
 import kotlinx.coroutines.launch
 
 @Composable
 fun BottomNavigationBar(
-    currentScreen: NavigationCurrentScreen,
-    setCurrentScreen: (NavigationCurrentScreen) -> Unit,
+    currentScreen: com.zhengzhou.cashflow.navigation.NavigationCurrentScreen,
+    setCurrentScreen: (com.zhengzhou.cashflow.navigation.NavigationCurrentScreen) -> Unit,
     navController: NavController,
 ) {
 
     NavigationBar {
-        NavigationCurrentScreen.elements
+        com.zhengzhou.cashflow.navigation.NavigationCurrentScreen.elements
             .filter{ screen ->
             screen.bottomActive
             }.forEach { item ->
@@ -54,7 +52,7 @@ fun BottomNavigationBar(
                         )
                     },
                     modifier = Modifier.testTag(
-                        NavigationAppTestTag.bottomNavBar(item.route)
+                        com.zhengzhou.cashflow.navigation.NavigationAppTestTag.bottomNavBar(item.route)
                     )
                 )
             }
@@ -64,8 +62,8 @@ fun BottomNavigationBar(
 @Composable
 fun SectionNavigationDrawerSheet(
     drawerState: DrawerState,
-    currentScreen: NavigationCurrentScreen,
-    setCurrentScreen: (NavigationCurrentScreen) -> Unit,
+    currentScreen: com.zhengzhou.cashflow.navigation.NavigationCurrentScreen,
+    setCurrentScreen: (com.zhengzhou.cashflow.navigation.NavigationCurrentScreen) -> Unit,
     navController: NavController,
 ) {
 
@@ -80,7 +78,7 @@ fun SectionNavigationDrawerSheet(
                 maxLines = 1,
                 modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
             )
-            NavigationCurrentScreen.elements
+            com.zhengzhou.cashflow.navigation.NavigationCurrentScreen.elements
                 .filter { item ->
                     item.navBarActive
                 }
@@ -101,7 +99,7 @@ fun SectionNavigationDrawerSheet(
                         },
                         modifier = Modifier
                             .testTag(
-                                NavigationAppTestTag.drawerNavBar(item.route)
+                                com.zhengzhou.cashflow.navigation.NavigationAppTestTag.drawerNavBar(item.route)
                             )
                             .padding(NavigationDrawerItemDefaults.ItemPadding)
                     )
@@ -113,7 +111,7 @@ fun SectionNavigationDrawerSheet(
 
 @Composable
 private fun RouteIcon(
-    navigationCurrentScreen : NavigationCurrentScreen,
+    navigationCurrentScreen : com.zhengzhou.cashflow.navigation.NavigationCurrentScreen,
 ) {
     Icon(
         painter = painterResource(id = navigationCurrentScreen.iconId),
@@ -126,8 +124,8 @@ private fun RouteIcon(
 }
 
 private fun routeClick(
-    setCurrentScreen: (NavigationCurrentScreen) -> Unit,
-    navigationCurrentScreen: NavigationCurrentScreen,
+    setCurrentScreen: (com.zhengzhou.cashflow.navigation.NavigationCurrentScreen) -> Unit,
+    navigationCurrentScreen: com.zhengzhou.cashflow.navigation.NavigationCurrentScreen,
     navController: NavController
 ) {
     if (navigationCurrentScreen.routeActive) {

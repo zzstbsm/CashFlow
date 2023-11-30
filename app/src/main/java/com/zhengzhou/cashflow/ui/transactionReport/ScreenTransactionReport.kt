@@ -35,8 +35,6 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.customUiElements.CategoryIcon
 import com.zhengzhou.cashflow.customUiElements.TagListLazyStaggeredHorizontalGrid
 import com.zhengzhou.cashflow.data.TransactionType
-import com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack
-import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.tools.CurrencyFormatter
 import java.util.UUID
 
@@ -52,8 +50,8 @@ fun TransactionReportScreen(
     }
     val transactionReportUiState by transactionReportViewModel.uiState.collectAsState()
 
-    ReloadPageAfterPopBackStack(
-        pageRoute = Screen.TransactionReport.route,
+    com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack(
+        pageRoute = com.zhengzhou.cashflow.navigation.Screen.TransactionReport.route,
         navController = navController
     ) {
         transactionReportViewModel.loadTransactionReport(transactionUUID)
@@ -69,7 +67,7 @@ fun TransactionReportScreen(
                     navController.popBackStack()
                  },
                  onEditClick = {
-                     Screen.TransactionEdit.navigate(
+                     com.zhengzhou.cashflow.navigation.Screen.TransactionEdit.navigate(
                          transactionType = transactionType,
                          transactionUUID = transactionUUID,
                          currency = transactionReportUiState.transactionFullForUI.wallet.currency,

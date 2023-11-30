@@ -19,16 +19,13 @@ import com.zhengzhou.cashflow.customUiElements.CategoryIcon
 import com.zhengzhou.cashflow.customUiElements.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.customUiElements.SectionTopAppBar
 import com.zhengzhou.cashflow.data.Wallet
-import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
-import com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack
-import com.zhengzhou.cashflow.navigation.Screen
 import java.util.UUID
 
 @Composable
 fun WalletOverviewScreen(
     walletUUID: UUID = UUID(0L,0L),
-    currentScreen: NavigationCurrentScreen,
-    setCurrentScreen: (NavigationCurrentScreen) -> Unit,
+    currentScreen: com.zhengzhou.cashflow.navigation.NavigationCurrentScreen,
+    setCurrentScreen: (com.zhengzhou.cashflow.navigation.NavigationCurrentScreen) -> Unit,
     navController: NavController
 ) {
 
@@ -40,11 +37,11 @@ fun WalletOverviewScreen(
     val walletOverviewUiState by walletOverviewViewModel.uiState.collectAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-    ReloadPageAfterPopBackStack(
-        pageRoute = Screen.WalletOverview.route,
+    com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack(
+        pageRoute = com.zhengzhou.cashflow.navigation.Screen.WalletOverview.route,
         navController = navController
     ) {
-        setCurrentScreen(NavigationCurrentScreen.WalletOverview)
+        setCurrentScreen(com.zhengzhou.cashflow.navigation.NavigationCurrentScreen.WalletOverview)
         walletOverviewViewModel.reloadScreen()
     }
 

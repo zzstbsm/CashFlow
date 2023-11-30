@@ -14,14 +14,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.navigation.NavigationAppTestTag
-import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SectionTopAppBar(
-    currentScreen: NavigationCurrentScreen,
+    currentScreen: com.zhengzhou.cashflow.navigation.NavigationCurrentScreen,
     drawerState: DrawerState,
     modifier: Modifier = Modifier,
     pageName: String? = null,
@@ -42,7 +40,7 @@ fun SectionTopAppBar(
                     }
                 },
                 modifier = modifier.testTag(
-                    NavigationAppTestTag.TAG_OPEN_NAV_DRAWER
+                    com.zhengzhou.cashflow.navigation.NavigationAppTestTag.TAG_OPEN_NAV_DRAWER
                 ),
             ) {
                 Icon(

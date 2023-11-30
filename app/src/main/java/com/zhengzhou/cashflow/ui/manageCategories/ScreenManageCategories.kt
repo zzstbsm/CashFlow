@@ -44,12 +44,11 @@ import com.zhengzhou.cashflow.customUiElements.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.customUiElements.SectionTopAppBar
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
-import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
 
 @Composable
 fun ManageCategoriesScreen(
-    currentScreen: NavigationCurrentScreen,
-    setCurrentScreen: (NavigationCurrentScreen) -> Unit,
+    currentScreen: com.zhengzhou.cashflow.navigation.NavigationCurrentScreen,
+    setCurrentScreen: (com.zhengzhou.cashflow.navigation.NavigationCurrentScreen) -> Unit,
     navController: NavController
 ) {
 

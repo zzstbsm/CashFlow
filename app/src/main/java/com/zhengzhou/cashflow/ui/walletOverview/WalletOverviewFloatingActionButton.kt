@@ -13,7 +13,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.navigation.Screen
 import java.util.UUID
 
 @Composable
@@ -33,7 +32,7 @@ fun WalletOverviewFloatingActionButton(
         textId = R.string.WalletOverview_add_wallet
         iconId = R.drawable.ic_add
         onClick = {
-            Screen.WalletEdit.navigate(
+            com.zhengzhou.cashflow.navigation.Screen.WalletEdit.navigate(
                 walletID = UUID(0L, 0L),
                 navController = navController,
             )
