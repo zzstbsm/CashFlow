@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.walletEdit
+package com.zhengzhou.cashflow.wallet_edit
 
 class WalletEditTestTag {
 

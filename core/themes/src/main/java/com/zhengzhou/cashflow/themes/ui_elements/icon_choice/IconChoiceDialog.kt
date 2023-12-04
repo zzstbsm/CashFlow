@@ -15,16 +15,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
 import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IconChoiceDialog(
     text: String,
-    iconList: List<com.zhengzhou.cashflow.themes.IconsMappedForDB>,
+    iconList: List<IconsMappedForDB>,
     onDismissRequest: () -> Unit,
-    currentSelectedIcon: com.zhengzhou.cashflow.themes.IconsMappedForDB?,
-    onChooseIcon: (com.zhengzhou.cashflow.themes.IconsMappedForDB) -> Unit,
+    currentSelectedIcon: IconsMappedForDB?,
+    onChooseIcon: (IconsMappedForDB) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     BasicAlertDialog(onDismissRequest = onDismissRequest) {

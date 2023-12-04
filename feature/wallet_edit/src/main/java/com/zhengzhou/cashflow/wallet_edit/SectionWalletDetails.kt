@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.walletEdit
+package com.zhengzhou.cashflow.wallet_edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -24,16 +24,18 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Currency
+import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
 import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
 import com.zhengzhou.cashflow.themes.ui_elements.date_selector.DateSelector
 import com.zhengzhou.cashflow.themes.ui_elements.dropdown_menu.DropdownTextFieldMenu
 import com.zhengzhou.cashflow.themes.ui_elements.icon_choice.IconChoiceDialog
+import com.zhengzhou.cashflow.wallet_edit.view_model.WalletEditUiState
+import com.zhengzhou.cashflow.wallet_edit.view_model.WalletEditViewModel
 import java.util.Date
 
 @Composable
-fun WalletDetailsSection(
+internal fun WalletDetailsSection(
     walletEditUiState: WalletEditUiState,
     walletEditViewModel: WalletEditViewModel,
     modifier: Modifier = Modifier,
@@ -60,7 +62,7 @@ fun WalletDetailsSection(
         )
     }
     MoneyTextField(
-        label = stringResource(id = R.string.WalletEdit_initial_amount),
+        label = stringResource(id = R.string.initial_amount),
         amountOnScreen = walletEditUiState.amountOnScreen,
         onValueChange = { newText ->
             if (newText.count { it == '.' } < 2)
@@ -71,7 +73,7 @@ fun WalletDetailsSection(
     )
     Row {
         DateSelector(
-            label = stringResource(id = R.string.WalletEdit_creation_date),
+            label = stringResource(id = R.string.creation_date),
             dateFormat = "EEEE, dd MMMM yyyy",
             date = walletEditUiState.wallet.creationDate,
             onSelectDate = { millis ->
@@ -97,7 +99,7 @@ private fun TextWalletName(
 ) {
     OutlinedTextField(
         label = {
-            Text(text = stringResource(id = R.string.WalletEdit_name))
+            Text(text = stringResource(id = R.string.name))
         },
         value = walletEditUiState.wallet.name,
         onValueChange = {
@@ -117,9 +119,9 @@ private fun TextWalletName(
             Text(
                 text =
                 if (walletEditUiState.isErrorWalletNameNotValid)
-                    stringResource(id = R.string.WalletEdit_error_wallet_name_not_valid)
+                    stringResource(id = R.string.error_wallet_name_not_valid)
                 else if (walletEditUiState.isErrorWalletNameInUse)
-                    stringResource(id = R.string.WalletEdit_error_wallet_name_already_in_use)
+                    stringResource(id = R.string.error_wallet_name_already_in_use)
                 else "",
                 modifier = Modifier.testTag(
                     tag = WalletEditTestTag.TAG_TEST_FIELD_WALLET_NAME_SUPPORTING_TEXT
@@ -157,8 +159,8 @@ private fun TextWalletIcon(
 
     if (showDialog) {
         IconChoiceDialog(
-            text = stringResource(id = R.string.WalletEdit_choose_wallet_icon),
-            iconList = com.zhengzhou.cashflow.themes.IconsMappedForDB.values()
+            text = stringResource(id = R.string.choose_wallet_icon),
+            iconList = IconsMappedForDB.values()
                 .toList()
                 .filter { it.wallet },
             onDismissRequest = { showDialog = false },
@@ -200,7 +202,7 @@ private fun MoneyTextField(
             Text(
                 text =
                 if (isError)
-                    stringResource(id = R.string.WalletEdit_error_amount_non_valid)
+                    stringResource(id = R.string.error_amount_non_valid)
                 else "",
                 modifier = Modifier.testTag(
                     tag = WalletEditTestTag.TAG_TEST_FIELD_WALLET_AMOUNT_SUPPORTING_TEXT
@@ -220,7 +222,7 @@ private fun TextWalletCurrencyChooser(
     var showDropDownMenu by remember { mutableStateOf(false) }
 
     DropdownTextFieldMenu(
-        label = stringResource(id = R.string.WalletEdit_currency),
+        label = stringResource(id = R.string.currency),
         value = walletEditUiState.wallet.currency.name,
         expanded = showDropDownMenu,
         onChangeExpanded = { ifShow ->

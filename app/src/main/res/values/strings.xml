@@ -15,6 +15,8 @@
     <string name="to">To</string>
     <string name="yes">Yes</string>
     <string name="nav_back">Go back</string>
+    <string name="nav_name_wallet_add">Add wallet</string>
+    <string name="nav_name_wallet_edit">Edit wallet</string>
 
 
     <!-- Accessibility strings -->
@@ -79,21 +81,6 @@
     <string name="location_add">Add location</string>
 
     <string name="movement_select_wallets">Select wallets</string>
-
-    <!-- WalletEdit page -->
-    <string name="WalletEdit_choose_wallet_icon">Choose wallet icon</string>
-    <string name="WalletEdit_currency">Currency</string>
-    <string name="WalletEdit_creation_date">Creation date</string>
-    <string name="WalletEdit_error_amount_non_valid">Inserted amount not valid</string>
-    <string name="WalletEdit_error_wallet_name_already_in_use">Wallet name already in use</string>
-    <string name="WalletEdit_error_wallet_name_not_valid">Wallet name not valid</string>
-    <string name="WalletEdit_initial_amount">Initial amount</string>
-    <string name="WalletEdit_name">Wallet name</string>
-    <string name="WalletEdit_last_access">Last access</string>
-    <string name="WalletEdit_if_budget_on">Enable budget option</string>
-    <string name="WalletEdit_not_set">Not set</string>
-    <string name="WalletEdit_wallet_saved">Wallet saved</string>
-
 
     <!-- Other -->
     <string name="delete_tag">Delete tag %1s</string>

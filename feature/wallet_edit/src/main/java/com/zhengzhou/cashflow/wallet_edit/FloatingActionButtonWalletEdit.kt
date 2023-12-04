@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.walletEdit
+package com.zhengzhou.cashflow.wallet_edit
 
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -7,12 +7,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.tools.EventMessages
+import com.zhengzhou.cashflow.wallet_edit.view_model.WalletEditUiState
+import com.zhengzhou.cashflow.wallet_edit.view_model.WalletEditViewModel
 
 @Composable
-fun WalletEditFloatingActionButton(
+internal fun WalletEditFloatingActionButton(
     walletEditUiState: WalletEditUiState,
     walletEditViewModel: WalletEditViewModel,
     navController: NavController
@@ -21,9 +22,9 @@ fun WalletEditFloatingActionButton(
         onClick = {
 
             if (walletEditUiState.isErrorWalletNameInUse) {
-                EventMessages.sendMessageId(R.string.WalletEdit_error_wallet_name_already_in_use)
+                EventMessages.sendMessageId(R.string.error_wallet_name_already_in_use)
             } else if (walletEditUiState.isErrorWalletNameNotValid) {
-                EventMessages.sendMessageId(R.string.WalletEdit_error_wallet_name_not_valid)
+                EventMessages.sendMessageId(R.string.error_wallet_name_not_valid)
             } else {
 
                 val walletEditSaveResults: WalletEditSaveResults = walletEditViewModel.saveWallet()

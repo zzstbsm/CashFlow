@@ -1,12 +1,16 @@
-package com.zhengzhou.cashflow.ui.walletEdit
+package com.zhengzhou.cashflow.wallet_edit.view_model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
+import com.zhengzhou.cashflow.database.api.use_case.walletUseCases.implementations.WalletUseCases
+import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
 import com.zhengzhou.cashflow.tools.calculator.Calculator
 import com.zhengzhou.cashflow.tools.calculator.mapCharToKeypadDigit
 import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
+import com.zhengzhou.cashflow.wallet_edit.WalletEditSaveResults
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -18,9 +22,12 @@ import java.util.Date
 import java.util.UUID
 
 
-class WalletEditViewModel(
+internal class WalletEditViewModel(
+    repository: RepositoryInterface,
     walletUUID: UUID,
 ): ViewModel() {
+
+    private val walletUseCases = WalletUseCases(repository)
 
     private var _newWallet = walletUUID == UUID(0L,0L)
     private var _wallet = MutableStateFlow(Wallet.loadingWallet())
@@ -36,8 +43,6 @@ class WalletEditViewModel(
     private var _uiState = MutableStateFlow(WalletEditUiState())
     val uiState: StateFlow<WalletEditUiState> = _uiState.asStateFlow()
 
-    private val repository = DatabaseRepository.get()
-
     private var calculator: Calculator = Calculator()
 
     private var jobLoadWallet: Job
@@ -51,13 +56,16 @@ class WalletEditViewModel(
         jobLoadWallet = loadWallet(walletUUID = walletUUID)
 
         jobLoadWalletListName = viewModelScope.launch {
-            repository.getWalletListOfNames().collect {
+            walletUseCases.getListOfNames().collect {
                 _walletListName.value = it
             }
         }
     }
 
     private fun setUiState(
+
+        wallet: Wallet? = null,
+
         isLoading: Boolean? = null,
 
         amountOnScreen: String? = null,
@@ -72,6 +80,8 @@ class WalletEditViewModel(
             writingOnUiState = true
 
             _uiState.value = WalletEditUiState(
+                wallet = wallet ?: uiState.value.wallet,
+
                 isLoading = isLoading ?: uiState.value.isLoading,
 
                 amountOnScreen = amountOnScreen ?: uiState.value.amountOnScreen,
@@ -92,7 +102,7 @@ class WalletEditViewModel(
             _wallet.value = if (_newWallet) {
                 Wallet.newEmpty()
             } else {
-                repository.getWallet(walletUUID) ?: Wallet.newEmpty()
+                walletUseCases.getWallet(walletUUID) ?: Wallet.newEmpty()
             }
 
             calculator = Calculator.initialize(wallet.value.startAmount)
@@ -122,7 +132,7 @@ class WalletEditViewModel(
     fun updateWallet(
         name: String? = null,
         startAmount: Float? = null,
-        iconName: com.zhengzhou.cashflow.themes.IconsMappedForDB? = null,
+        iconName: IconsMappedForDB? = null,
         currency: Currency? = null,
         creationDate: Date? = null,
         lastAccess: Date? = null,
@@ -177,9 +187,9 @@ class WalletEditViewModel(
                 )
             }
             if (_newWallet) {
-                repository.addWallet(wallet)
+                walletUseCases.addWallet(wallet)
             } else {
-                repository.updateWallet(wallet)
+                walletUseCases.updateWallet(wallet)
             }
         }
         return WalletEditSaveResults.SUCCESS

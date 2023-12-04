@@ -10,7 +10,6 @@ android {
 }
 
 dependencies {
-    implementation(project(mapOf("path" to ":tools")))
     core()
     compose()
     test()
@@ -19,4 +18,5 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     featuresDependencies()
+    tools()
 }

@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.walletEdit
+package com.zhengzhou.cashflow.wallet_edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -11,9 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.zhengzhou.cashflow.wallet_edit.view_model.WalletEditUiState
+import com.zhengzhou.cashflow.wallet_edit.view_model.WalletEditViewModel
 
 @Composable
-fun BudgetSection(
+internal fun BudgetSection(
     walletEditUiState: WalletEditUiState,
     walletEditViewModel: WalletEditViewModel,
     modifier: Modifier = Modifier
@@ -50,5 +52,5 @@ fun BudgetSection(
 private fun BudgetSettings(
     modifier: Modifier = Modifier,
 ) {
-    Text(text = "Hi all")
+    Text(text = "Test")
 }
