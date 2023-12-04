@@ -1,9 +1,11 @@
-package com.zhengzhou.cashflow.transaction_edit.return_results
+package com.zhengzhou.cashflow.database.api.complex_data
 
+import androidx.annotation.StringRes
 import com.zhengzhou.cashflow.data.TransactionType
-import com.zhengzhou.cashflow.transaction_edit.R
+import com.zhengzhou.cashflow.database.R
 
 enum class TransactionSaveResult(
+    @StringRes
     val errorMessage: Int,
     val transactionTypeActiveList: List<TransactionType>
 ) {

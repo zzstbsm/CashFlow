@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_amount">No amount inserted, insert amount</string>
+    <string name="no_category">No category inserted, insert category</string>
+    <string name="transaction_saved">Transaction saved</string>
+</resources>

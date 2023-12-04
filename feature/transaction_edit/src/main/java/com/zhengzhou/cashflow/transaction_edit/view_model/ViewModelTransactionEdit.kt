@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.transaction_edit
+package com.zhengzhou.cashflow.transaction_edit.view_model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,14 +9,15 @@ import com.zhengzhou.cashflow.data.TagEntry
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.database.api.complex_data.TransactionFullForUI
+import com.zhengzhou.cashflow.database.api.complex_data.TransactionSaveResult
 import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.database.api.use_case.walletUseCases.implementations.WalletUseCases
 import com.zhengzhou.cashflow.tools.calculator.Calculator
 import com.zhengzhou.cashflow.tools.calculator.KeypadDigit
 import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
-import com.zhengzhou.cashflow.transaction_edit.return_results.TransactionSaveResult
-import com.zhengzhou.cashflow.transaction_edit.view_model.TransactionEditUiState
-import com.zhengzhou.cashflow.transaction_edit.view_model.TransactionFullForUI
+import com.zhengzhou.cashflow.transaction_edit.TransactionEditScreenToChooseFunctionality
+import com.zhengzhou.cashflow.transaction_edit.TransactionSectionToShow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

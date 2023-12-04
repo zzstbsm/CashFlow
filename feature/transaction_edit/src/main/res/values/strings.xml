@@ -8,11 +8,8 @@
     <string name="confirm">Confirm</string>
     <string name="description">Description</string>
     <string name="prompt_save_transaction">Do you want to save the transaction?</string>
-    <string name="transaction_saved">Transaction saved</string>
     <string name="nav_back">Go back</string>
     <string name="no">No</string>
-    <string name="no_amount">No amount inserted, insert amount</string>
-    <string name="no_category">No category inserted, insert category</string>
     <string name="save_transaction">Save transaction</string>
     <string name="tag">Tag</string>
     <string name="transaction_deleted">Transaction deleted</string>

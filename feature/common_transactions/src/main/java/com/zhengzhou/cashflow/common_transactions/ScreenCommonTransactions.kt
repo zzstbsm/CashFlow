@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.commonTransactions
+package com.zhengzhou.cashflow.common_transactions
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,29 +32,37 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.common_transactions.view_model.CommonTransactionsUiState
+import com.zhengzhou.cashflow.common_transactions.view_model.CommonTransactionsViewModel
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
-import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
+import com.zhengzhou.cashflow.database.api.complex_data.TransactionFullForUI
+import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.navigation.ApplicationScreensEnum
 import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.navigation.functions.ReloadPageAfterPopBackStack
+import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
+import com.zhengzhou.cashflow.themes.ui_elements.navigation.BottomNavigationBar
+import com.zhengzhou.cashflow.themes.ui_elements.navigation.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.themes.ui_elements.navigation.SectionTopAppBar
 import com.zhengzhou.cashflow.tools.EventMessages
 
 @Composable
 fun CommonTransactionsScreen(
+    repository: RepositoryInterface,
     currentScreen: ApplicationScreensEnum,
     setCurrentScreen: (ApplicationScreensEnum) -> Unit,
     navController: NavController
 ) {
 
     val commonTransactionsViewModel: CommonTransactionsViewModel = viewModel {
-        CommonTransactionsViewModel()
+        CommonTransactionsViewModel(
+            repository = repository
+        )
     }
     val commonTransactionsUiState by commonTransactionsViewModel.uiState.collectAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -69,7 +77,7 @@ fun CommonTransactionsScreen(
 
     ModalNavigationDrawer(
         drawerContent = {
-            com.zhengzhou.cashflow.themes.ui_elements.SectionNavigationDrawerSheet(
+            SectionNavigationDrawerSheet(
                 drawerState = drawerState,
                 currentScreen = currentScreen,
                 setCurrentScreen = setCurrentScreen,
@@ -101,7 +109,7 @@ fun CommonTransactionsScreen(
                 )
             },
             bottomBar = {
-                com.zhengzhou.cashflow.themes.ui_elements.BottomNavigationBar(
+                BottomNavigationBar(
                     currentScreen = currentScreen,
                     setCurrentScreen = setCurrentScreen,
                     navController = navController
@@ -137,7 +145,7 @@ private fun CommonTransactionsMainBody(
                 .fillMaxSize()
         ) {
             Text(
-                text = stringResource(id = R.string.CommonTransactions_no_model)
+                text = stringResource(id = R.string.no_model)
             )
         }
     } else {
@@ -219,7 +227,7 @@ private fun PreviewSingleTransaction() {
         ),
         category = Category.newEmpty().copy(
             name = "Category",
-            iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.HOME
+            iconName = IconsMappedForDB.HOME
         ),
         tagList = listOf(
             Tag(

@@ -33,12 +33,6 @@
     <string name="AllTransactions_TopAppBar">Transaction list</string>
 
 
-    <!-- CommonTransactions -->
-    <string name="CommonTransactions_no_model">There are no blueprints</string>
-    <string name="CommonTransactions_edit_model">Edit model</string>
-    <string name="CommonTransactions_tag">Tags:</string>
-    <string name="CommonTransactions_transaction_deleted">Transaction blueprint deleted</string>
-
 
     <string name="tag">Tag</string>
     <string name="tag_no">No tags</string>

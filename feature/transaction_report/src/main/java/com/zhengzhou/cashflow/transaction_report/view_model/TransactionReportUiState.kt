@@ -1,6 +1,6 @@
 package com.zhengzhou.cashflow.transaction_report.view_model
 
-import com.zhengzhou.cashflow.transaction_report.data_structure.TransactionFullForUI
+import com.zhengzhou.cashflow.database.api.complex_data.TransactionFullForUI
 
 internal data class TransactionReportUiState(
     val transactionFullForUI: TransactionFullForUI = TransactionFullForUI(),

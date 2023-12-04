@@ -2,10 +2,10 @@ package com.zhengzhou.cashflow.transaction_report.view_model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zhengzhou.cashflow.database.api.complex_data.TransactionFullForUI
 import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.transaction_report.R
-import com.zhengzhou.cashflow.transaction_report.data_structure.TransactionFullForUI
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

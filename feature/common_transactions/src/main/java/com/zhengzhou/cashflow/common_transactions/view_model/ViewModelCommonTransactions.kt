@@ -1,11 +1,14 @@
-package com.zhengzhou.cashflow.ui.commonTransactions
+package com.zhengzhou.cashflow.common_transactions.view_model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.common_transactions.R
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.Wallet
-import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
+import com.zhengzhou.cashflow.database.api.complex_data.TransactionFullForUI
+import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
+import com.zhengzhou.cashflow.database.api.use_case.transactionUseCases.implementations.TransactionUseCases
+import com.zhengzhou.cashflow.database.api.use_case.walletUseCases.implementations.WalletUseCases
 import com.zhengzhou.cashflow.tools.EventMessages
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,21 +19,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-data class CommonTransactionsUiState(
-    val isLoading: Boolean = true,
-    val walletList: List<Wallet> = listOf(),
+internal class CommonTransactionsViewModel(
+    val repository: RepositoryInterface
+): ViewModel() {
 
-    val transactionFullForUIList: List<TransactionFullForUI> = listOf(),
-)
-
-class CommonTransactionsViewModel(): ViewModel() {
+    private val walletUseCases = WalletUseCases(repository)
+    private val transactionUseCases = TransactionUseCases(repository)
 
     private var _uiState = MutableStateFlow(CommonTransactionsUiState())
     val uiState: StateFlow<CommonTransactionsUiState> = _uiState.asStateFlow()
 
     private var writingOnUiState = false
 
-    private val repository = DatabaseRepository.get()
     private var jobLoadWalletList: Job
     private var jobLoadTransactionBlueprint: Job
 
@@ -84,7 +84,7 @@ class CommonTransactionsViewModel(): ViewModel() {
             val transactionFullForUIList: MutableList<TransactionFullForUI> = mutableListOf()
 
             coroutineScope.launch {
-                repository.getTransactionIsBlueprint().collect {
+                transactionUseCases.getTransactionIsBlueprint().collect {
                     transactionList = it
                     isLoading = false
                 }
@@ -108,7 +108,7 @@ class CommonTransactionsViewModel(): ViewModel() {
 
     private fun loadWalletList(): Job {
         return viewModelScope.launch {
-            repository.getWalletList().collect { walletList ->
+            walletUseCases.getWalletList().collect { walletList ->
                 setUiState(
                     walletList = walletList,
                 )
@@ -134,7 +134,7 @@ class CommonTransactionsViewModel(): ViewModel() {
 
     fun addTransaction(transactionFullForUI: TransactionFullForUI) {
         viewModelScope.launch {
-            transactionFullForUI.copy(
+            val saveResult = transactionFullForUI.copy(
                 transaction = transactionFullForUI.transaction.copy(
                     isBlueprint = false
                 ),
@@ -148,7 +148,7 @@ class CommonTransactionsViewModel(): ViewModel() {
                 newTransaction = true,
             )
 
-            EventMessages.sendMessageId(R.string.TransactionEdit_transaction_saved)
+            EventMessages.sendMessageId(saveResult.errorMessage)
 
         }
     }
@@ -165,6 +165,6 @@ class CommonTransactionsViewModel(): ViewModel() {
             jobLoadTransactionBlueprint.cancel()
             jobLoadTransactionBlueprint = loadTransactionBlueprint()
         }
-        EventMessages.sendMessageId(R.string.CommonTransactions_transaction_deleted)
+        EventMessages.sendMessageId(R.string.transaction_deleted)
     }
 }
