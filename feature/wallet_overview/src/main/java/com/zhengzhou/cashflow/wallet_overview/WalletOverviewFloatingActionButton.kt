@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.walletOverview
+package com.zhengzhou.cashflow.wallet_overview
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
@@ -12,12 +12,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.navigation.Screen
+import com.zhengzhou.cashflow.wallet_overview.view_model.WalletOverviewUiState
+import com.zhengzhou.cashflow.wallet_overview.view_model.WalletOverviewViewModel
 import java.util.UUID
 
 @Composable
-fun WalletOverviewFloatingActionButton(
+internal fun WalletOverviewFloatingActionButton(
     walletOverviewUiState: WalletOverviewUiState,
     walletOverviewViewModel: WalletOverviewViewModel,
     navController: NavController,
@@ -30,7 +31,7 @@ fun WalletOverviewFloatingActionButton(
     val onClick: () -> Unit
 
     if (walletOverviewUiState.ifZeroWallet) {
-        textId = R.string.WalletOverview_add_wallet
+        textId = R.string.add_wallet
         iconId = R.drawable.ic_add
         onClick = {
             Screen.WalletEdit.navigate(
@@ -39,7 +40,7 @@ fun WalletOverviewFloatingActionButton(
             )
         }
     } else {
-        textId = R.string.WalletOverview_select_wallet
+        textId = R.string.select_wallet
         iconId = R.drawable.ic_wallet
         onClick = {
             walletOverviewViewModel.updateWalletList()

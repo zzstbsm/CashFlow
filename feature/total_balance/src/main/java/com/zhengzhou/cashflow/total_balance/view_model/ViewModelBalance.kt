@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Wallet
-import com.zhengzhou.cashflow.database.api.DatabaseInstance
+import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.CategoryUseCases
 import com.zhengzhou.cashflow.database.api.use_case.transactionUseCases.implementations.TransactionUseCases
 import com.zhengzhou.cashflow.database.api.use_case.walletUseCases.implementations.WalletUseCases
@@ -23,12 +23,13 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
-internal class BalanceViewModel : ViewModel() {
+internal class BalanceViewModel(
+    repository: RepositoryInterface
+) : ViewModel() {
 
-    private val database = DatabaseInstance.getRepository()
-    private val categoryUseCases = CategoryUseCases(database)
-    private val transactionUseCases = TransactionUseCases(database)
-    private val walletUseCases = WalletUseCases(database)
+    private val categoryUseCases = CategoryUseCases(repository)
+    private val transactionUseCases = TransactionUseCases(repository)
+    private val walletUseCases = WalletUseCases(repository)
 
     // UiState
     private var _uiState = MutableStateFlow(BalanceUiState())

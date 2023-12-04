@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.data.Transaction
+import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.navigation.ApplicationScreensEnum
 import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.navigation.functions.ReloadPageAfterPopBackStack
@@ -20,13 +21,14 @@ import com.zhengzhou.cashflow.total_balance.view_model.BalanceViewModel
 
 @Composable
 fun BalanceScreen(
+    repository: RepositoryInterface,
     currentScreen: ApplicationScreensEnum,
     setCurrentScreen: (ApplicationScreensEnum) -> Unit,
     navController: NavController
 ) {
 
     val balanceViewModel: BalanceViewModel = viewModel {
-        BalanceViewModel()
+        BalanceViewModel(repository = repository)
     }
     val balanceUiState by balanceViewModel.uiState.collectAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)

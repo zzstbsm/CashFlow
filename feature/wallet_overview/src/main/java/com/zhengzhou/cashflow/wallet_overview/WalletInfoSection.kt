@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.walletOverview
+package com.zhengzhou.cashflow.wallet_overview
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,11 +13,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.tools.CurrencyFormatter
+import com.zhengzhou.cashflow.wallet_overview.view_model.WalletOverviewUiState
+import com.zhengzhou.cashflow.wallet_overview.view_model.WalletOverviewViewModel
 
 @Composable
-fun WalletInfoSection(
+internal fun WalletInfoSection(
     walletOverviewUiState: WalletOverviewUiState,
     walletOverviewViewModel: WalletOverviewViewModel,
     modifier: Modifier = Modifier,
@@ -27,7 +28,7 @@ fun WalletInfoSection(
     ) {
         Text(
             text = if (walletOverviewUiState.ifZeroWallet) {
-                stringResource(id = R.string.WalletOverview_no_wallet)
+                stringResource(id = R.string.no_wallet)
             } else {
                 walletOverviewUiState.wallet.name
             },
@@ -42,10 +43,10 @@ fun WalletInfoSection(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = stringResource(id = R.string.WalletOverview_balance)
+                text = stringResource(id = R.string.balance)
             )
             Text(
-                text = CurrencyFormatter.formatCurrency(walletOverviewUiState.wallet.currency,walletOverviewUiState.currentAmountInTheWallet),
+                text = CurrencyFormatter.formatCurrency(walletOverviewUiState.wallet.currency, walletOverviewUiState.currentAmountInTheWallet),
                 modifier = Modifier.testTag(
                     WalletOverviewTestTag.TAG_TEXT_WALLET_AMOUNT
                 )

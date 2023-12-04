@@ -94,18 +94,6 @@
     <string name="WalletEdit_not_set">Not set</string>
     <string name="WalletEdit_wallet_saved">Wallet saved</string>
 
-    <!-- WalletOverview page-->
-    <string name="WalletOverview_add_wallet">Add wallet</string>
-    <string name="WalletOverview_balance">Balance</string>
-    <string name="WalletOverview_cannot_delete_wallet">Cannot delete wallet, there are transactions registered in it.</string>
-    <string name="WalletOverview_choose_wallet">Choose wallet</string>
-    <string name="WalletOverview_edit_wallet">Edit wallet</string>
-    <string name="WalletOverview_no_transactions">No transactions</string>
-    <string name="WalletOverview_no_wallet">No wallet</string>
-    <string name="WalletOverview_recent_transactions">Recent transactions</string>
-    <string name="WalletOverview_select_wallet">Select wallet</string>
-    <string name="WalletOverview_see_all">See all</string>
-    <string name="WalletOverview_wallet_deleted">Wallet deleted</string>
 
     <!-- Other -->
     <string name="delete_tag">Delete tag %1s</string>

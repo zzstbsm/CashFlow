@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.walletOverview
+package com.zhengzhou.cashflow.wallet_overview
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.DropdownMenu
@@ -16,12 +16,13 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.navigation.Screen
+import com.zhengzhou.cashflow.wallet_overview.view_model.WalletOverviewUiState
+import com.zhengzhou.cashflow.wallet_overview.view_model.WalletOverviewViewModel
 import java.util.UUID
 
 @Composable
-fun WalletOverviewAppBarAction(
+internal fun WalletOverviewAppBarAction(
     walletOverviewUiState: WalletOverviewUiState,
     walletOverviewViewModel: WalletOverviewViewModel,
     navController: NavController,
@@ -44,7 +45,7 @@ fun WalletOverviewAppBarAction(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_edit),
-                    contentDescription = stringResource(id = R.string.WalletOverview_edit_wallet)
+                    contentDescription = stringResource(id = R.string.edit_wallet)
                 )
             }
 
@@ -89,9 +90,9 @@ fun WalletOverviewAppBarAction(
             onClick = {
                 openMenu = false
                 if (walletOverviewViewModel.deleteShownWallet() == WalletOverviewReturnResults.CAN_DELETE_WALLET) {
-                    com.zhengzhou.cashflow.tools.EventMessages.sendMessageId(R.string.WalletOverview_wallet_deleted)
+                    com.zhengzhou.cashflow.tools.EventMessages.sendMessageId(R.string.wallet_deleted)
                 } else {
-                    com.zhengzhou.cashflow.tools.EventMessages.sendMessageId(R.string.WalletOverview_cannot_delete_wallet)
+                    com.zhengzhou.cashflow.tools.EventMessages.sendMessageId(R.string.cannot_delete_wallet)
                 }
             },
             modifier = Modifier.testTag(

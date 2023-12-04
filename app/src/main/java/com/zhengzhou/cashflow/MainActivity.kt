@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import com.zhengzhou.cashflow.database.api.DatabaseInstance
+import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.CategoryUseCases
 import com.zhengzhou.cashflow.navigation.NavigationApp
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.PreloadTransactions
@@ -21,10 +22,11 @@ class MainActivity : ComponentActivity() {
 
         setContent{
 
-            val repository = DatabaseInstance.get()
+            val repository = DatabaseInstance.getRepository()
+            val categoryUseCases = CategoryUseCases(repository)
             val coroutineScope = CoroutineScope(Dispatchers.Default)
             coroutineScope.launch {
-                repository.getCategoryList().collect {
+                categoryUseCases.getCategoryList().collect {
                     if (it.isEmpty())
                         LoadDefaultCategories.configureTableCategory()
 
@@ -34,7 +36,7 @@ class MainActivity : ComponentActivity() {
             PreloadTransactions.load()
 
             MaterialTheme {
-                NavigationApp()
+                NavigationApp(repository)
             }
 
             EventMessages.messageId.observe(this) {

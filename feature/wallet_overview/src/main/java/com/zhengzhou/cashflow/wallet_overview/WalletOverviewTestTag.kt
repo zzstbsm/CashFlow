@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.walletOverview
+package com.zhengzhou.cashflow.wallet_overview
 
 class WalletOverviewTestTag {
     companion object {

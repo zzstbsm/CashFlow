@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.walletOverview
+package com.zhengzhou.cashflow.wallet_overview
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -11,14 +11,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.themes.ui_elements.transaction.SectionTransactionEntry
+import com.zhengzhou.cashflow.wallet_overview.view_model.WalletOverviewUiState
 
 @Composable
-fun TransactionListSection(
+internal fun TransactionListSection(
     walletOverviewUiState: WalletOverviewUiState,
-    walletOverviewViewModel: WalletOverviewViewModel,
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
@@ -28,9 +27,9 @@ fun TransactionListSection(
         Text(
             text = stringResource(
                 id = if (walletOverviewUiState.transactionAndCategoryList.isEmpty()) {
-                    R.string.WalletOverview_no_transactions
+                    R.string.no_transactions
                 } else {
-                    R.string.WalletOverview_recent_transactions
+                    R.string.recent_transactions
                 }
             ),
             color = Color.Gray,
@@ -64,7 +63,7 @@ fun TransactionListSection(
                 }
             ) {
                 Text(
-                    text = stringResource(id = R.string.WalletOverview_see_all)
+                    text = stringResource(id = R.string.see_all)
                 )
             }
         }

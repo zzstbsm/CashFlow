@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.zhengzhou.cashflow.about_me.AboutMeScreen
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
+import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.total_balance.BalanceScreen
 import com.zhengzhou.cashflow.ui.allTransactions.AllTransactionsScreen
 import com.zhengzhou.cashflow.ui.commonTransactions.CommonTransactionsScreen
@@ -19,11 +20,13 @@ import com.zhengzhou.cashflow.ui.profile.ProfileScreen
 import com.zhengzhou.cashflow.ui.transactionEdit.TransactionEditScreen
 import com.zhengzhou.cashflow.ui.transactionReport.TransactionReportScreen
 import com.zhengzhou.cashflow.ui.walletEdit.WalletEditScreen
-import com.zhengzhou.cashflow.ui.walletOverview.WalletOverviewScreen
+import com.zhengzhou.cashflow.wallet_overview.WalletOverviewScreen
 import java.util.UUID
 
 @Composable
-fun NavigationApp() {
+fun NavigationApp(
+    repository: RepositoryInterface
+) {
 
     var currentScreen by remember {
         mutableStateOf(ApplicationScreensEnum.Balance)
@@ -67,6 +70,7 @@ fun NavigationApp() {
         }
         composable(route = Screen.Balance.route) {
             BalanceScreen(
+                repository = repository,
                 currentScreen = currentScreen,
                 setCurrentScreen = { screen ->
                     currentScreen = screen
@@ -118,6 +122,7 @@ fun NavigationApp() {
             )
 
             WalletOverviewScreen(
+                repository = repository,
                 walletUUID = walletUUID,
                 currentScreen = currentScreen,
                 setCurrentScreen = { screen ->

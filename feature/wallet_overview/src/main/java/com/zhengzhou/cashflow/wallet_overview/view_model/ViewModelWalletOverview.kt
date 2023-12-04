@@ -1,11 +1,16 @@
-package com.zhengzhou.cashflow.ui.walletOverview
+package com.zhengzhou.cashflow.wallet_overview.view_model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.Wallet
-import com.zhengzhou.cashflow.dataForUi.TransactionAndCategory
+import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
+import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.CategoryUseCases
+import com.zhengzhou.cashflow.database.api.use_case.transactionUseCases.implementations.TransactionUseCases
+import com.zhengzhou.cashflow.database.api.use_case.walletUseCases.implementations.WalletUseCases
+import com.zhengzhou.cashflow.wallet_overview.WalletOverviewReturnResults
+import com.zhengzhou.cashflow.wallet_overview.data_structure.TransactionAndCategory
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,21 +21,9 @@ import java.lang.Integer.min
 import java.util.Date
 import java.util.UUID
 
-data class WalletOverviewUiState(
-    val wallet: Wallet = Wallet.loadingWallet(),
-    val currentAmountInTheWallet: Float = 0f,
 
-    val ifZeroWallet: Boolean = false,
-    val walletList: List<Wallet> = listOf(),
-    val transactionAndCategoryList: List<TransactionAndCategory> = listOf(),
-
-    val isLoadingWallet: Boolean = true,
-    val isLoadingTransactions: Boolean = false,
-
-    val showSelectWallet: Boolean = false,
-)
-
-class WalletOverviewViewModel(
+internal class WalletOverviewViewModel(
+    repository: RepositoryInterface,
     walletUUID: UUID,
 ): ViewModel() {
 
@@ -39,7 +32,9 @@ class WalletOverviewViewModel(
     private var _uiState = MutableStateFlow(WalletOverviewUiState())
     val uiState: StateFlow<WalletOverviewUiState> = _uiState.asStateFlow()
 
-    private val repository = DatabaseRepository.get()
+    private val categoryUseCases = CategoryUseCases(repository)
+    private val transactionUseCases = TransactionUseCases(repository)
+    private val walletUseCases = WalletUseCases(repository)
 
     private var retrieveCurrentAmountInWalletJob: Job
     private var retrieveTransactionJob: Job
@@ -102,7 +97,7 @@ class WalletOverviewViewModel(
 
     private suspend fun loadLastAccessed() {
         setUiState(
-            wallet = repository.getWalletLastAccessed() ?: Wallet.newEmpty(),
+            wallet = walletUseCases.getLastAccessedWallet() ?: Wallet.newEmpty(),
             isLoadingWallet = false,
         )
         retrieveCurrentAmountInWalletJob.cancel()
@@ -115,7 +110,7 @@ class WalletOverviewViewModel(
 
         return if (uiState.value.transactionAndCategoryList.isEmpty()) {
             viewModelScope.launch {
-                repository.deleteWallet(uiState.value.wallet)
+                walletUseCases.deleteWallet(uiState.value.wallet)
                 setUiState(
                     wallet = Wallet.newEmpty(),
                     currentAmountInTheWallet = 0f,
@@ -144,7 +139,7 @@ class WalletOverviewViewModel(
             lastAccess = Date()
         )
         viewModelScope.launch {
-             repository.updateWallet(walletToReload)
+             walletUseCases.updateWallet(walletToReload)
         }
 
         setUiState(
@@ -183,7 +178,7 @@ class WalletOverviewViewModel(
 
             if (wallet.id != Wallet.newWalletId()) {
 
-                repository.getTransactionListInWallet(
+                transactionUseCases.getTransactionListInWallet(
                     walletUUID = wallet.id,
                 ).collect { list: List<Transaction> ->
                     val transactionAndCategoryList = mutableListOf<TransactionAndCategory>()
@@ -191,7 +186,7 @@ class WalletOverviewViewModel(
                     list.filter { !it.isBlueprint }.let { filteredList ->
                         filteredList.subList(0, min(filteredList.size, 3))
                             .forEach { transaction ->
-                                val category = repository.getCategory(transaction.categoryUUID)
+                                val category = categoryUseCases.getCategory(transaction.categoryUUID)
                                     ?: Category.newEmpty()
 
 
@@ -219,7 +214,7 @@ class WalletOverviewViewModel(
     private fun jobUpdateWalletList(): Job {
         return viewModelScope.launch {
 
-            repository.getWalletList().collect { walletList: List<Wallet> ->
+            walletUseCases.getWalletList().collect { walletList: List<Wallet> ->
                 setUiState(
                     ifZeroWallet = walletList.isEmpty(),
                     walletList = walletList.sortedBy { it.name }
@@ -231,7 +226,7 @@ class WalletOverviewViewModel(
         return viewModelScope.launch {
 
             if (uiState.value.wallet.id != Wallet.newWalletId()) {
-                repository.getTransactionListInWallet(uiState.value.wallet.id)
+                transactionUseCases.getTransactionListInWallet(uiState.value.wallet.id)
                     .collect { transactionList: List<Transaction> ->
                         setUiState(
                             currentAmountInTheWallet = transactionList.filter {
@@ -253,7 +248,7 @@ class WalletOverviewViewModel(
                 }
             } else {
                 setUiState(
-                    wallet = repository.getWallet(walletUUID) ?: Wallet.newEmpty(),
+                    wallet = walletUseCases.getWallet(walletUUID) ?: Wallet.newEmpty(),
                     isLoadingWallet = false
                 )
             }
