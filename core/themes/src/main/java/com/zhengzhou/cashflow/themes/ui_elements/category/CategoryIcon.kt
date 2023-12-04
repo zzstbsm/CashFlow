@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.customUiElements
+package com.zhengzhou.cashflow.themes.ui_elements.category
 
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable

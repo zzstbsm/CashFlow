@@ -1,4 +1,5 @@
 import org.gradle.api.artifacts.dsl.DependencyHandler
+import org.gradle.kotlin.dsl.project
 
 object Dependencies {
     const val core = "androidx.core:core-ktx:${Versions.core}"
@@ -42,6 +43,21 @@ fun DependencyHandler.compose() {
     androidTestImplementation(Dependencies.junitUi)
 }
 
+fun DependencyHandler.allFeatures() {
+
+    implementation(project(":feature:about_me"))
+    implementation(project(":feature:all_transactions"))
+    implementation(project(":feature:common_transactions"))
+    implementation(project(":feature:manage_categories"))
+    implementation(project(":feature:profile"))
+    implementation(project(":feature:settings"))
+    implementation(project(":feature:total_balance"))
+    implementation(project(":feature:transaction_edit"))
+    implementation(project(":feature:transaction_report"))
+    implementation(project(":feature:wallet_edit"))
+    implementation(project(":feature:wallet_overview"))
+}
+
 fun DependencyHandler.core() {
     implementation(Dependencies.appCompat)
     implementation(Dependencies.core)
@@ -49,6 +65,10 @@ fun DependencyHandler.core() {
 
 fun DependencyHandler.datastore() {
     implementation(Dependencies.datastore)
+}
+
+fun DependencyHandler.navigation() {
+    implementation(project(":core:navigation"))
 }
 
 fun DependencyHandler.room() {
@@ -60,5 +80,12 @@ fun DependencyHandler.room() {
 fun DependencyHandler.test() {
     implementation(Dependencies.junitKtx)
     testImplementation(Dependencies.junit)
+}
 
+fun DependencyHandler.themes() {
+    implementation(project(":core:themes"))
+}
+
+fun DependencyHandler.tools() {
+    implementation(project(":tools"))
 }

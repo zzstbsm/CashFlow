@@ -1,4 +1,6 @@
-package com.zhengzhou.cashflow.themes
+package com.zhengzhou.cashflow.themes.icons
+
+import com.zhengzhou.cashflow.themes.R
 
 enum class IconsMappedForDB(
     val resource: Int,

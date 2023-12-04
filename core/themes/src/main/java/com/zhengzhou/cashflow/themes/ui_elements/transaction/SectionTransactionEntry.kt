@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.customUiElements
+package com.zhengzhou.cashflow.themes.ui_elements.transaction
 
 import android.text.format.DateFormat
 import androidx.compose.foundation.clickable
@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Transaction
+import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
 import com.zhengzhou.cashflow.tools.CurrencyFormatter
 
 @Composable

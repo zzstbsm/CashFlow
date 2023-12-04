@@ -3,7 +3,7 @@ package com.zhengzhou.cashflow.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.zhengzhou.cashflow.themes.IconsMappedForDB
+import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
 import java.util.UUID
 
 @Entity(tableName = "category")
@@ -11,7 +11,7 @@ data class Category (
     @PrimaryKey val id: UUID,
     var name: String,
     @ColumnInfo(name = "id_icon")
-    val iconName: com.zhengzhou.cashflow.themes.IconsMappedForDB,
+    val iconName: IconsMappedForDB,
     @ColumnInfo(name = "movement_type")
     val transactionType: TransactionType,
 ) {
@@ -20,7 +20,7 @@ data class Category (
             return Category(
                 id = UUID(0L,0L),
                 name = "",
-                iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.LOADING,
+                iconName = IconsMappedForDB.LOADING,
                 transactionType = TransactionType.Loading,
             )
         }
@@ -28,7 +28,7 @@ data class Category (
         fun newTransfer(categoryUUID: UUID): Category {
             return newEmpty().copy(
                 id = categoryUUID,
-                iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.TRANSFER,
+                iconName = IconsMappedForDB.TRANSFER,
                 transactionType = TransactionType.Move
             )
         }

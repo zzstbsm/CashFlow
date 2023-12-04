@@ -1,6 +1,6 @@
 package com.zhengzhou.cashflow.navigation
 
-internal class NavigationKeys {
+class NavigationKeys {
     companion object {
         const val keyCategoryUUID = "categoryUUID"
         const val keyCurrencyName = "currencyName"

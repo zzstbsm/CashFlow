@@ -12,7 +12,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.customUiElements.SectionTransactionEntry
+import com.zhengzhou.cashflow.navigation.Screen
+import com.zhengzhou.cashflow.themes.ui_elements.transaction.SectionTransactionEntry
 
 @Composable
 fun TransactionListSection(
@@ -45,7 +46,7 @@ fun TransactionListSection(
                     category = category,
                     currency = walletOverviewUiState.wallet.currency,
                     onClickTransaction = {
-                        com.zhengzhou.cashflow.navigation.Screen.TransactionReport.navigate(
+                        Screen.TransactionReport.navigate(
                             transactionUUID = transaction.id,
                             navController = navController,
                         )
@@ -55,7 +56,7 @@ fun TransactionListSection(
             }
             TextButton(
                 onClick = {
-                    com.zhengzhou.cashflow.navigation.Screen.AllTransactions.navigate(
+                    Screen.AllTransactions.navigate(
                         walletUUID = walletOverviewUiState.wallet.id,
                         currency = walletOverviewUiState.wallet.currency,
                         navController = navController,

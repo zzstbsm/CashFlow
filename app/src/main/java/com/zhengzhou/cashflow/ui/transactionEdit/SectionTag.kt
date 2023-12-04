@@ -28,9 +28,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.customUiElements.SingleTag
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.TagEntry
+import com.zhengzhou.cashflow.themes.ui_elements.tag.SingleTag
 
 @Composable
 fun TagSection(
@@ -133,7 +133,7 @@ private fun TagListPart(
                 item {
                     SingleTag(
                         tag = "",
-                        onTagClick = {  },
+                        onTagClick = { },
                         selected = false
                     )
                 }

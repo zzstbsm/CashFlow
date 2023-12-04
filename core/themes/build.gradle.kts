@@ -10,6 +10,7 @@ android {
 }
 
 dependencies {
+    implementation(project(mapOf("path" to ":core:navigation")))
     core()
     compose()
     test()

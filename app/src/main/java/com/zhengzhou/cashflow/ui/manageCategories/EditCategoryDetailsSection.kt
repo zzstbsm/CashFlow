@@ -26,9 +26,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.customUiElements.CategoryIcon
-import com.zhengzhou.cashflow.customUiElements.IconChoiceDialog
 import com.zhengzhou.cashflow.data.Category
+import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
+import com.zhengzhou.cashflow.themes.ui_elements.icon_choice.IconChoiceDialog
 
 
 @Composable

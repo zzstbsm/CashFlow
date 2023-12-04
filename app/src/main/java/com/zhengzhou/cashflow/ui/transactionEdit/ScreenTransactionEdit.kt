@@ -36,6 +36,7 @@ import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
+import com.zhengzhou.cashflow.navigation.functions.BackHandler
 import com.zhengzhou.cashflow.tools.calculator.KeypadDigit
 import java.util.UUID
 
@@ -64,7 +65,7 @@ fun TransactionEditScreen(
         mutableStateOf(false)
     }
 
-    com.zhengzhou.cashflow.navigation.BackHandler {
+    BackHandler {
         showBackDialog = true
     }
 

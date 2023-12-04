@@ -3,7 +3,7 @@ package com.zhengzhou.cashflow.database.data.data_source
 import androidx.room.TypeConverter
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
-import com.zhengzhou.cashflow.themes.IconsMappedForDB
+import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
 import java.util.Date
 
 internal class TransactionTypeConverters {

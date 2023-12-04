@@ -4,8 +4,8 @@ The default structure of a page is the following:
 @Composable
 fun DefaultScreen(
     *args: ,
-    currentScreen: NavigationCurrentScreen,
-    setCurrentScreen: (NavigationCurrentScreen) -> Unit,
+    currentScreen: ApplicationScreensEnum,
+    setCurrentScreen: (ApplicationScreensEnum) -> Unit,
     navController: NavController
 ) {
 

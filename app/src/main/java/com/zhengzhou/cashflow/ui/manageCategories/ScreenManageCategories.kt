@@ -38,17 +38,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.customUiElements.BottomNavigationBar
-import com.zhengzhou.cashflow.customUiElements.CategoryIcon
-import com.zhengzhou.cashflow.customUiElements.SectionNavigationDrawerSheet
-import com.zhengzhou.cashflow.customUiElements.SectionTopAppBar
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
+import com.zhengzhou.cashflow.navigation.ApplicationScreensEnum
+import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
+import com.zhengzhou.cashflow.themes.ui_elements.navigation.SectionTopAppBar
 
 @Composable
 fun ManageCategoriesScreen(
-    currentScreen: com.zhengzhou.cashflow.navigation.NavigationCurrentScreen,
-    setCurrentScreen: (com.zhengzhou.cashflow.navigation.NavigationCurrentScreen) -> Unit,
+    currentScreen: ApplicationScreensEnum,
+    setCurrentScreen: (ApplicationScreensEnum) -> Unit,
     navController: NavController
 ) {
 
@@ -60,7 +59,7 @@ fun ManageCategoriesScreen(
 
     ModalNavigationDrawer(
         drawerContent = {
-            SectionNavigationDrawerSheet(
+            com.zhengzhou.cashflow.themes.ui_elements.SectionNavigationDrawerSheet(
                 drawerState = drawerState,
                 currentScreen = currentScreen,
                 setCurrentScreen = setCurrentScreen,
@@ -91,7 +90,7 @@ fun ManageCategoriesScreen(
                 )
             },
             bottomBar = {
-                BottomNavigationBar(
+                com.zhengzhou.cashflow.themes.ui_elements.BottomNavigationBar(
                     currentScreen = currentScreen,
                     setCurrentScreen = setCurrentScreen,
                     navController = navController

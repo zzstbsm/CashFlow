@@ -19,10 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.zhengzhou.cashflow.customUiElements.CategoryIcon
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Transaction
+import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
 import com.zhengzhou.cashflow.tools.CurrencyFormatter
 
 @Composable

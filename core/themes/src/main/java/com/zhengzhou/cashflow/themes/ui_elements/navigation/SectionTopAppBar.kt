@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.customUiElements
+package com.zhengzhou.cashflow.themes.ui_elements.navigation
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.DrawerState
@@ -13,13 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.zhengzhou.cashflow.R
+import com.zhengzhou.cashflow.navigation.ApplicationScreensEnum
+import com.zhengzhou.cashflow.navigation.NavigationAppTestTag
+import com.zhengzhou.cashflow.navigation.R
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SectionTopAppBar(
-    currentScreen: com.zhengzhou.cashflow.navigation.NavigationCurrentScreen,
+    currentScreen: ApplicationScreensEnum,
     drawerState: DrawerState,
     modifier: Modifier = Modifier,
     pageName: String? = null,
@@ -40,7 +42,7 @@ fun SectionTopAppBar(
                     }
                 },
                 modifier = modifier.testTag(
-                    com.zhengzhou.cashflow.navigation.NavigationAppTestTag.TAG_OPEN_NAV_DRAWER
+                    NavigationAppTestTag.TAG_OPEN_NAV_DRAWER
                 ),
             ) {
                 Icon(

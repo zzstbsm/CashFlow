@@ -3,7 +3,7 @@ package com.zhengzhou.cashflow.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.zhengzhou.cashflow.themes.IconsMappedForDB
+import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
 import java.util.Date
 import java.util.UUID
 
@@ -14,7 +14,7 @@ data class Wallet(
     @ColumnInfo(name = "start_amount")
     val startAmount: Float,
     @ColumnInfo(name = "icon_id")
-    val iconName: com.zhengzhou.cashflow.themes.IconsMappedForDB,
+    val iconName: IconsMappedForDB,
     val currency: Currency,
     @ColumnInfo(name = "creation_date")
     val creationDate: Date,
@@ -30,7 +30,7 @@ data class Wallet(
                 id = UUID(0L,0L),
                 name = "",
                 startAmount = 0f,
-                iconName = com.zhengzhou.cashflow.themes.IconsMappedForDB.WALLET,
+                iconName = IconsMappedForDB.WALLET,
                 currency = Currency.EUR,
                 creationDate = Date(),
                 lastAccess = Date(),

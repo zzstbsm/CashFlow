@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.customUiElements
+package com.zhengzhou.cashflow.themes.ui_elements.loading
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

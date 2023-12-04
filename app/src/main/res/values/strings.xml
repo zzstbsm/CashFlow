@@ -16,31 +16,11 @@
     <string name="yes">Yes</string>
     <string name="nav_back">Go back</string>
 
-    <string name="nav_name_about_me">About CashFlow</string>
-    <string name="nav_name_all_transactions">All transactions</string>
-    <string name="nav_name_balance">Balance</string>
-    <string name="nav_name_common_transactions_short">Common</string>
-    <string name="nav_name_common_transactions">Common transactions</string>
-    <string name="nav_name_manage_categories">Manage categories</string>
-    <string name="nav_name_overview">Overview</string>
-    <string name="nav_name_profile">Profile</string>
-    <string name="nav_name_transaction_edit">Edit transaction</string>
-    <string name="nav_name_transaction_report">Transaction report</string>
-    <string name="nav_name_wallet">Wallet</string>
-    <string name="nav_name_wallet_add">Add wallet</string>
-    <string name="nav_name_wallet_edit">Edit wallet</string>
-    <string name="nav_name_wallet_delete">Delete wallet</string>
 
     <!-- Accessibility strings -->
     <string name="accessibility_add_category">Add category</string>
     <string name="accessibility_add_tag">Add tag</string>
     <string name="accessibility_close_category">Close category</string>
-    <string name="accessibility_menu_navbar">Navigation bar</string>
-    <string name="accessibility_menu_navbar_balance">Balance</string>
-    <string name="accessibility_menu_navbar_common_transactions">Common transactions</string>
-    <string name="accessibility_menu_navbar_overview">Overview</string>
-    <string name="accessibility_menu_navbar_profile">Profile</string>
-    <string name="accessibility_menu_action_open">Open menu</string>
     <string name="accessibility_open_category">Open category</string>
     <string name="accessibility_transaction_new">New transaction</string>
 

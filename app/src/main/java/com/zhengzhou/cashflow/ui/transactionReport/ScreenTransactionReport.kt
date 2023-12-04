@@ -32,9 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.customUiElements.CategoryIcon
-import com.zhengzhou.cashflow.customUiElements.TagListLazyStaggeredHorizontalGrid
 import com.zhengzhou.cashflow.data.TransactionType
+import com.zhengzhou.cashflow.navigation.Screen
+import com.zhengzhou.cashflow.navigation.functions.ReloadPageAfterPopBackStack
+import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
+import com.zhengzhou.cashflow.themes.ui_elements.tag.TagListLazyStaggeredHorizontalGrid
 import com.zhengzhou.cashflow.tools.CurrencyFormatter
 import java.util.UUID
 
@@ -50,8 +52,8 @@ fun TransactionReportScreen(
     }
     val transactionReportUiState by transactionReportViewModel.uiState.collectAsState()
 
-    com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack(
-        pageRoute = com.zhengzhou.cashflow.navigation.Screen.TransactionReport.route,
+    ReloadPageAfterPopBackStack(
+        pageRoute = Screen.TransactionReport.route,
         navController = navController
     ) {
         transactionReportViewModel.loadTransactionReport(transactionUUID)
@@ -67,7 +69,7 @@ fun TransactionReportScreen(
                     navController.popBackStack()
                  },
                  onEditClick = {
-                     com.zhengzhou.cashflow.navigation.Screen.TransactionEdit.navigate(
+                     Screen.TransactionEdit.navigate(
                          transactionType = transactionType,
                          transactionUUID = transactionUUID,
                          currency = transactionReportUiState.transactionFullForUI.wallet.currency,
@@ -223,7 +225,10 @@ private fun TransactionReportMainBody(
                     onValueChange = { },
                     readOnly = true,
                     leadingIcon = {
-                        CategoryIcon(iconName = wallet.iconName, contentDescription = null)
+                        CategoryIcon(
+                            iconName = wallet.iconName,
+                            contentDescription = null
+                        )
                     },
                     modifier = Modifier
                         .padding(horizontal = 8.dp, vertical = 4.dp)
@@ -239,7 +244,10 @@ private fun TransactionReportMainBody(
                     onValueChange = { },
                     readOnly = true,
                     leadingIcon = {
-                        CategoryIcon(iconName = category.iconName, contentDescription = null)
+                        CategoryIcon(
+                            iconName = category.iconName,
+                            contentDescription = null
+                        )
                     },
                     modifier = Modifier
                         .padding(horizontal = 8.dp, vertical = 4.dp)

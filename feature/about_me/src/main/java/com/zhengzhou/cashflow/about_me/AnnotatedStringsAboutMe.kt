@@ -7,9 +7,10 @@ import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 
-enum class AboutMeAnnotatedStrings(
+internal enum class AboutMeAnnotatedStrings(
     @StringRes val text: Int,
     @StringRes val link: Int,
     val annotatedText: String,

@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.zhengzhou.cashflow.customUiElements.SelectIconsGrid
 import com.zhengzhou.cashflow.data.Category
+import com.zhengzhou.cashflow.themes.ui_elements.category.SelectIconsGrid
 import java.util.UUID
 
 @Composable

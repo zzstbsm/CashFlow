@@ -2,7 +2,7 @@ package com.zhengzhou.cashflow.ui
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.zhengzhou.cashflow.MainActivity
-import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
+import com.zhengzhou.cashflow.navigation.ApplicationScreensEnum
 import com.zhengzhou.cashflow.themes.IconsMappedForDB
 import com.zhengzhou.cashflow.ui.walletEdit.WalletEditTestTag
 import org.junit.FixMethodOrder
@@ -35,7 +35,7 @@ class TestWalletOperations {
     fun o01_addWalletWhenZeroWallets() {
 
         testActions.navigateBottomBar(
-            route = NavigationCurrentScreen.WalletOverview.route
+            route = ApplicationScreensEnum.WalletOverview.route
         )
 
         testActions.checkZeroWallets()
@@ -59,7 +59,7 @@ class TestWalletOperations {
     fun o02_addWalletWhenWalletExists() {
 
         testActions.navigateBottomBar(
-            route = NavigationCurrentScreen.WalletOverview.route
+            route = ApplicationScreensEnum.WalletOverview.route
         )
 
         testActions.openAddWalletWhenWalletsExist()
@@ -81,7 +81,7 @@ class TestWalletOperations {
     fun o03_editWallet() {
 
         testActions.navigateBottomBar(
-            route = NavigationCurrentScreen.WalletOverview.route
+            route = ApplicationScreensEnum.WalletOverview.route
         )
 
         testActions.checkExistWallet()
@@ -106,7 +106,7 @@ class TestWalletOperations {
     @Test
     fun o04_insertNonValidData() {
         testActions.navigateBottomBar(
-            route = NavigationCurrentScreen.WalletOverview.route
+            route = ApplicationScreensEnum.WalletOverview.route
         )
         testActions.checkShownWallet(
             walletName = walletName2Edited,
@@ -161,7 +161,7 @@ class TestWalletOperations {
     fun o05_deleteWalletWhenThreeWallets() {
 
         testActions.navigateBottomBar(
-            route = NavigationCurrentScreen.WalletOverview.route
+            route = ApplicationScreensEnum.WalletOverview.route
         )
 
         testActions.checkExistWallet()
@@ -182,7 +182,7 @@ class TestWalletOperations {
     fun o06_deleteWalletWhenTwoWallets() {
 
         testActions.navigateBottomBar(
-            route = NavigationCurrentScreen.WalletOverview.route
+            route = ApplicationScreensEnum.WalletOverview.route
         )
 
         testActions.checkExistWallet()
@@ -203,7 +203,7 @@ class TestWalletOperations {
     fun o07_deleteWalletWhenOneWallet() {
 
         testActions.navigateBottomBar(
-            route = NavigationCurrentScreen.WalletOverview.route
+            route = ApplicationScreensEnum.WalletOverview.route
         )
 
         testActions.checkShownWallet(

@@ -36,16 +36,16 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.customUiElements.SectionNavigationDrawerSheet
-import com.zhengzhou.cashflow.customUiElements.SectionTopAppBar
-import com.zhengzhou.cashflow.navigation.NavigationCurrentScreen
-import com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack
+import com.zhengzhou.cashflow.navigation.ApplicationScreensEnum
 import com.zhengzhou.cashflow.navigation.Screen
+import com.zhengzhou.cashflow.navigation.functions.ReloadPageAfterPopBackStack
+import com.zhengzhou.cashflow.themes.ui_elements.navigation.SectionNavigationDrawerSheet
+import com.zhengzhou.cashflow.themes.ui_elements.navigation.SectionTopAppBar
 
 @Composable
 fun AboutMeScreen(
-    currentScreen: NavigationCurrentScreen,
-    setCurrentScreen: (NavigationCurrentScreen) -> Unit,
+    currentScreen: ApplicationScreensEnum,
+    setCurrentScreen: (ApplicationScreensEnum) -> Unit,
     navController: NavController
 ) {
 
@@ -56,7 +56,7 @@ fun AboutMeScreen(
         pageRoute = Screen.Balance.route,
         navController = navController,
     ) {
-        setCurrentScreen(NavigationCurrentScreen.Balance)
+        setCurrentScreen(ApplicationScreensEnum.Balance)
     }
 
     ModalNavigationDrawer(
@@ -115,7 +115,7 @@ private fun AboutMeMainBody(
         modifier = Modifier.padding(innerPaddingValues)
     ) {
         Text(
-            text = stringResource(id = R.string.AboutMe_description),
+            text = stringResource(id = R.string.description),
             modifier = modifier
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -175,10 +175,10 @@ private fun AboutMeMainBody(
                         .padding(16.dp)
                 ) {
                     Text(
-                        text = "\u2764 " + stringResource(id = R.string.AboutMe_donate),
+                        text = "\u2764 " + stringResource(id = R.string.donate),
                         fontWeight = FontWeight.Bold
                     )
-                    Text(text = stringResource(id = R.string.AboutMe_donate_dialog))
+                    Text(text = stringResource(id = R.string.donate_dialog))
                 }
             }
         }
@@ -212,12 +212,12 @@ private fun AboutMeFloatingActionButton(
 ) {
     ExtendedFloatingActionButton(
         text = {
-            Text(text = stringResource(id = R.string.AboutMe_donate))
+            Text(text = stringResource(id = R.string.donate))
         },
         icon = {
             Icon(
                 painter = painterResource(id = R.drawable.ic_heart),
-                contentDescription = stringResource(id = R.string.AboutMe_donate),
+                contentDescription = stringResource(id = R.string.donate),
                 modifier = Modifier.size(32.dp)
             )
         },

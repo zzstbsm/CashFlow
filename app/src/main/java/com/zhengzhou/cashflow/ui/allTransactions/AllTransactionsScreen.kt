@@ -14,8 +14,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.customUiElements.LoadingLayer
 import com.zhengzhou.cashflow.data.Currency
+import com.zhengzhou.cashflow.navigation.Screen
+import com.zhengzhou.cashflow.navigation.functions.ReloadPageAfterPopBackStack
+import com.zhengzhou.cashflow.themes.ui_elements.loading.LoadingLayer
 import java.util.UUID
 
 @Composable
@@ -35,8 +37,8 @@ fun AllTransactionsScreen(
     }
     val allTransactionsUiState by allTransactionsViewModel.uiState.collectAsState()
 
-    com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack(
-        pageRoute = com.zhengzhou.cashflow.navigation.Screen.AllTransactions.route,
+    ReloadPageAfterPopBackStack(
+        pageRoute = Screen.AllTransactions.route,
         navController = navController,
         onPopBackStack = { }
     )

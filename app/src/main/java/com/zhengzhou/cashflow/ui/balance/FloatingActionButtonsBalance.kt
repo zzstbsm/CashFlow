@@ -23,6 +23,7 @@ import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.tools.EventMessages
 import java.util.UUID
 
@@ -64,7 +65,7 @@ fun BalanceFloatingActionButtons(
                         },
                         onClick = {
                             if (wallet.id != UUID(0L, 0L)) {
-                                com.zhengzhou.cashflow.navigation.Screen.TransactionEdit.navigate(
+                                Screen.TransactionEdit.navigate(
                                     transactionType = transactionType,
                                     transactionUUID = transaction.id,
                                     currency = wallet.currency,

@@ -12,9 +12,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.customUiElements.SectionTransactionEntry
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.dataForUi.TransactionAndCategory
+import com.zhengzhou.cashflow.navigation.Screen
+import com.zhengzhou.cashflow.themes.ui_elements.transaction.SectionTransactionEntry
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +49,7 @@ fun TransactionsInCategoryAlertDialog(
                                 category = transaction.category,
                                 currency = currency,
                                 onClickTransaction = {
-                                    com.zhengzhou.cashflow.navigation.Screen.TransactionReport.navigate(
+                                    Screen.TransactionReport.navigate(
                                         transactionUUID = transaction.transaction.id,
                                         navController = navController,
                                     )

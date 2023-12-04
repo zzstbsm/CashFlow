@@ -25,11 +25,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.customUiElements.CategoryIcon
-import com.zhengzhou.cashflow.customUiElements.DateSelector
-import com.zhengzhou.cashflow.customUiElements.DropdownTextFieldMenu
-import com.zhengzhou.cashflow.customUiElements.IconChoiceDialog
 import com.zhengzhou.cashflow.data.Currency
+import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
+import com.zhengzhou.cashflow.themes.ui_elements.date_selector.DateSelector
+import com.zhengzhou.cashflow.themes.ui_elements.dropdown_menu.DropdownTextFieldMenu
+import com.zhengzhou.cashflow.themes.ui_elements.icon_choice.IconChoiceDialog
 import java.util.Date
 
 @Composable

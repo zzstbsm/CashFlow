@@ -30,10 +30,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.customUiElements.CategoryIcon
-import com.zhengzhou.cashflow.customUiElements.KeypadDigitButton
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
+import com.zhengzhou.cashflow.themes.ui_elements.keypad.KeypadDigitButton
 import com.zhengzhou.cashflow.tools.calculator.KeypadDigit
 
 @Composable

@@ -13,15 +13,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.zhengzhou.cashflow.customUiElements.BottomNavigationBar
-import com.zhengzhou.cashflow.customUiElements.SectionNavigationDrawerSheet
-import com.zhengzhou.cashflow.customUiElements.SectionTopAppBar
+import com.zhengzhou.cashflow.navigation.ApplicationScreensEnum
+import com.zhengzhou.cashflow.navigation.Screen
+import com.zhengzhou.cashflow.navigation.functions.ReloadPageAfterPopBackStack
+import com.zhengzhou.cashflow.themes.ui_elements.navigation.SectionTopAppBar
 
 @Preview
 @Composable
 private fun ProfileScreenPreview(){
     ProfileScreen(
-        currentScreen = com.zhengzhou.cashflow.navigation.NavigationCurrentScreen.Profile,
+        currentScreen = ApplicationScreensEnum.Profile,
         setCurrentScreen = { },
         navController = rememberNavController()
     )
@@ -29,8 +30,8 @@ private fun ProfileScreenPreview(){
 
 @Composable
 fun ProfileScreen(
-    currentScreen: com.zhengzhou.cashflow.navigation.NavigationCurrentScreen,
-    setCurrentScreen: (com.zhengzhou.cashflow.navigation.NavigationCurrentScreen) -> Unit,
+    currentScreen: ApplicationScreensEnum,
+    setCurrentScreen: (ApplicationScreensEnum) -> Unit,
     navController: NavController,
 ) {
     val profileViewModel: ProfileViewModel = viewModel()
@@ -38,16 +39,16 @@ fun ProfileScreen(
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-    com.zhengzhou.cashflow.navigation.ReloadPageAfterPopBackStack(
-        pageRoute = com.zhengzhou.cashflow.navigation.Screen.Profile.route,
+    ReloadPageAfterPopBackStack(
+        pageRoute = Screen.Profile.route,
         navController = navController,
     ) {
-        setCurrentScreen(com.zhengzhou.cashflow.navigation.NavigationCurrentScreen.Profile)
+        setCurrentScreen(ApplicationScreensEnum.Profile)
     }
 
     ModalNavigationDrawer(
         drawerContent = {
-            SectionNavigationDrawerSheet(
+            com.zhengzhou.cashflow.themes.ui_elements.SectionNavigationDrawerSheet(
                 drawerState = drawerState,
                 currentScreen = currentScreen,
                 setCurrentScreen = setCurrentScreen,
@@ -70,7 +71,7 @@ fun ProfileScreen(
                 )
             },
             bottomBar = {
-                BottomNavigationBar(
+                com.zhengzhou.cashflow.themes.ui_elements.BottomNavigationBar(
                     currentScreen = currentScreen,
                     setCurrentScreen = setCurrentScreen,
                     navController = navController,
