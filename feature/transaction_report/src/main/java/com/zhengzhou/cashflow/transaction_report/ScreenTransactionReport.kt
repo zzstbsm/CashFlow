@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.transactionReport
+package com.zhengzhou.cashflow.transaction_report
 
 import android.annotation.SuppressLint
 import android.text.format.DateFormat
@@ -31,24 +31,31 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.TransactionType
+import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.navigation.functions.ReloadPageAfterPopBackStack
+import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
 import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
 import com.zhengzhou.cashflow.themes.ui_elements.tag.TagListLazyStaggeredHorizontalGrid
 import com.zhengzhou.cashflow.tools.CurrencyFormatter
+import com.zhengzhou.cashflow.transaction_report.view_model.TransactionReportUiState
+import com.zhengzhou.cashflow.transaction_report.view_model.TransactionReportViewModel
 import java.util.UUID
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun TransactionReportScreen(
+    repository: RepositoryInterface,
     transactionUUID: UUID,
     navController: NavController,
 ) {
 
     val transactionReportViewModel: TransactionReportViewModel = viewModel {
-        TransactionReportViewModel(transactionUUID = transactionUUID)
+        TransactionReportViewModel(
+            repository = repository,
+            transactionUUID = transactionUUID,
+        )
     }
     val transactionReportUiState by transactionReportViewModel.uiState.collectAsState()
 
@@ -121,13 +128,13 @@ fun TransactionReportTopAppBar(
             IconButton(onClick = onEditClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_edit),
-                    contentDescription = stringResource(id = R.string.TransactionReport_edit_transaction)
+                    contentDescription = stringResource(id = R.string.edit_transaction)
                 )
             }
             IconButton(onClick = onDeleteTransaction) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_trash),
-                    contentDescription = stringResource(id = R.string.TransactionReport_delete_transaction)
+                    contentDescription = stringResource(id = R.string.delete_transaction)
                 )
             }
         }
@@ -185,7 +192,7 @@ private fun TransactionReportMainBody(
                             modifier = Modifier
                                 .weight(5f)
                         )
-                        if (category.iconName == com.zhengzhou.cashflow.themes.IconsMappedForDB.LOADING) {
+                        if (category.iconName == IconsMappedForDB.LOADING) {
                             CircularProgressIndicator(
                                 modifier = Modifier
                                     .weight(1f)
@@ -218,7 +225,7 @@ private fun TransactionReportMainBody(
                 OutlinedTextField(
                     label = {
                         Text(
-                            text = stringResource(id = R.string.TransactionReport_wallet)
+                            text = stringResource(id = R.string.wallet)
                         )
                     },
                     value = wallet.name,
@@ -237,7 +244,7 @@ private fun TransactionReportMainBody(
                 OutlinedTextField(
                     label = {
                         Text(
-                            text = stringResource(id = R.string.TransactionReport_category)
+                            text = stringResource(id = R.string.category)
                         )
                     },
                     value = category.name,
@@ -262,7 +269,7 @@ private fun TransactionReportMainBody(
                 val textModifier = Modifier
                     .padding(horizontal = 8.dp, vertical = 4.dp)
                 Text(
-                    text = stringResource(id = R.string.CommonTransactions_tag),
+                    text = stringResource(id = R.string.tag),
                     modifier = textModifier
                 )
                 TagListLazyStaggeredHorizontalGrid(

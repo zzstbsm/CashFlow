@@ -13,6 +13,7 @@ import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
 import com.zhengzhou.cashflow.tools.calculator.Calculator
 import com.zhengzhou.cashflow.tools.calculator.KeypadDigit
 import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
+import com.zhengzhou.cashflow.transaction_edit.return_results.TransactionSaveResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

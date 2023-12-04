@@ -1,9 +1,11 @@
-package com.zhengzhou.cashflow.ui.transactionReport
+package com.zhengzhou.cashflow.transaction_report.view_model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
+import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
+import com.zhengzhou.cashflow.tools.EventMessages
+import com.zhengzhou.cashflow.transaction_report.R
+import com.zhengzhou.cashflow.transaction_report.data_structure.TransactionFullForUI
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,21 +14,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-data class TransactionReportUiState(
-    val transactionFullForUI: TransactionFullForUI = TransactionFullForUI(),
 
-    val isLoading: Boolean = true,
-
-    )
-
-class TransactionReportViewModel(
+internal class TransactionReportViewModel(
+    val repository: RepositoryInterface,
     transactionUUID: UUID,
 ): ViewModel() {
 
     private var _uiState = MutableStateFlow(TransactionReportUiState())
     val uiState: StateFlow<TransactionReportUiState> = _uiState.asStateFlow()
 
-    private val repository = DatabaseRepository.get()
 
     private var writingOnUiState: Boolean = false
 
@@ -74,6 +70,6 @@ class TransactionReportViewModel(
                 }
             ).delete(repository)
         }
-        com.zhengzhou.cashflow.tools.EventMessages.sendMessageId(R.string.TransactionReport_transaction_deleted)
+        EventMessages.sendMessageId(R.string.transaction_deleted)
     }
 }

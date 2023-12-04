@@ -59,12 +59,6 @@
     <string name="TransactionEdit_transaction_report">Transaction report</string>
     <string name="TransactionEdit_amount_insert_prompt">Insert the amount</string>
 
-    <!-- TransactionReport -->
-    <string name="TransactionReport_category">Category</string>
-    <string name="TransactionReport_wallet">Wallet</string>
-    <string name="TransactionReport_delete_transaction">Delete transaction</string>
-    <string name="TransactionReport_edit_transaction">Edit transaction</string>
-    <string name="TransactionReport_transaction_deleted">Transaction deleted</string>
 
     <string name="tag">Tag</string>
     <string name="tag_no">No tags</string>

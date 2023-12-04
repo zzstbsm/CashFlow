@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.dataForUi
+package com.zhengzhou.cashflow.transaction_report.data_structure
 
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Location
@@ -7,6 +7,9 @@ import com.zhengzhou.cashflow.data.TagEntry
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
+import com.zhengzhou.cashflow.database.api.use_case.tagUseCases.implementations.TagUseCases
+import com.zhengzhou.cashflow.database.api.use_case.transactionUseCases.implementations.TransactionUseCases
 import com.zhengzhou.cashflow.transaction_edit.return_results.TransactionSaveResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,9 +27,11 @@ data class TransactionFullForUI(
 ) {
     companion object {
         suspend fun load(
-            repository: DatabaseRepository,
+            repository: RepositoryInterface,
             transactionUUID: UUID
         ): Pair<TransactionFullForUI, Boolean> {
+
+            val tagUseCases = TagUseCases(repository)
 
             var isLoading = true
             val jobRetrieveTagTransaction = CoroutineScope(Dispatchers.Default)
@@ -39,7 +44,7 @@ data class TransactionFullForUI(
 
             var  tagList: List<Tag> = listOf()
             jobRetrieveTagTransaction.launch {
-                repository.getTagListFromTransaction(transactionUUID = transaction.id).collect {
+                tagUseCases.getTagListFromTransaction(transactionUUID = transaction.id).collect {
                     tagList = it
                     isLoading = false
                 }
@@ -101,15 +106,18 @@ data class TransactionFullForUI(
     }
 
     suspend fun save(
-        repository: DatabaseRepository,
+        repository: RepositoryInterface,
         newTransaction: Boolean,
     ): TransactionSaveResult {
 
-        /*
+        /**
          *
          * Remember to update the count of the tags before saving
          *
          */
+
+        val tagUseCases = TagUseCases(repository)
+        val transactionUseCases = TransactionUseCases(repository)
 
         var currentTransaction: Transaction = transaction.copy(
             date = if (newTransaction) Date() else transaction.date,
@@ -118,7 +126,7 @@ data class TransactionFullForUI(
 
         // Save transaction entry
         if (newTransaction) {
-            currentTransaction = repository.addTransaction(currentTransaction)
+            currentTransaction = transactionUseCases.addTransaction(currentTransaction)
         } else {
             repository.updateTransaction(currentTransaction)
         }
@@ -136,13 +144,13 @@ data class TransactionFullForUI(
 
             val newTag = tag.isNewTag()
             if ((newTag || newTransaction) && tag.enabled) {
-                repository.addTag(tag)
+                tagUseCases.addTag(tag)
             }
             // Tag has been deleted during the edit
             else if (!tag.enabled) {
-                repository.deleteTag(tag)
+                tagUseCases.deleteTag(tag)
             } else {
-                repository.updateTag(tag)
+                tagUseCases.updateTag(tag)
             }
         }
 
@@ -150,13 +158,15 @@ data class TransactionFullForUI(
     }
 
     suspend fun delete(
-        repository: DatabaseRepository,
+        repository: RepositoryInterface,
     ) {
-        repository.deleteTransaction(transaction = transaction)
+        val tagUseCases = TagUseCases(repository)
+        val transactionUseCases = TransactionUseCases(repository)
+        transactionUseCases.deleteTransaction(transaction = transaction)
         tagList.map { tag ->
             tag.decreaseCounter()
         }.forEach { tag ->
-            repository.deleteTag(tag = tag)
+            tagUseCases.deleteTag(tag = tag)
         }
     }
 }

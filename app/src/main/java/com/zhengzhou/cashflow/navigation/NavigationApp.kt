@@ -166,6 +166,7 @@ fun NavigationApp(
                 "Exception: passed walletUUIDStr not valid"
             }
             TransactionReportScreen(
+                repository = repository,
                 transactionUUID = UUID.fromString(transactionUUID),
                 navController = navController
             )

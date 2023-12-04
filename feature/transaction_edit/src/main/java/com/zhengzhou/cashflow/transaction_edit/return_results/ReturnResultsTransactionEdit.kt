@@ -1,6 +1,5 @@
-package com.zhengzhou.cashflow.ui.transactionEdit
+package com.zhengzhou.cashflow.transaction_edit.return_results
 
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.TransactionType
 
 enum class TransactionSaveResult(
