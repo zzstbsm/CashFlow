@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.transactionEdit
+package com.zhengzhou.cashflow.transaction_edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
@@ -37,7 +36,7 @@ import com.zhengzhou.cashflow.themes.ui_elements.keypad.KeypadDigitButton
 import com.zhengzhou.cashflow.tools.calculator.KeypadDigit
 
 @Composable
-fun AmountTextSection(
+internal fun AmountTextSection(
     amountString: String,
     wallet: Wallet,
     walletList: List<Wallet>,
@@ -149,7 +148,7 @@ fun AmountTextSection(
 }
 
 @Composable
-fun KeypadTransactionSection(
+internal fun KeypadTransactionSection(
     modifier: Modifier = Modifier,
     onDigitClick: (KeypadDigit) -> Unit
 ) {

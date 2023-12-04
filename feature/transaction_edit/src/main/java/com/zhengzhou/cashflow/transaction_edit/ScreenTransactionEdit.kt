@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.transactionEdit
+package com.zhengzhou.cashflow.transaction_edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,15 +33,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
+import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.navigation.functions.BackHandler
 import com.zhengzhou.cashflow.tools.calculator.KeypadDigit
+import com.zhengzhou.cashflow.transaction_edit.view_model.TransactionEditUiState
 import java.util.UUID
 
 @Composable
 fun TransactionEditScreen(
+    repository: RepositoryInterface,
     transactionType: TransactionType,
     transactionUUID: UUID,
     currency: Currency,
@@ -52,6 +54,7 @@ fun TransactionEditScreen(
 
     val transactionEditViewModel: TransactionEditViewModel = viewModel {
         TransactionEditViewModel(
+            repository = repository,
             transactionUUID = transactionUUID,
             transactionType = transactionType,
             currency = currency,
@@ -115,7 +118,7 @@ fun TransactionEditScreen(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_save),
                         contentDescription = stringResource(
-                            id = R.string.TransactionEdit_save_transaction
+                            id = R.string.save_transaction
                         )
                     )
                 }
@@ -127,7 +130,7 @@ fun TransactionEditScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TransactionEditTopAppBar(
+internal fun TransactionEditTopAppBar(
     transactionType: TransactionType,
     onNavigationIconClick: (Boolean) -> Unit,
 ) {
@@ -151,7 +154,7 @@ fun TransactionEditTopAppBar(
 }
 
 @Composable
-fun TransactionEditMainBody(
+internal fun TransactionEditMainBody(
     transactionEditUiState: TransactionEditUiState,
     transactionEditViewModel: TransactionEditViewModel,
     contentPadding: PaddingValues,
@@ -324,7 +327,7 @@ private fun BackDialog(
                 modifier = modifier,
             ) {
                 Text(
-                    text = stringResource(id = R.string.TransactionEdit_prompt_save_transaction),
+                    text = stringResource(id = R.string.prompt_save_transaction),
                     modifier = Modifier.padding(16.dp)
                 )
                 Row(

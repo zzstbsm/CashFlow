@@ -47,18 +47,6 @@
     <string name="ManageCategories_new_category">New category</string>
     <string name="ManageCategories_occurrences">Occurrences</string>
 
-    <!-- TransactionEdit page strings -->
-    <string name="amount">Amount</string>
-    <string name="description">Description</string>
-    <string name="TransactionEdit_prompt_save_transaction">Do you want to save the transaction?</string>
-    <string name="TransactionEdit_transaction_saved">Transaction saved</string>
-    <string name="TransactionEdit_no_amount">No amount inserted, insert amount</string>
-    <string name="TransactionEdit_no_category">No category inserted, insert category</string>
-    <string name="TransactionEdit_save_transaction">Save transaction</string>
-    <string name="TransactionEdit_transaction_deleted">Transaction deleted</string>
-    <string name="TransactionEdit_transaction_report">Transaction report</string>
-    <string name="TransactionEdit_amount_insert_prompt">Insert the amount</string>
-
 
     <string name="tag">Tag</string>
     <string name="tag_no">No tags</string>

@@ -1,10 +1,10 @@
-package com.zhengzhou.cashflow.ui.transactionEdit
+package com.zhengzhou.cashflow.transaction_edit
 
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.transaction_edit.return_results.TransactionSaveResult
 
-class TransactionEditActions {
+internal class TransactionEditActions {
     companion object {
         fun save(
             transactionEditViewModel: TransactionEditViewModel,

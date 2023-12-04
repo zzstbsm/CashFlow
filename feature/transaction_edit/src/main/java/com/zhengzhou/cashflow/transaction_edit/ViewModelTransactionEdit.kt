@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.transactionEdit
+package com.zhengzhou.cashflow.transaction_edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,11 +9,14 @@ import com.zhengzhou.cashflow.data.TagEntry
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
-import com.zhengzhou.cashflow.dataForUi.TransactionFullForUI
+import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
+import com.zhengzhou.cashflow.database.api.use_case.walletUseCases.implementations.WalletUseCases
 import com.zhengzhou.cashflow.tools.calculator.Calculator
 import com.zhengzhou.cashflow.tools.calculator.KeypadDigit
 import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
 import com.zhengzhou.cashflow.transaction_edit.return_results.TransactionSaveResult
+import com.zhengzhou.cashflow.transaction_edit.view_model.TransactionEditUiState
+import com.zhengzhou.cashflow.transaction_edit.view_model.TransactionFullForUI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -24,7 +27,7 @@ import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.UUID
 
-/*
+/**
  * TransactionEditUiState contains all the elements to draw the ui
  *
  * walletList, categoryList and tagListInDB are constant, they just need to be loaded once from the database.
@@ -40,29 +43,18 @@ import java.util.UUID
  *
  */
 
-data class TransactionEditUiState(
-    val isLoading: Boolean = true,
 
-    val wallet: Wallet = Wallet.newEmpty(),
-    val transaction: Transaction = Transaction.newEmpty(),
-    val currentTagList: List<Tag> = listOf(),
-    val secondaryWallet: Wallet? = null,
 
-    val walletList: List<Wallet> = listOf(),
-    val categoryList: List<Category> = listOf(),
-    val tagListInDB: List<TagEntry> = listOf(),
-
-    val amountString: String = "0",
-    val transactionSectionToShow: TransactionSectionToShow,
-)
-
-class TransactionEditViewModel(
+internal class TransactionEditViewModel(
+    val repository: RepositoryInterface,
     transactionUUID: UUID,
     transactionType: TransactionType,
     currency: Currency,
     isBlueprint: Boolean,
     editBlueprint: Boolean,
 ) : ViewModel() {
+
+    val walletUseCases = WalletUseCases(repository)
 
     private var _uiState = MutableStateFlow(
         TransactionEditUiState(
@@ -74,8 +66,6 @@ class TransactionEditViewModel(
     val uiState: StateFlow<TransactionEditUiState> = _uiState.asStateFlow()
 
     private var newTransaction: Boolean = false
-
-    private val repository = DatabaseRepository.get()
 
     private var writingOnUiState: Boolean = false
 
@@ -129,7 +119,7 @@ class TransactionEditViewModel(
 
             if (newTransaction) {
 
-                wallet = repository.getWalletLastAccessed() ?: Wallet.newEmpty()
+                wallet = walletUseCases.getLastAccessedWallet() ?: Wallet.newEmpty()
                 transaction = Transaction.newEmpty().copy(
                     walletUUID = wallet.id,
                     transactionType = transactionType,

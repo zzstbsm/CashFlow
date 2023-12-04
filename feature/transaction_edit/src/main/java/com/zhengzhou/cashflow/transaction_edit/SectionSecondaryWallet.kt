@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.transactionEdit
+package com.zhengzhou.cashflow.transaction_edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,12 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
 
 @Composable
-fun SecondaryWalletSection(
+internal fun SecondaryWalletSection(
     primaryWallet: Wallet,
     onSelectPrimaryWallet: (Wallet) -> Unit,
     secondaryWallet: Wallet,

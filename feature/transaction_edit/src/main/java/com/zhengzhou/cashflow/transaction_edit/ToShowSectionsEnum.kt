@@ -1,8 +1,7 @@
-package com.zhengzhou.cashflow.ui.transactionEdit
+package com.zhengzhou.cashflow.transaction_edit
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.TransactionType
 
 enum class TransactionSectionToShow(

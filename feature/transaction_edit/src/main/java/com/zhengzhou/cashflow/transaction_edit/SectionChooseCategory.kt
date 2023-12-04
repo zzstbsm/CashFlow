@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.transactionEdit
+package com.zhengzhou.cashflow.transaction_edit
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -11,7 +11,7 @@ import com.zhengzhou.cashflow.themes.ui_elements.category.SelectIconsGrid
 import java.util.UUID
 
 @Composable
-fun ChooseCategorySection(
+internal fun ChooseCategorySection(
     categoryList: List<Category>,
     currentlyChosenCategoryId: UUID,
     onCategoryChoice: (Category) -> Unit,

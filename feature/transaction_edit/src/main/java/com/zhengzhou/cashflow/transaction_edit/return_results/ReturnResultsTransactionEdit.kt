@@ -1,6 +1,7 @@
 package com.zhengzhou.cashflow.transaction_edit.return_results
 
 import com.zhengzhou.cashflow.data.TransactionType
+import com.zhengzhou.cashflow.transaction_edit.R
 
 enum class TransactionSaveResult(
     val errorMessage: Int,
@@ -8,15 +9,15 @@ enum class TransactionSaveResult(
 ) {
 
     SUCCESS(
-        errorMessage = R.string.TransactionEdit_transaction_saved,
+        errorMessage = R.string.transaction_saved,
         transactionTypeActiveList = TransactionType.getAllActive(),
     ),
     NO_AMOUNT(
-        errorMessage = R.string.TransactionEdit_no_amount,
+        errorMessage = R.string.no_amount,
         transactionTypeActiveList = TransactionType.getAllActive(),
     ),
     NO_CATEGORY(
-        errorMessage = R.string.TransactionEdit_no_category,
+        errorMessage = R.string.no_category,
         transactionTypeActiveList = listOf(
             TransactionType.Expense,
             TransactionType.Deposit,
