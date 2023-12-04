@@ -1,13 +1,18 @@
-package com.zhengzhou.cashflow.ui.balance
+package com.zhengzhou.cashflow.total_balance.view_model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Wallet
-import com.zhengzhou.cashflow.dataForUi.TransactionAndCategory
+import com.zhengzhou.cashflow.database.api.DatabaseInstance
+import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.CategoryUseCases
+import com.zhengzhou.cashflow.database.api.use_case.transactionUseCases.implementations.TransactionUseCases
+import com.zhengzhou.cashflow.database.api.use_case.walletUseCases.implementations.WalletUseCases
 import com.zhengzhou.cashflow.tools.TimeTools
+import com.zhengzhou.cashflow.total_balance.BalanceTabOptions
+import com.zhengzhou.cashflow.total_balance.R
+import com.zhengzhou.cashflow.total_balance.data_structure.TransactionAndCategory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -18,63 +23,12 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
-data class BalanceUiState(
-    val isLoading: Boolean = true,
-    val equivalentWallet: Wallet = Wallet.newEmpty().copy(
-        name = "All wallets",
-        currency = Currency.EUR,
-    ),
-    val walletList: List<Wallet> = listOf(),
-    val currencyList: List<Currency> = listOf(),
-    val transactionList: List<TransactionAndCategory> = listOf(),
-    val categoryList: List<Category> = listOf(),
-    val transactionListToShow: List<TransactionAndCategory> = listOf(),
+internal class BalanceViewModel : ViewModel() {
 
-    val filterStartDate: Date = TimeFilterForSegmentedButton.Month.getStartDate(),
-    val filterEndDate: Date = TimeFilterForSegmentedButton.Month.getEndDate(),
-    val timeFilter: TimeFilterForSegmentedButton? = TimeFilterForSegmentedButton.Month,
-
-    val shownTab: BalanceTabOptions = BalanceTabOptions.CATEGORIES,
-) {
-
-    fun getBalance(): Float {
-
-        var amount: Float = this.updateEquivalentWallet().equivalentWallet.startAmount
-
-        this.transactionList.map {
-            it.transaction
-        }.forEach { transaction ->
-            amount += transaction.amount
-        }
-        return amount
-    }
-
-    fun getLastWallet(): Wallet {
-        return this.walletList.maxByOrNull { wallet ->
-            wallet.lastAccess
-        } ?: Wallet.newEmpty()
-    }
-
-    private fun updateEquivalentWallet() : BalanceUiState{
-
-        var startAmount = 0f
-
-        this.walletList.forEach { wallet ->
-            startAmount += wallet.startAmount
-        }
-
-        return this.copy(
-            equivalentWallet = this.equivalentWallet.copy(
-                startAmount = startAmount,
-            )
-        )
-
-    }
-}
-
-class BalanceViewModel : ViewModel() {
-
-    private val repository = DatabaseRepository.get()
+    private val database = DatabaseInstance.getRepository()
+    private val categoryUseCases = CategoryUseCases(database)
+    private val transactionUseCases = TransactionUseCases(database)
+    private val walletUseCases = WalletUseCases(database)
 
     // UiState
     private var _uiState = MutableStateFlow(BalanceUiState())
@@ -150,7 +104,7 @@ class BalanceViewModel : ViewModel() {
 
     private fun getCategories(): Job {
         return viewModelScope.launch {
-            repository.getCategoryList().collect { categoryList ->
+            categoryUseCases.getCategoryList().collect { categoryList ->
                 setUiState(
                     categoryList = categoryList.sortedBy { category: Category -> category.name },
                 )
@@ -161,7 +115,7 @@ class BalanceViewModel : ViewModel() {
     private fun getCurrencyList(): Job {
         return viewModelScope.launch(Dispatchers.IO) {
             // Collect all wallets
-            repository.getWalletCurrencyList().collect { currencyList ->
+            walletUseCases.getUsedCurrenciesInAllWallets().collect { currencyList ->
                 setUiState(
                     currencyList = currencyList,
                     isLoading = false
@@ -184,12 +138,12 @@ class BalanceViewModel : ViewModel() {
             setUiState(
                 transactionList = listOf()
             )
-            repository.getTransactionListInListOfWallet(uiState.value.walletList).collect { transactionList ->
+            transactionUseCases.getTransactionListInListOfWallet(uiState.value.walletList).collect { transactionList ->
 
                 val transactionCategoryGroup: MutableList<TransactionAndCategory> = mutableListOf()
 
                 transactionList.forEach { transaction ->
-                    val category = repository.getCategory(transaction.categoryUUID) ?: Category.newEmpty()
+                    val category = categoryUseCases.getCategory(transaction.categoryUUID) ?: Category.newEmpty()
                     transactionCategoryGroup.add(
                         TransactionAndCategory(
                             transaction = transaction,
@@ -214,7 +168,7 @@ class BalanceViewModel : ViewModel() {
                 isLoading = true
             )
             // Collect all wallets
-            repository.getWalletListByCurrency(currency).collect { collectedWalletList ->
+            walletUseCases.getWalletListByCurrency(currency).collect { collectedWalletList ->
                 var amount = 0f
                 collectedWalletList.forEach { wallet: Wallet ->
                     amount += wallet.startAmount
@@ -284,19 +238,19 @@ enum class TimeFilterForSegmentedButton(
     val dateFormat: String,
 ) {
     Week(
-        textId = R.string.Balance_week,
+        textId = R.string.week,
         dateFormat = "EE, dd MMM",
     ),
     Month(
-        textId = R.string.Balance_month,
+        textId = R.string.month,
         dateFormat = "MMMM yyyy",
     ),
     Year(
-        textId = R.string.Balance_year,
+        textId = R.string.year,
         dateFormat = "yyyy",
     ),
     All(
-        textId = R.string.Balance_all,
+        textId = R.string.all,
         dateFormat = "dd/MM/yyyy"
     );
 

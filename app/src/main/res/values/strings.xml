@@ -25,26 +25,11 @@
     <string name="accessibility_transaction_new">New transaction</string>
 
     <string name="wallet">Wallet</string>
-    <string name="balance">Balance: %1$s</string>
     <string name="profile">Profile</string>
 
     <!-- AllTransactions -->
     <string name="AllTransactions_TopAppBar">Transaction list</string>
 
-    <!-- Balance Screen -->
-    <string name="Balance_all">All</string>
-    <string name="Balance_category">Categories</string>
-    <string name="Balance_choose_currency">Choose currency</string>
-    <string name="Balance_month">Month</string>
-    <string name="Balance_no_transactions">No transactions</string>
-    <string name="Balance_no_wallet">No wallets present in the system. Please first add a wallet.</string>
-    <string name="Balance_personalized">Personalized</string>
-    <string name="Balance_select_currency">Select currency of the wallets</string>
-    <string name="Balance_selected_period_balance">Selected period balance</string>
-    <string name="Balance_transaction">Recent transactions</string>
-    <string name="Balance_wallet_name_currency">%1s wallets</string>
-    <string name="Balance_week">Week</string>
-    <string name="Balance_year">Year</string>
 
     <!-- CommonTransactions -->
     <string name="CommonTransactions_no_model">There are no blueprints</string>

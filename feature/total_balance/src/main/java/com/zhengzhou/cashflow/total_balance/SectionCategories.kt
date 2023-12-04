@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.balance
+package com.zhengzhou.cashflow.total_balance
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +22,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Transaction
@@ -31,7 +30,7 @@ import com.zhengzhou.cashflow.tools.CashFlowTools
 import com.zhengzhou.cashflow.tools.CurrencyFormatter
 
 @Composable
-fun SectionCategoryItem(
+internal fun SectionCategoryItem(
     amount: Float,
     category: Category,
     currency: Currency,
@@ -64,7 +63,7 @@ fun SectionCategoryItem(
 }
 
 @Composable
-fun BalanceInSelectedPeriod(
+internal fun BalanceInSelectedPeriod(
     currency: Currency,
     transactionList: List<Transaction>,
     modifier: Modifier = Modifier,
@@ -82,7 +81,7 @@ fun BalanceInSelectedPeriod(
         modifier = modifier.fillMaxHeight()
     ) {
         Text(
-            text = stringResource(id = R.string.Balance_selected_period_balance)
+            text = stringResource(id = R.string.selected_period_balance)
         )
         Row {
             Image(

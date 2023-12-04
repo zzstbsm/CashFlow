@@ -10,7 +10,7 @@ import java.util.UUID
 class GetWallet(
     private val repository: RepositoryInterface
 ): GetWalletInterface {
-    override fun getUsedCurrencies(wallet: Wallet): Flow<List<Currency>> {
+    override fun getUsedCurrenciesInWallet(wallet: Wallet): Flow<List<Currency>> {
         return repository.getWalletCurrencyList()
     }
 
@@ -24,6 +24,10 @@ class GetWallet(
 
     override fun getWalletList(): Flow<List<Wallet>> {
         return repository.getWalletList()
+    }
+
+    override fun getUsedCurrenciesInAllWallets(): Flow<List<Currency>> {
+        return repository.getWalletCurrencyList()
     }
 
     override fun getWalletListByCurrency(currency: Currency): Flow<List<Wallet>> {

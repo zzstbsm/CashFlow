@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.balance
+package com.zhengzhou.cashflow.total_balance
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,15 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Currency
-import com.zhengzhou.cashflow.dataForUi.TransactionAndCategory
 import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.themes.ui_elements.transaction.SectionTransactionEntry
+import com.zhengzhou.cashflow.total_balance.data_structure.TransactionAndCategory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TransactionsInCategoryAlertDialog(
+internal fun TransactionsInCategoryAlertDialog(
     show: Boolean,
     onDismissDialog: (Boolean) -> Unit,
     transactionList: List<TransactionAndCategory>,
@@ -37,7 +36,7 @@ fun TransactionsInCategoryAlertDialog(
                     if (transactionList.isEmpty()) {
                         item {
                             Text(
-                                text = stringResource(id = R.string.Balance_no_transactions),
+                                text = stringResource(id = R.string.no_transactions),
                                 modifier = Modifier.padding(horizontal = 8.dp)
                             )
                         }

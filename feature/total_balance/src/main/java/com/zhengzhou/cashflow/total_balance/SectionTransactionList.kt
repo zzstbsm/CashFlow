@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.balance
+package com.zhengzhou.cashflow.total_balance
 
 import android.text.format.DateFormat
 import androidx.compose.foundation.clickable
@@ -26,7 +26,7 @@ import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
 import com.zhengzhou.cashflow.tools.CurrencyFormatter
 
 @Composable
-fun TransactionEntry(
+internal fun TransactionEntry(
     transaction: Transaction,
     category: Category,
     currency: Currency,

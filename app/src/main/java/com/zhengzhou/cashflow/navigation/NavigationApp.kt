@@ -11,8 +11,8 @@ import androidx.navigation.compose.rememberNavController
 import com.zhengzhou.cashflow.about_me.AboutMeScreen
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
+import com.zhengzhou.cashflow.total_balance.BalanceScreen
 import com.zhengzhou.cashflow.ui.allTransactions.AllTransactionsScreen
-import com.zhengzhou.cashflow.ui.balance.BalanceScreen
 import com.zhengzhou.cashflow.ui.commonTransactions.CommonTransactionsScreen
 import com.zhengzhou.cashflow.ui.manageCategories.ManageCategoriesScreen
 import com.zhengzhou.cashflow.ui.profile.ProfileScreen

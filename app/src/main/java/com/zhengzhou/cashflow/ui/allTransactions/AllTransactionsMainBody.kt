@@ -25,7 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.navigation.Screen
-import com.zhengzhou.cashflow.ui.balance.TransactionEntry
+import com.zhengzhou.cashflow.total_balance.TransactionEntry
 import kotlinx.coroutines.launch
 
 @Composable

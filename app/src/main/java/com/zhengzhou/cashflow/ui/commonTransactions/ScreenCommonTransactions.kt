@@ -357,7 +357,7 @@ private fun CommonTransactionFloatingActionButtons(
                                     navController = navController,
                                 )
                             } else {
-                                EventMessages.sendMessageId(R.string.Balance_no_wallet)
+                                EventMessages.sendMessageId(R.string.no_wallet)
                             }
                             showDialog = false
                         },

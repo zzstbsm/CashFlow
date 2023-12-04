@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.balance
+package com.zhengzhou.cashflow.total_balance
 
 import android.annotation.SuppressLint
 import android.text.format.DateFormat
@@ -19,13 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.tools.TimeTools
+import com.zhengzhou.cashflow.total_balance.view_model.TimeFilterForSegmentedButton
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SelectTimeFilter(
+internal fun SelectTimeFilter(
     currentTimeFilter: TimeFilterForSegmentedButton?,
     timeFilterList: List<TimeFilterForSegmentedButton>,
     onSelectTimeFilter: (TimeFilterForSegmentedButton?) -> Unit,
@@ -118,7 +118,7 @@ fun SelectedPeriodShow(
             text = when (timeFilter) {
                 TimeFilterForSegmentedButton.Month -> endDateFormat
                 TimeFilterForSegmentedButton.Year -> endDateFormat
-                TimeFilterForSegmentedButton.All -> stringResource(id = R.string.Balance_all)
+                TimeFilterForSegmentedButton.All -> stringResource(id = R.string.all)
                 else -> "$startDateFormat - $endDateFormat"
             }
         )

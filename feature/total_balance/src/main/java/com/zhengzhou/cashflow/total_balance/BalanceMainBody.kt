@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.balance
+package com.zhengzhou.cashflow.total_balance
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,13 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,86 +20,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.R
-import com.zhengzhou.cashflow.data.Transaction
-import com.zhengzhou.cashflow.dataForUi.TransactionAndCategory
-import com.zhengzhou.cashflow.navigation.ApplicationScreensEnum
 import com.zhengzhou.cashflow.navigation.Screen
-import com.zhengzhou.cashflow.navigation.functions.ReloadPageAfterPopBackStack
-import com.zhengzhou.cashflow.themes.ui_elements.navigation.SectionTopAppBar
+import com.zhengzhou.cashflow.total_balance.data_structure.TransactionAndCategory
+import com.zhengzhou.cashflow.total_balance.view_model.BalanceUiState
+import com.zhengzhou.cashflow.total_balance.view_model.BalanceViewModel
+import com.zhengzhou.cashflow.total_balance.view_model.TimeFilterForSegmentedButton
+
 
 @Composable
-fun BalanceScreen(
-    currentScreen: ApplicationScreensEnum,
-    setCurrentScreen: (ApplicationScreensEnum) -> Unit,
-    navController: NavController
-) {
-
-    val balanceViewModel: BalanceViewModel = viewModel {
-        BalanceViewModel()
-    }
-    val balanceUiState by balanceViewModel.uiState.collectAsState()
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-
-    ReloadPageAfterPopBackStack(
-        pageRoute = Screen.Balance.route,
-        navController = navController,
-    ) {
-        setCurrentScreen(ApplicationScreensEnum.Balance)
-    }
-
-    ModalNavigationDrawer(
-        drawerContent = {
-            com.zhengzhou.cashflow.themes.ui_elements.SectionNavigationDrawerSheet(
-                drawerState = drawerState,
-                currentScreen = currentScreen,
-                setCurrentScreen = setCurrentScreen,
-                navController = navController
-            )
-        },
-        gesturesEnabled = drawerState.currentValue == DrawerValue.Open,
-        drawerState = drawerState,
-    ) {
-        Scaffold(
-            topBar = {
-                SectionTopAppBar(
-                    currentScreen = currentScreen,
-                    drawerState = drawerState,
-                )
-            },
-            content = { innerPadding ->
-                BalanceMainBody(
-                    balanceUiState = balanceUiState,
-                    balanceViewModel = balanceViewModel,
-                    innerPaddingValues = innerPadding,
-                    navController = navController,
-                )
-            },
-            bottomBar = {
-                com.zhengzhou.cashflow.themes.ui_elements.BottomNavigationBar(
-                    currentScreen = currentScreen,
-                    setCurrentScreen = setCurrentScreen,
-                    navController = navController,
-                )
-            },
-            floatingActionButton = {
-                if (!balanceUiState.isLoading) {
-                    BalanceFloatingActionButtons(
-                        wallet = balanceUiState.getLastWallet(),
-                        transaction = Transaction.newEmpty(),
-                        navController = navController,
-                    )
-                }
-            },
-        )
-    }
-
-}
-
-@Composable
-private fun BalanceMainBody(
+internal fun BalanceMainBody(
     balanceUiState: BalanceUiState,
     balanceViewModel: BalanceViewModel,
     innerPaddingValues: PaddingValues,
@@ -227,7 +152,7 @@ private fun BalanceMainBody(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = modifier
                             ) {
-                                Text(text = stringResource(id = R.string.Balance_no_transactions))
+                                Text(text = stringResource(id = R.string.no_transactions))
                             }
                         }
                     }

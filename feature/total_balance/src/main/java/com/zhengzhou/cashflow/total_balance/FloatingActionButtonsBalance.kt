@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.balance
+package com.zhengzhou.cashflow.total_balance
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,7 +19,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
@@ -74,7 +73,7 @@ fun BalanceFloatingActionButtons(
                                     navController = navController,
                                 )
                             } else {
-                                EventMessages.sendMessageId(R.string.Balance_no_wallet)
+                                EventMessages.sendMessageId(R.string.no_wallet)
                             }
                             showDialog = false
                         },

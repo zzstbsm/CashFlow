@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.balance
+package com.zhengzhou.cashflow.total_balance
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Tab
@@ -13,7 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 
 @Composable
-fun BalanceTabOptionsSelector(
+internal fun BalanceTabOptionsSelector(
     selectedTab: BalanceTabOptions,
     onSelectTab: (BalanceTabOptions) -> Unit
 ) {

@@ -63,6 +63,14 @@ fun DependencyHandler.core() {
     implementation(Dependencies.core)
 }
 
+fun DependencyHandler.data() {
+    implementation(project(":core:data"))
+}
+
+fun DependencyHandler.database() {
+    implementation(project(":core:database"))
+}
+
 fun DependencyHandler.datastore() {
     implementation(Dependencies.datastore)
 }

@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.balance
+package com.zhengzhou.cashflow.total_balance
 
 import android.text.format.DateFormat
 import androidx.compose.foundation.layout.*
@@ -15,13 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.tools.CurrencyFormatter
+import com.zhengzhou.cashflow.total_balance.view_model.BalanceUiState
+import com.zhengzhou.cashflow.total_balance.view_model.BalanceViewModel
 import java.util.*
 
 @Composable
-fun CreditCardSection(
+internal fun CreditCardSection(
     balanceUiState: BalanceUiState,
     balanceViewModel: BalanceViewModel,
     modifier: Modifier = Modifier,
@@ -53,7 +54,7 @@ fun CreditCardSection(
                 IconButton(onClick = { showCurrencySelectorDialog = true }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_more_vert),
-                        contentDescription = stringResource(id = R.string.Balance_select_currency)
+                        contentDescription = stringResource(id = R.string.select_currency)
                     )
                 }
             }
@@ -72,16 +73,15 @@ fun CreditCardSection(
         toShow = showCurrencySelectorDialog,
         currencyList = balanceUiState.currencyList,
         onDismissDialog = { showCurrencySelectorDialog = false },
-        onSelectCurrency = { currency ->
-            balanceViewModel.setWalletListByCurrency(currency)
-            showCurrencySelectorDialog = false
-        },
-    )
+    ) { currency ->
+        balanceViewModel.setWalletListByCurrency(currency)
+        showCurrencySelectorDialog = false
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SelectGroupCurrency(
+internal  fun SelectGroupCurrency(
     toShow: Boolean,
     currencyList: List<Currency>,
     onDismissDialog: () -> Unit,
@@ -96,7 +96,7 @@ private fun SelectGroupCurrency(
                     .fillMaxHeight(.5f)
             ) {
                 Text(
-                    text = stringResource(id = R.string.Balance_choose_currency),
+                    text = stringResource(id = R.string.choose_currency),
                     modifier = Modifier
                         .padding(8.dp)
                 )
@@ -133,7 +133,7 @@ private fun SelectGroupCurrency(
 }
 
 @Composable
-private fun CardText(
+internal fun CardText(
     balance: Float,
     currency: Currency,
     modifier: Modifier = Modifier
@@ -143,13 +143,13 @@ private fun CardText(
     val formattedBalance = CurrencyFormatter.formatCurrency(currency, balance)
 
     Text(
-        text = stringResource(id = R.string.Balance_wallet_name_currency,stringResource(currency.nameCurrency)),
+        text = stringResource(id = R.string.wallet_name_currency,stringResource(currency.nameCurrency)),
         modifier = modifier
             .padding(vertical = 8.dp),
         style = MaterialTheme.typography.headlineMedium
     )
     Text(
-        text = stringResource(R.string.balance,formattedBalance)
+        text = stringResource(id = R.string.balance,formattedBalance)
     )
 
 }
