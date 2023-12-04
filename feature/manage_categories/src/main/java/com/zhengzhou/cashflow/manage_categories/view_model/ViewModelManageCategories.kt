@@ -1,10 +1,13 @@
-package com.zhengzhou.cashflow.ui.manageCategories
+package com.zhengzhou.cashflow.manage_categories.view_model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
+import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
+import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.CategoryUseCases
+import com.zhengzhou.cashflow.settings.R
+import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
 import kotlinx.coroutines.Job
@@ -15,16 +18,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-data class ManageCategoriesUiState(
-    val isLoading: Boolean = true,
-    val listCategories: List<Category> = listOf(),
+internal class ManageCategoriesViewModel(
+    repository: RepositoryInterface
+) : ViewModel() {
 
-    val transactionType: TransactionType = TransactionType.Expense,
-    val openCategory: Category? = null,
-    val openCategoryOccurrences: Int = 0,
-)
-
-class ManageCategoriesViewModel : ViewModel() {
+    private val categoryUseCases = CategoryUseCases(repository)
 
     private var jobLoadCategories: Job
 
@@ -32,8 +30,6 @@ class ManageCategoriesViewModel : ViewModel() {
 
     private var _uiState = MutableStateFlow(ManageCategoriesUiState())
     val uiState: StateFlow<ManageCategoriesUiState> = _uiState.asStateFlow()
-
-    private val repository = DatabaseRepository.get()
 
     init {
         jobLoadCategories = loadCategories()
@@ -68,7 +64,7 @@ class ManageCategoriesViewModel : ViewModel() {
 
     private fun loadCategories(): Job {
         return viewModelScope.launch {
-            repository.getCategoryList().collect { categoryList ->
+            categoryUseCases.getCategoryList().collect { categoryList ->
                 setUiState(
                     listCategories = categoryList.sortedBy { category: Category -> category.name },
                     isLoading = false,
@@ -87,7 +83,7 @@ class ManageCategoriesViewModel : ViewModel() {
                 setUiState(
                     isLoading = true
                 )
-                val occurrences = repository.getCategoryOccurrences(category = category)
+                val occurrences = categoryUseCases.getCategoryOccurrences(category = category)
                 setUiState(
                     openCategoryOccurrences = occurrences,
                     isLoading = false,
@@ -111,7 +107,7 @@ class ManageCategoriesViewModel : ViewModel() {
 
     fun createCategory(
         name: String,
-        iconName: com.zhengzhou.cashflow.themes.IconsMappedForDB,
+        iconName: IconsMappedForDB,
         transactionType: TransactionType
     ) {
         val newCategory = Category(
@@ -121,7 +117,7 @@ class ManageCategoriesViewModel : ViewModel() {
             transactionType = transactionType
         )
         viewModelScope.launch {
-            repository.addCategory(category = newCategory)
+            categoryUseCases.addCategory(category = newCategory)
             loadCategories()
         }
     }
@@ -131,7 +127,7 @@ class ManageCategoriesViewModel : ViewModel() {
             val tempCategory = category.copy(
                 name = removeSpaceFromStringEnd(category.name)
             )
-            repository.updateCategory(category = tempCategory)
+            categoryUseCases.updateCategory(category = tempCategory)
             loadCategories()
         }
     }
@@ -139,17 +135,17 @@ class ManageCategoriesViewModel : ViewModel() {
     fun deleteCategory(category: Category) {
 
         if (uiState.value.openCategoryOccurrences > 0) {
-            EventMessages.sendMessageId(R.string.ManageCategories_cannot_delete)
+            EventMessages.sendMessageId(R.string.cannot_delete)
             return
         }
 
         if (uiState.value.isLoading) {
-            EventMessages.sendMessageId(R.string.ManageCategories_loading_category_occurrences)
+            EventMessages.sendMessageId(R.string.loading_category_occurrences)
             return
         }
 
         viewModelScope.launch {
-            repository.deleteCategory(category)
+            categoryUseCases.deleteCategory(category)
             loadCategories()
         }
     }

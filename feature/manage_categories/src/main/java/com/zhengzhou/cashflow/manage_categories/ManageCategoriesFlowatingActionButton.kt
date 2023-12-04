@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.manageCategories
+package com.zhengzhou.cashflow.manage_categories
 
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
@@ -13,12 +13,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
+import com.zhengzhou.cashflow.manage_categories.view_model.ManageCategoriesUiState
+import com.zhengzhou.cashflow.manage_categories.view_model.ManageCategoriesViewModel
+import com.zhengzhou.cashflow.settings.R
+import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ManageCategoriesFloatingActionButton(
+internal fun ManageCategoriesFloatingActionButton(
     manageCategoriesUiState: ManageCategoriesUiState,
     manageCategoriesViewModel: ManageCategoriesViewModel,
 ) {
@@ -42,12 +45,12 @@ fun ManageCategoriesFloatingActionButton(
         ) {
             Card {
                 val defaultNewCategoryName =
-                    stringResource(id = R.string.ManageCategories_new_category)
+                    stringResource(id = R.string.new_category)
                 var newCategoryName by remember {
                     mutableStateOf(defaultNewCategoryName)
                 }
                 var newCategoryIcon by remember {
-                    mutableStateOf(com.zhengzhou.cashflow.themes.IconsMappedForDB.HOME)
+                    mutableStateOf(IconsMappedForDB.HOME)
                 }
 
                 EditCategoryDetailsSection(
@@ -73,7 +76,7 @@ fun ManageCategoriesFloatingActionButton(
                         showDialog = false
                     },
                     onUndoChanges = {
-                        newCategoryIcon = com.zhengzhou.cashflow.themes.IconsMappedForDB.HOME
+                        newCategoryIcon = IconsMappedForDB.HOME
                         newCategoryName = defaultNewCategoryName
                     },
                 )

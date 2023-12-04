@@ -7,7 +7,7 @@ import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.interfaces.
 class UpdateCategory(
     private val repository: RepositoryInterface
 ) : UpdateCategoryInterface {
-    override suspend fun updateCategoryInterfaces(category: Category) {
+    override suspend fun updateCategory(category: Category) {
         repository.updateCategory(category = category)
     }
 }

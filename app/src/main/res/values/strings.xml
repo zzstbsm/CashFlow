@@ -39,14 +39,6 @@
     <string name="CommonTransactions_tag">Tags:</string>
     <string name="CommonTransactions_transaction_deleted">Transaction blueprint deleted</string>
 
-    <!-- ManageCategories-->
-    <string name="ManageCategories_cannot_delete">Cannot delete the category: there are transactions using this category</string>
-    <string name="ManageCategories_choose_category_icon">Choose category icon</string>
-    <string name="ManageCategories_edit_category">Edit category</string>
-    <string name="ManageCategories_loading_category_occurrences">Loading category occurrences, please wait or reload</string>
-    <string name="ManageCategories_new_category">New category</string>
-    <string name="ManageCategories_occurrences">Occurrences</string>
-
 
     <string name="tag">Tag</string>
     <string name="tag_no">No tags</string>

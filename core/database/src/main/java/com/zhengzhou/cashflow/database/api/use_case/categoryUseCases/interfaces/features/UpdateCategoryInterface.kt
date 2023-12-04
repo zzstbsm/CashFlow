@@ -3,5 +3,5 @@ package com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.interfaces
 import com.zhengzhou.cashflow.data.Category
 
 interface UpdateCategoryInterface {
-    suspend fun updateCategoryInterfaces(category: Category)
+    suspend fun updateCategory(category: Category)
 }

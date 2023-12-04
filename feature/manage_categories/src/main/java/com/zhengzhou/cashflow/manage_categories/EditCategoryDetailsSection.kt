@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.manageCategories
+package com.zhengzhou.cashflow.manage_categories
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,19 +25,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.zhengzhou.cashflow.R
 import com.zhengzhou.cashflow.data.Category
+import com.zhengzhou.cashflow.settings.R
+import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
 import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
 import com.zhengzhou.cashflow.themes.ui_elements.icon_choice.IconChoiceDialog
 
 
 @Composable
-fun EditCategoryDetailsSection(
+internal fun EditCategoryDetailsSection(
     category: Category,
     newCategoryName: String,
     onEditCategoryName: (String) ->Unit,
-    newCategoryIcon: com.zhengzhou.cashflow.themes.IconsMappedForDB,
-    onEditCategoryIcon: (com.zhengzhou.cashflow.themes.IconsMappedForDB) -> Unit,
+    newCategoryIcon: IconsMappedForDB,
+    onEditCategoryIcon: (IconsMappedForDB) -> Unit,
     horizontalPadding: Dp,
     onDeleteCategory: (Category) -> Unit,
     onSaveNewCategory: (Category) -> Unit,
@@ -93,8 +94,8 @@ fun EditCategoryDetailsSection(
 
 @Composable
 private fun ChooseCategoryIcon(
-    currentIcon: com.zhengzhou.cashflow.themes.IconsMappedForDB,
-    onChooseIcon: (com.zhengzhou.cashflow.themes.IconsMappedForDB) -> Unit,
+    currentIcon: IconsMappedForDB,
+    onChooseIcon: (IconsMappedForDB) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -116,8 +117,8 @@ private fun ChooseCategoryIcon(
 
     if (showDialog) {
         IconChoiceDialog(
-            text = stringResource(id = R.string.ManageCategories_choose_category_icon),
-            iconList = com.zhengzhou.cashflow.themes.IconsMappedForDB.values().toList()
+            text = stringResource(id = R.string.choose_category_icon),
+            iconList = IconsMappedForDB.values().toList()
                 .toList()
                 .filter { it.category },
             onDismissRequest = { showDialog = false },

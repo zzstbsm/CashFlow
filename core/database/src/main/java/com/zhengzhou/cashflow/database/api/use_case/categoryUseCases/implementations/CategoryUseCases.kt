@@ -4,15 +4,11 @@ import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.features.AddCategory
 import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.features.DeleteCategory
 import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.features.GetCategory
-import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.features.GetCategoryList
-import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.features.GetCategoryOccurrences
 import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.features.UpdateCategory
 import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.interfaces.CategoryUseCasesInterface
 import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.interfaces.features.AddCategoryInterface
 import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.interfaces.features.DeleteCategoryInterface
 import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.interfaces.features.GetCategoryInterface
-import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.interfaces.features.GetCategoryListInterface
-import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.interfaces.features.GetCategoryOccurrencesInterface
 import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.interfaces.features.UpdateCategoryInterface
 
 class CategoryUseCases(
@@ -21,6 +17,4 @@ class CategoryUseCases(
         AddCategoryInterface by AddCategory(repository),
         DeleteCategoryInterface by DeleteCategory(repository),
         GetCategoryInterface by GetCategory(repository),
-        GetCategoryListInterface by GetCategoryList(repository),
-        GetCategoryOccurrencesInterface by GetCategoryOccurrences(repository),
         UpdateCategoryInterface by UpdateCategory(repository)
