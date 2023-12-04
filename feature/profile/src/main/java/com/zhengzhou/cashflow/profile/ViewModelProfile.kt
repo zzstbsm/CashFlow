@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.profile
+package com.zhengzhou.cashflow.profile
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

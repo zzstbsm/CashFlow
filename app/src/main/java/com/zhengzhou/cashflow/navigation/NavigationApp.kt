@@ -12,13 +12,13 @@ import com.zhengzhou.cashflow.about_me.AboutMeScreen
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
+import com.zhengzhou.cashflow.profile.ProfileScreen
 import com.zhengzhou.cashflow.total_balance.BalanceScreen
 import com.zhengzhou.cashflow.transaction_edit.TransactionEditScreen
 import com.zhengzhou.cashflow.transaction_report.TransactionReportScreen
 import com.zhengzhou.cashflow.ui.allTransactions.AllTransactionsScreen
 import com.zhengzhou.cashflow.ui.commonTransactions.CommonTransactionsScreen
 import com.zhengzhou.cashflow.ui.manageCategories.ManageCategoriesScreen
-import com.zhengzhou.cashflow.ui.profile.ProfileScreen
 import com.zhengzhou.cashflow.wallet_edit.WalletEditScreen
 import com.zhengzhou.cashflow.wallet_overview.WalletOverviewScreen
 import java.util.UUID

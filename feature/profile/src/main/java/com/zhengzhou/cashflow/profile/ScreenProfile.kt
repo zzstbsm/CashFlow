@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.ui.profile
+package com.zhengzhou.cashflow.profile
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
@@ -9,24 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.zhengzhou.cashflow.navigation.ApplicationScreensEnum
 import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.navigation.functions.ReloadPageAfterPopBackStack
+import com.zhengzhou.cashflow.themes.ui_elements.navigation.BottomNavigationBar
+import com.zhengzhou.cashflow.themes.ui_elements.navigation.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.themes.ui_elements.navigation.SectionTopAppBar
-
-@Preview
-@Composable
-private fun ProfileScreenPreview(){
-    ProfileScreen(
-        currentScreen = ApplicationScreensEnum.Profile,
-        setCurrentScreen = { },
-        navController = rememberNavController()
-    )
-}
 
 @Composable
 fun ProfileScreen(
@@ -48,7 +38,7 @@ fun ProfileScreen(
 
     ModalNavigationDrawer(
         drawerContent = {
-            com.zhengzhou.cashflow.themes.ui_elements.SectionNavigationDrawerSheet(
+            SectionNavigationDrawerSheet(
                 drawerState = drawerState,
                 currentScreen = currentScreen,
                 setCurrentScreen = setCurrentScreen,
@@ -71,7 +61,7 @@ fun ProfileScreen(
                 )
             },
             bottomBar = {
-                com.zhengzhou.cashflow.themes.ui_elements.BottomNavigationBar(
+                BottomNavigationBar(
                     currentScreen = currentScreen,
                     setCurrentScreen = setCurrentScreen,
                     navController = navController,
