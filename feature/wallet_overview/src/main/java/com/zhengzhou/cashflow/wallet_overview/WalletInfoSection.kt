@@ -38,19 +38,24 @@ internal fun WalletInfoSection(
                 WalletOverviewTestTag.TAG_TEXT_WALLET_NAME
             )
         )
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = stringResource(id = R.string.balance)
-            )
-            Text(
-                text = CurrencyFormatter.formatCurrency(walletOverviewUiState.wallet.currency, walletOverviewUiState.currentAmountInTheWallet),
-                modifier = Modifier.testTag(
-                    WalletOverviewTestTag.TAG_TEXT_WALLET_AMOUNT
+        if (!walletOverviewUiState.ifZeroWallet) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(id = R.string.balance)
                 )
-            )
+                Text(
+                    text = CurrencyFormatter.formatCurrency(
+                        walletOverviewUiState.wallet.currency,
+                        walletOverviewUiState.currentAmountInTheWallet
+                    ),
+                    modifier = Modifier.testTag(
+                        WalletOverviewTestTag.TAG_TEXT_WALLET_AMOUNT
+                    )
+                )
+            }
         }
     }
 }
