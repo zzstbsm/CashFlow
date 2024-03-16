@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.UUID
 
-
 internal class WalletEditViewModel(
     repository: RepositoryInterface,
     walletUUID: UUID,
@@ -107,6 +106,10 @@ internal class WalletEditViewModel(
 
             calculator = Calculator.initialize(wallet.value.startAmount)
             updateAmountOnScreen(amount = wallet.value.startAmount.toString())
+
+            setUiState(
+                isLoading = false
+            )
 
         }
     }
