@@ -2,11 +2,9 @@ package com.zhengzhou.cashflow.wallet_edit.view_model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.database.api.use_case.walletUseCases.implementations.WalletUseCases
-import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
 import com.zhengzhou.cashflow.tools.calculator.Calculator
 import com.zhengzhou.cashflow.tools.calculator.mapCharToKeypadDigit
 import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
@@ -18,7 +16,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.Date
 import java.util.UUID
 
 internal class WalletEditViewModel(
@@ -29,8 +26,6 @@ internal class WalletEditViewModel(
     private val walletUseCases = WalletUseCases(repository)
 
     private var _newWallet = walletUUID == UUID(0L,0L)
-    private var _wallet = MutableStateFlow(Wallet.loadingWallet())
-    val wallet: StateFlow<Wallet> = _wallet.asStateFlow()
 
     private var _budgetEnabledWhenLoaded: Boolean = false
 
@@ -95,77 +90,90 @@ internal class WalletEditViewModel(
         }
     }
 
+    fun onEvent(event: WalletEditEvent) {
+        when (event) {
+            is WalletEditEvent.UpdateAmount -> {
+
+                val amount = event.amount
+
+                // Ignore the strings with more than 1 dot
+                if (amount.count { it == '.' } > 1) return
+
+                // Ignore all the strings with more than 2 digits after the dot
+                if (amount.count { it == '.' } == 1) {
+                    val decimals = amount.split('.')[1]
+                    if (decimals.length > 2) return
+                }
+
+                var validAmount = true
+
+                amount.forEach { digit ->
+                    val key = mapCharToKeypadDigit(digit)
+                    if (key == null) {
+                        validAmount = false
+                        return@forEach
+                    }
+                }
+
+                setUiState(
+                    amountOnScreen = amount,
+                    isErrorAmountOnScreen = !validAmount
+                )
+            }
+            is WalletEditEvent.UpdateWallet -> {
+
+                val wallet = uiState.value.wallet
+
+                val newWalletForUi = wallet.copy(
+                    name = event.name ?: wallet.name,
+                    startAmount = event.startAmount ?: wallet.startAmount,
+                    iconName = event.iconName ?: wallet.iconName,
+                    currency = event.currency ?: wallet.currency,
+                    creationDate = event.creationDate ?: wallet.creationDate,
+                    lastAccess = event.lastAccess ?: wallet.lastAccess,
+                    budgetEnabled = event.budgetEnabled ?: wallet.budgetEnabled,
+                )
+
+                val isErrorWalletNameInUse = if (event.name == null) uiState.value.isErrorWalletNameInUse else {
+                    val checkedName = removeSpaceFromStringEnd(event.name)
+                    checkedName in walletListName.value
+                }
+                val isErrorWalletNameNotValid = if (event.name == null) uiState.value.isErrorWalletNameNotValid else {
+                    val checkedName = removeSpaceFromStringEnd(event.name)
+                    checkedName.isEmpty()
+                }
+
+                setUiState(
+                    isErrorWalletNameInUse = isErrorWalletNameInUse,
+                    isErrorWalletNameNotValid = isErrorWalletNameNotValid,
+
+                    wallet = newWalletForUi
+                )
+            }
+        }
+    }
+
     private fun loadWallet(walletUUID: UUID): Job {
         return viewModelScope.launch(Dispatchers.IO) {
 
-            _wallet.value = if (_newWallet) {
+            val wallet = if (_newWallet) {
                 Wallet.newEmpty()
             } else {
                 walletUseCases.getWallet(walletUUID) ?: Wallet.newEmpty()
             }
 
-            calculator = Calculator.initialize(wallet.value.startAmount)
-            updateAmountOnScreen(amount = wallet.value.startAmount.toString())
+            calculator = Calculator.initialize(wallet.startAmount)
+
+            onEvent(
+                WalletEditEvent.UpdateAmount(amount = wallet.startAmount.toString())
+            )
 
             setUiState(
-                isLoading = false
+                isLoading = false,
+                wallet = wallet,
             )
 
         }
-    }
-
-    fun updateAmountOnScreen(amount: String) {
-
-        var validAmount = true
-
-        amount.forEach { digit ->
-            val key = mapCharToKeypadDigit(digit)
-            if (key == null) {
-                validAmount = false
-                return@forEach
-            }
-        }
-
-        setUiState(
-            amountOnScreen = amount,
-            isErrorAmountOnScreen = !validAmount
-        )
-    }
-
-    fun updateWallet(
-        name: String? = null,
-        startAmount: Float? = null,
-        iconName: IconsMappedForDB? = null,
-        currency: Currency? = null,
-        creationDate: Date? = null,
-        lastAccess: Date? = null,
-        budgetEnabled: Boolean? = null,
-    ) {
-        val newWalletForUi = wallet.value.copy(
-            name = name ?: wallet.value.name,
-            startAmount = startAmount ?: wallet.value.startAmount,
-            iconName = iconName ?: wallet.value.iconName,
-            currency = currency ?: wallet.value.currency,
-            creationDate = creationDate ?: wallet.value.creationDate,
-            lastAccess = lastAccess ?: wallet.value.lastAccess,
-            budgetEnabled = budgetEnabled ?: wallet.value.budgetEnabled,
-        )
-
-        val isErrorWalletNameInUse = if (name == null) uiState.value.isErrorWalletNameInUse else {
-            val checkedName = removeSpaceFromStringEnd(name)
-            checkedName in walletListName.value
-        }
-        val isErrorWalletNameNotValid = if (name == null) uiState.value.isErrorWalletNameNotValid else {
-            val checkedName = removeSpaceFromStringEnd(name)
-            checkedName.isEmpty()
-        }
-
-        setUiState(
-            isErrorWalletNameInUse = isErrorWalletNameInUse,
-            isErrorWalletNameNotValid = isErrorWalletNameNotValid,
-
-            wallet = newWalletForUi
-        )
     }
 
     fun saveWallet(): WalletEditSaveResults {

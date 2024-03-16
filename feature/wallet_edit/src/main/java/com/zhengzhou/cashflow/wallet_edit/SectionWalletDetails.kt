@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -30,6 +31,7 @@ import com.zhengzhou.cashflow.tools.ui_elements.category.CategoryIcon
 import com.zhengzhou.cashflow.tools.ui_elements.date_selector.DateSelector
 import com.zhengzhou.cashflow.tools.ui_elements.dropdown_menu.DropdownTextFieldMenu
 import com.zhengzhou.cashflow.tools.ui_elements.icon_choice.IconChoiceDialog
+import com.zhengzhou.cashflow.wallet_edit.view_model.WalletEditEvent
 import com.zhengzhou.cashflow.wallet_edit.view_model.WalletEditUiState
 import com.zhengzhou.cashflow.wallet_edit.view_model.WalletEditViewModel
 import java.util.Date
@@ -65,8 +67,7 @@ internal fun WalletDetailsSection(
         label = stringResource(id = R.string.initial_amount),
         amountOnScreen = walletEditUiState.amountOnScreen,
         onValueChange = { newText ->
-            if (newText.count { it == '.' } < 2)
-                walletEditViewModel.updateAmountOnScreen(newText)
+            walletEditViewModel.onEvent(WalletEditEvent.UpdateAmount(newText))
         },
         isError = walletEditUiState.isErrorAmountOnScreen,
         modifier = modifier,
@@ -77,8 +78,10 @@ internal fun WalletDetailsSection(
             dateFormat = "EEEE, dd MMMM yyyy",
             date = walletEditUiState.wallet.creationDate,
             onSelectDate = { millis ->
-                walletEditViewModel.updateWallet(
-                    creationDate = Date(millis ?: walletEditUiState.wallet.creationDate.time)
+                walletEditViewModel.onEvent(
+                    WalletEditEvent.UpdateWallet(
+                        creationDate = Date(millis ?: walletEditUiState.wallet.creationDate.time)
+                    )
                 )
             },
             modifier = modifier.weight(2f),
@@ -103,8 +106,11 @@ private fun TextWalletName(
         },
         value = walletEditUiState.wallet.name,
         onValueChange = {
+            // Ignore empty name and newline
             if (!(it.isNotEmpty() && it.last() == '\n')) {
-                walletEditViewModel.updateWallet(name = it)
+                walletEditViewModel.onEvent(
+                    WalletEditEvent.UpdateWallet(name = it)
+                )
             }
         },
         modifier = modifier.testTag(
@@ -166,8 +172,10 @@ private fun TextWalletIcon(
             onDismissRequest = { showDialog = false },
             currentSelectedIcon = currentIcon,
             onChooseIcon = { chosenIcon ->
-                walletEditViewModel.updateWallet(
-                    iconName = chosenIcon
+                walletEditViewModel.onEvent(
+                    WalletEditEvent.UpdateWallet(
+                        iconName = chosenIcon
+                    )
                 )
             },
             modifier = Modifier.fillMaxWidth()
@@ -221,6 +229,8 @@ private fun TextWalletCurrencyChooser(
 
     var showDropDownMenu by remember { mutableStateOf(false) }
 
+    val focusManager = LocalFocusManager.current
+
     DropdownTextFieldMenu(
         label = stringResource(id = R.string.currency),
         value = walletEditUiState.wallet.currency.name,
@@ -244,7 +254,10 @@ private fun TextWalletCurrencyChooser(
                         )
                     },
                     onClick = {
-                        walletEditViewModel.updateWallet(currency = currency)
+                        walletEditViewModel.onEvent(
+                            WalletEditEvent.UpdateWallet(currency = currency)
+                        )
+                        focusManager.clearFocus()
                         showDropDownMenu = false
                     }
                 )
