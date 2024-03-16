@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.navigation.Screen
-import com.zhengzhou.cashflow.themes.ui_elements.transaction.SectionTransactionEntry
+import com.zhengzhou.cashflow.tools.ui_elements.transaction.SectionTransactionEntry
 import com.zhengzhou.cashflow.wallet_overview.view_model.WalletOverviewUiState
 
 @Composable

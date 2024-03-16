@@ -20,18 +20,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.tools.TimeTools
-import com.zhengzhou.cashflow.total_balance.view_model.TimeFilterForSegmentedButton
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+/**
+ * Composable to handle the segmented buttons sections for the periods to filter.
+ * No navigation between periods.
+ */
 internal fun SelectTimeFilter(
     currentTimeFilter: TimeFilterForSegmentedButton?,
     timeFilterList: List<TimeFilterForSegmentedButton>,
     onSelectTimeFilter: (TimeFilterForSegmentedButton?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
+               
     MultiChoiceSegmentedButtonRow(
         modifier = modifier.padding(vertical = 4.dp)
     ) {

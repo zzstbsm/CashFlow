@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Calculator -->
+    <string name="Calculator_err_divide_by_zero">Cannot divide by zero</string>
+
+    <!-- Actions -->
+    <string name="confirm">Confirm</string>
+
+    <!-- Tag -->
+    <string name="tag_no">No tags</string>
+    <string name="delete_tag">Delete tag %1s</string>
+
+
+</resources>

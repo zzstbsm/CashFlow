@@ -29,8 +29,6 @@
     <string name="wallet">Wallet</string>
     <string name="profile">Profile</string>
 
-    <!-- AllTransactions -->
-    <string name="AllTransactions_TopAppBar">Transaction list</string>
 
 
 
@@ -50,7 +48,5 @@
 
     <string name="movement_select_wallets">Select wallets</string>
 
-    <!-- Other -->
-    <string name="delete_tag">Delete tag %1s</string>
 
 </resources>

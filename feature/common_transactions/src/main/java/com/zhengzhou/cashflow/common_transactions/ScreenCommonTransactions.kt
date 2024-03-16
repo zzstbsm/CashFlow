@@ -46,10 +46,10 @@ import com.zhengzhou.cashflow.navigation.ApplicationScreensEnum
 import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.navigation.functions.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
-import com.zhengzhou.cashflow.themes.ui_elements.navigation.BottomNavigationBar
-import com.zhengzhou.cashflow.themes.ui_elements.navigation.SectionNavigationDrawerSheet
-import com.zhengzhou.cashflow.themes.ui_elements.navigation.SectionTopAppBar
 import com.zhengzhou.cashflow.tools.EventMessages
+import com.zhengzhou.cashflow.tools.ui_elements.navigation.BottomNavigationBar
+import com.zhengzhou.cashflow.tools.ui_elements.navigation.SectionNavigationDrawerSheet
+import com.zhengzhou.cashflow.tools.ui_elements.navigation.SectionTopAppBar
 
 @Composable
 fun CommonTransactionsScreen(

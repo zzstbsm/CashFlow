@@ -89,6 +89,10 @@ class MainGradlePlugin: Plugin<Project> {
             buildFeatures {
                 compose = true
             }
+
+            composeOptions {
+                kotlinCompilerExtensionVersion = ProjectConfig.kotlinCompilerExtensionVersion
+            }
         }
     }
 

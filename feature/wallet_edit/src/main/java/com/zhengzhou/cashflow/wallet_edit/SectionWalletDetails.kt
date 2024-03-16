@@ -26,10 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
-import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
-import com.zhengzhou.cashflow.themes.ui_elements.date_selector.DateSelector
-import com.zhengzhou.cashflow.themes.ui_elements.dropdown_menu.DropdownTextFieldMenu
-import com.zhengzhou.cashflow.themes.ui_elements.icon_choice.IconChoiceDialog
+import com.zhengzhou.cashflow.tools.ui_elements.category.CategoryIcon
+import com.zhengzhou.cashflow.tools.ui_elements.date_selector.DateSelector
+import com.zhengzhou.cashflow.tools.ui_elements.dropdown_menu.DropdownTextFieldMenu
+import com.zhengzhou.cashflow.tools.ui_elements.icon_choice.IconChoiceDialog
 import com.zhengzhou.cashflow.wallet_edit.view_model.WalletEditUiState
 import com.zhengzhou.cashflow.wallet_edit.view_model.WalletEditViewModel
 import java.util.Date

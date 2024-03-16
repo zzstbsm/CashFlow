@@ -6,10 +6,11 @@ plugins {
 apply<MainGradlePlugin>()
 
 android {
-    namespace = "com.zhengzhou.cashflow.settings"
+    namespace = "com.zhengzhou.cashflow.manage_categories"
 }
 
 dependencies {
+
     core()
     compose()
     test()

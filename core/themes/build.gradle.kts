@@ -10,9 +10,9 @@ android {
 }
 
 dependencies {
-    implementation(project(mapOf("path" to ":core:navigation")))
-    core()
+
     compose()
+    core()
     test()
 
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

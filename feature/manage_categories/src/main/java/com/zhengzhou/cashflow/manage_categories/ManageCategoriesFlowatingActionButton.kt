@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.manage_categories.view_model.ManageCategoriesUiState
 import com.zhengzhou.cashflow.manage_categories.view_model.ManageCategoriesViewModel
-import com.zhengzhou.cashflow.settings.R
 import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
 
 @OptIn(ExperimentalMaterial3Api::class)

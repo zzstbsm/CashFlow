@@ -11,10 +11,11 @@ android {
 
 dependencies {
 
+    compose()
     core()
     room()
     test()
 
-    implementation(project(":core:themes"))
+    themes()
 
 }

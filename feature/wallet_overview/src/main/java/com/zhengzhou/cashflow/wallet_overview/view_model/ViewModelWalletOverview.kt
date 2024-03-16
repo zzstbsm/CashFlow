@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Transaction
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.database.api.complex_data.TransactionAndCategory
 import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.CategoryUseCases
 import com.zhengzhou.cashflow.database.api.use_case.transactionUseCases.implementations.TransactionUseCases
 import com.zhengzhou.cashflow.database.api.use_case.walletUseCases.implementations.WalletUseCases
 import com.zhengzhou.cashflow.wallet_overview.WalletOverviewReturnResults
-import com.zhengzhou.cashflow.wallet_overview.data_structure.TransactionAndCategory
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

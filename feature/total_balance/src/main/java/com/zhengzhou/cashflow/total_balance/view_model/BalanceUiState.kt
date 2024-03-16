@@ -3,8 +3,9 @@ package com.zhengzhou.cashflow.total_balance.view_model
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Wallet
+import com.zhengzhou.cashflow.database.api.complex_data.TransactionAndCategory
 import com.zhengzhou.cashflow.total_balance.BalanceTabOptions
-import com.zhengzhou.cashflow.total_balance.data_structure.TransactionAndCategory
+import com.zhengzhou.cashflow.total_balance.TimeFilterForSegmentedButton
 import java.util.Date
 
 internal data class BalanceUiState(

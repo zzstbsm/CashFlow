@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <!-- Calculator -->
-    <string name="Calculator_err_divide_by_zero">Cannot divide by zero</string>
-
-</resources>
