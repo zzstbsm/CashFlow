@@ -8,8 +8,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 
 @Composable
 fun DropdownTextFieldMenu(
@@ -22,7 +22,7 @@ fun DropdownTextFieldMenu(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
 
-    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Box(
         modifier = modifier
@@ -34,13 +34,12 @@ fun DropdownTextFieldMenu(
             value = value,
             onValueChange = { },
             enabled = enabled,
-            modifier = Modifier
-                .onFocusChanged { focusState ->
-                    if (focusState.isFocused) {
-                        onChangeExpanded(true)
-                        focusManager.clearFocus()
-                    }
-                },
+            modifier = Modifier.onFocusEvent { focusState ->
+                if (focusState.isFocused) {
+                    onChangeExpanded(true)
+                    keyboardController?.hide()
+                }
+            },
             maxLines = 1,
         )
 
