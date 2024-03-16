@@ -44,7 +44,7 @@ internal fun WalletInfoSection(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = stringResource(id = R.string.balance)
+                    text = stringResource(id = R.string.balance_one_wallet)
                 )
                 Text(
                     text = CurrencyFormatter.formatCurrency(

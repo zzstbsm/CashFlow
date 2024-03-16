@@ -35,7 +35,7 @@ internal fun DescriptionSection(
         OutlinedTextField(
             value = text,
             label = {
-                Text(text = stringResource(id = R.string.description))
+                Text(text = stringResource(id = R.string.description_transaction))
             },
             maxLines = 1,
             onValueChange = {

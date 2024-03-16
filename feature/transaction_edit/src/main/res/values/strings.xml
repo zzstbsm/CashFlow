@@ -6,7 +6,7 @@
     <string name="amount_insert_prompt">Insert the amount</string>
     <string name="category">Category</string>
     <string name="confirm">Confirm</string>
-    <string name="description">Description</string>
+    <string name="description_transaction">Description</string>
     <string name="prompt_save_transaction">Do you want to save the transaction?</string>
     <string name="nav_back">Go back</string>
     <string name="no">No</string>

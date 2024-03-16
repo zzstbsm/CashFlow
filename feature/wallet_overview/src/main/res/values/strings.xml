@@ -3,7 +3,7 @@
 
     <!-- WalletOverview page-->
     <string name="add_wallet">Add wallet</string>
-    <string name="balance">Balance</string>
+    <string name="balance_one_wallet">Balance</string>
     <string name="cannot_delete_wallet">Cannot delete wallet, there are transactions registered in it.</string>
     <string name="choose_wallet">Choose wallet</string>
     <string name="edit_wallet">Edit wallet</string>
