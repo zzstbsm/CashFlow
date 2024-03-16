@@ -112,11 +112,8 @@ dependencies {
 
     test()
 
-    implementation(project(":core:data"))
-    implementation(project(":core:database"))
-    implementation(project(":core:navigation"))
-    implementation(project(":core:themes"))
-    implementation(project(":tools"))
+    featuresDependencies()
+    tools()
 
     allFeatures()
 

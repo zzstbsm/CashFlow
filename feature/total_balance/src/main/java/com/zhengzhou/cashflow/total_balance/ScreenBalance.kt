@@ -14,9 +14,9 @@ import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.navigation.ApplicationScreensEnum
 import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.navigation.functions.ReloadPageAfterPopBackStack
-import com.zhengzhou.cashflow.themes.ui_elements.navigation.BottomNavigationBar
-import com.zhengzhou.cashflow.themes.ui_elements.navigation.SectionNavigationDrawerSheet
-import com.zhengzhou.cashflow.themes.ui_elements.navigation.SectionTopAppBar
+import com.zhengzhou.cashflow.tools.ui_elements.navigation.BottomNavigationBar
+import com.zhengzhou.cashflow.tools.ui_elements.navigation.SectionNavigationDrawerSheet
+import com.zhengzhou.cashflow.tools.ui_elements.navigation.SectionTopAppBar
 import com.zhengzhou.cashflow.total_balance.view_model.BalanceViewModel
 
 @Composable

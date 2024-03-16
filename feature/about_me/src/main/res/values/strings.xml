@@ -7,7 +7,7 @@
     <string name="GitHub_link">https://github.com/zzstbsm/CashFlow</string>
     <string name="LinkedIn">LinkedIn: Zhou Zheng</string>
     <string name="LinkedIn_link">https://www.linkedin.com/in/zhou-zheng-974b14167/</string>
-    <string name="donate">Make a donation to the project</string>
+    <string name="donate">Offer me a coffee</string>
     <string name="donate_dialog">Thank you for showing support for the project!\n\nUnfortunately, for the Google policies, I am not authorized to keep the direct link to the donation page. However, you can check my GitHub page.</string>
 
 </resources>

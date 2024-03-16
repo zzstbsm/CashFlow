@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.data.Wallet
-import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
+import com.zhengzhou.cashflow.tools.ui_elements.category.CategoryIcon
 
 @Composable
 internal fun SecondaryWalletSection(

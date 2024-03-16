@@ -6,7 +6,7 @@ import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.CategoryUseCases
-import com.zhengzhou.cashflow.settings.R
+import com.zhengzhou.cashflow.manage_categories.R
 import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd

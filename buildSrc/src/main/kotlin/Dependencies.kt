@@ -76,10 +76,11 @@ fun DependencyHandler.datastore() {
 }
 
 fun DependencyHandler.featuresDependencies() {
-    implementation(project(":core:data"))
-    implementation(project(":core:database"))
-    implementation(project(":core:navigation"))
-    implementation(project(":core:themes"))
+    data()
+    database()
+    navigation()
+    themes()
+    tools()
 }
 
 fun DependencyHandler.navigation() {
@@ -102,5 +103,5 @@ fun DependencyHandler.themes() {
 }
 
 fun DependencyHandler.tools() {
-    implementation(project(":tools"))
+    implementation(project(":core:tools"))
 }

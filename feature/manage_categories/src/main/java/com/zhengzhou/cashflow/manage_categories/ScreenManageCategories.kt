@@ -33,9 +33,9 @@ import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.manage_categories.view_model.ManageCategoriesUiState
 import com.zhengzhou.cashflow.manage_categories.view_model.ManageCategoriesViewModel
 import com.zhengzhou.cashflow.navigation.ApplicationScreensEnum
-import com.zhengzhou.cashflow.themes.ui_elements.navigation.BottomNavigationBar
-import com.zhengzhou.cashflow.themes.ui_elements.navigation.SectionNavigationDrawerSheet
-import com.zhengzhou.cashflow.themes.ui_elements.navigation.SectionTopAppBar
+import com.zhengzhou.cashflow.tools.ui_elements.navigation.BottomNavigationBar
+import com.zhengzhou.cashflow.tools.ui_elements.navigation.SectionNavigationDrawerSheet
+import com.zhengzhou.cashflow.tools.ui_elements.navigation.SectionTopAppBar
 
 @Composable
 fun ManageCategoriesScreen(

@@ -25,9 +25,9 @@ import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Transaction
-import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
 import com.zhengzhou.cashflow.tools.CashFlowTools
 import com.zhengzhou.cashflow.tools.CurrencyFormatter
+import com.zhengzhou.cashflow.tools.ui_elements.category.CategoryIcon
 
 @Composable
 internal fun SectionCategoryItem(

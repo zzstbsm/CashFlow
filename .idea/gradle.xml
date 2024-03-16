@@ -18,6 +18,7 @@
             <option value="$PROJECT_DIR$/core/database" />
             <option value="$PROJECT_DIR$/core/navigation" />
             <option value="$PROJECT_DIR$/core/themes" />
+            <option value="$PROJECT_DIR$/core/tools" />
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/about_me" />
             <option value="$PROJECT_DIR$/feature/all_transactions" />
@@ -30,7 +31,6 @@
             <option value="$PROJECT_DIR$/feature/transaction_report" />
             <option value="$PROJECT_DIR$/feature/wallet_edit" />
             <option value="$PROJECT_DIR$/feature/wallet_overview" />
-            <option value="$PROJECT_DIR$/tools" />
           </set>
         </option>
       </GradleProjectSettings>

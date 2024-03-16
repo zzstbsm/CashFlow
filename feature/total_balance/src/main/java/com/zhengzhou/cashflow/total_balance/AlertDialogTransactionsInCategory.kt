@@ -12,9 +12,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.data.Currency
+import com.zhengzhou.cashflow.database.api.complex_data.TransactionAndCategory
 import com.zhengzhou.cashflow.navigation.Screen
-import com.zhengzhou.cashflow.themes.ui_elements.transaction.SectionTransactionEntry
-import com.zhengzhou.cashflow.total_balance.data_structure.TransactionAndCategory
+import com.zhengzhou.cashflow.tools.ui_elements.transaction.SectionTransactionEntry
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

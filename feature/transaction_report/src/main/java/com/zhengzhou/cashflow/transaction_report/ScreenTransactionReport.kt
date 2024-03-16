@@ -36,9 +36,9 @@ import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.navigation.functions.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
-import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
-import com.zhengzhou.cashflow.themes.ui_elements.tag.TagListLazyStaggeredHorizontalGrid
 import com.zhengzhou.cashflow.tools.CurrencyFormatter
+import com.zhengzhou.cashflow.tools.ui_elements.category.CategoryIcon
+import com.zhengzhou.cashflow.tools.ui_elements.tag.TagListLazyStaggeredHorizontalGrid
 import com.zhengzhou.cashflow.transaction_report.view_model.TransactionReportUiState
 import com.zhengzhou.cashflow.transaction_report.view_model.TransactionReportViewModel
 import java.util.UUID

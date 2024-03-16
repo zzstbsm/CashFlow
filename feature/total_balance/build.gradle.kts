@@ -10,6 +10,7 @@ android {
 }
 
 dependencies {
+
     core()
     compose()
     test()

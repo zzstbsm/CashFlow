@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.tools.CurrencyFormatter
+import com.zhengzhou.cashflow.total_balance.view_model.BalanceEvent
 import com.zhengzhou.cashflow.total_balance.view_model.BalanceUiState
 import com.zhengzhou.cashflow.total_balance.view_model.BalanceViewModel
 import java.util.*
@@ -74,7 +75,9 @@ internal fun CreditCardSection(
         currencyList = balanceUiState.currencyList,
         onDismissDialog = { showCurrencySelectorDialog = false },
     ) { currency ->
-        balanceViewModel.setWalletListByCurrency(currency)
+        balanceViewModel.onEvent(
+            BalanceEvent.SetWalletListByCurrency(currency)
+        )
         showCurrencySelectorDialog = false
     }
 }

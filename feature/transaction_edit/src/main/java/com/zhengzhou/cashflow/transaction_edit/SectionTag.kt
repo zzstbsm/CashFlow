@@ -29,7 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.data.Tag
 import com.zhengzhou.cashflow.data.TagEntry
-import com.zhengzhou.cashflow.themes.ui_elements.tag.SingleTag
+import com.zhengzhou.cashflow.tools.ui_elements.tag.SingleTag
 
 @Composable
 internal fun TagSection(

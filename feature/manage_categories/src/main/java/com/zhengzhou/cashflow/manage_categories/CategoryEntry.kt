@@ -24,9 +24,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.data.Category
-import com.zhengzhou.cashflow.settings.R
 import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
-import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
+import com.zhengzhou.cashflow.tools.ui_elements.category.CategoryIcon
 
 @Composable
 internal fun CategoryEntry(

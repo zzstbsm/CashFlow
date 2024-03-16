@@ -1,7 +1,7 @@
 package com.zhengzhou.cashflow.wallet_overview.view_model
 
 import com.zhengzhou.cashflow.data.Wallet
-import com.zhengzhou.cashflow.wallet_overview.data_structure.TransactionAndCategory
+import com.zhengzhou.cashflow.database.api.complex_data.TransactionAndCategory
 
 internal data class WalletOverviewUiState(
     val wallet: Wallet = Wallet.loadingWallet(),

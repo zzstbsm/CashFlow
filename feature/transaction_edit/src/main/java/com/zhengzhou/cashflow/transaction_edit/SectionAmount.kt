@@ -31,9 +31,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.data.Wallet
-import com.zhengzhou.cashflow.themes.ui_elements.category.CategoryIcon
-import com.zhengzhou.cashflow.themes.ui_elements.keypad.KeypadDigitButton
 import com.zhengzhou.cashflow.tools.calculator.KeypadDigit
+import com.zhengzhou.cashflow.tools.ui_elements.category.CategoryIcon
+import com.zhengzhou.cashflow.tools.ui_elements.keypad.KeypadDigitButton
 
 @Composable
 internal fun AmountTextSection(

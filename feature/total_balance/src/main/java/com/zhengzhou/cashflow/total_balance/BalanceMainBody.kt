@@ -21,11 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.zhengzhou.cashflow.database.api.complex_data.TransactionAndCategory
 import com.zhengzhou.cashflow.navigation.Screen
-import com.zhengzhou.cashflow.total_balance.data_structure.TransactionAndCategory
+import com.zhengzhou.cashflow.tools.ui_elements.transaction.SectionTransactionEntry
+import com.zhengzhou.cashflow.total_balance.view_model.BalanceEvent
 import com.zhengzhou.cashflow.total_balance.view_model.BalanceUiState
 import com.zhengzhou.cashflow.total_balance.view_model.BalanceViewModel
-import com.zhengzhou.cashflow.total_balance.view_model.TimeFilterForSegmentedButton
 
 
 @Composable
@@ -59,7 +60,9 @@ internal fun BalanceMainBody(
         )
         BalanceTabOptionsSelector(
             selectedTab = balanceUiState.shownTab,
-            onSelectTab = { balanceViewModel.selectTabToShow(it) }
+            onSelectTab = {
+                balanceViewModel.onEvent(BalanceEvent.SelectTabToShow(it))
+            }
         )
 
         LazyVerticalGrid(
@@ -75,7 +78,14 @@ internal fun BalanceMainBody(
                         currentTimeFilter = balanceUiState.timeFilter,
                         timeFilterList = timeFilterList,
                         onSelectTimeFilter = { timeFilter ->
-                            balanceViewModel.setTimeFilter(timeFilter)
+                            balanceViewModel.onEvent(
+                                BalanceEvent.SetTimeFilter(
+                                    timeFilter = timeFilter,
+                                    startDate = balanceUiState.filterStartDate,
+                                    endDate = balanceUiState.filterEndDate,
+                                    navigation = false,
+                                )
+                            )
                         },
                         modifier = modifier,
                     )
@@ -84,11 +94,13 @@ internal fun BalanceMainBody(
                         endDate = balanceUiState.filterEndDate,
                         timeFilter = balanceUiState.timeFilter,
                         onSelectTimePeriod = { startDate, endDate ->
-                            balanceViewModel.setTimeFilter(
-                                timeFilter = balanceUiState.timeFilter,
-                                startDate = startDate,
-                                endDate = endDate,
-                                navigation = true,
+                            balanceViewModel.onEvent(
+                                BalanceEvent.SetTimeFilter(
+                                    timeFilter = balanceUiState.timeFilter,
+                                    startDate = startDate,
+                                    endDate = endDate,
+                                    navigation = true,
+                                )
                             )
                         },
                         modifier = modifier,
@@ -163,7 +175,7 @@ internal fun BalanceMainBody(
                     ) { position ->
                         val transactionCategoryGroup =
                             balanceUiState.transactionListToShow[position]
-                        TransactionEntry(
+                        SectionTransactionEntry(
                             transaction = transactionCategoryGroup.transaction,
                             category = transactionCategoryGroup.category,
                             currency = wallet.currency,
