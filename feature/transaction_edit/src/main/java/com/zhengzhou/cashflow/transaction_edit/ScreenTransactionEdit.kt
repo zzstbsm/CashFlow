@@ -40,6 +40,8 @@ import com.zhengzhou.cashflow.navigation.functions.BackHandler
 import com.zhengzhou.cashflow.tools.calculator.KeypadDigit
 import com.zhengzhou.cashflow.transaction_edit.view_model.TransactionEditUiState
 import com.zhengzhou.cashflow.transaction_edit.view_model.TransactionEditViewModel
+import com.zhengzhou.cashflow.transaction_edit.view_model.event.TagEvent
+import com.zhengzhou.cashflow.transaction_edit.view_model.event.TransactionEditEvent
 import java.util.UUID
 
 @Composable
@@ -297,13 +299,27 @@ private fun TransferMovementTypeSection(
                 completeTagList = transactionEditUiState.tagListInDB,
                 currentTagText = currentTagText,
                 onChangeText = { currentTagText = it },
-                onTagAdd = { transactionEditViewModel.addTag(it) },
+                onTagAdd = {
+                    transactionEditViewModel.onEvent(
+                        event = TransactionEditEvent.TagAction(
+                            tagEvent = TagEvent.Add(it)
+                        )
+                    )
+                    },
                 onTagClick = {
                     val selectedTag = transactionEditUiState.currentTagList[it]
                     if (selectedTag.enabled) {
-                        transactionEditViewModel.disableTag(it)
+                        transactionEditViewModel.onEvent(
+                            event = TransactionEditEvent.TagAction(
+                                tagEvent = TagEvent.Disable(it)
+                            )
+                        )
                     } else {
-                        transactionEditViewModel.enableTag(it)
+                        transactionEditViewModel.onEvent(
+                            event = TransactionEditEvent.TagAction(
+                                tagEvent = TagEvent.Enable(it)
+                            )
+                        )
                     }
                     currentTagText = "a"
                     currentTagText = ""

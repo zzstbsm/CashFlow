@@ -18,6 +18,8 @@ import com.zhengzhou.cashflow.tools.calculator.KeypadDigit
 import com.zhengzhou.cashflow.tools.removeSpaceFromStringEnd
 import com.zhengzhou.cashflow.transaction_edit.TransactionEditScreenToChooseFunctionality
 import com.zhengzhou.cashflow.transaction_edit.TransactionSectionToShow
+import com.zhengzhou.cashflow.transaction_edit.view_model.event.TagEvent
+import com.zhengzhou.cashflow.transaction_edit.view_model.event.TransactionEditEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -231,6 +233,88 @@ internal class TransactionEditViewModel(
         }
     }
 
+    fun onEvent(event: TransactionEditEvent) {
+        when (event) {
+            is TransactionEditEvent.TagAction -> {
+
+                when (val tagEvent = event.tagEvent) {
+
+                    is TagEvent.Add -> {
+
+                        val tagName = tagEvent.tagName
+
+                        // Clean text
+                        val cleanText = removeSpaceFromStringEnd(tagName)
+                        if (cleanText.isEmpty()) return
+
+                        // Ignore the add tag if the tag is already added
+                        if (uiState.value.currentTagList.isNotEmpty()) {
+                            uiState.value.currentTagList.forEach { tag ->
+                                if (tag.name == cleanText) return
+                            }
+                        }
+
+                        // Check if it exists in tagListInDB
+                        val filteredDB = uiState.value.tagListInDB.filter {
+                            it.name == cleanText
+                        }
+                        val tagAlreadyExist = filteredDB.isNotEmpty()
+                        val tagEntry = if (tagAlreadyExist) {
+                            filteredDB.first().copy(
+                                count = filteredDB.first().count + 1
+                            )
+                        } else {
+                            TagEntry(
+                                id = UUID.randomUUID(),
+                                name = cleanText,
+                                count = 1
+                            )
+                        }
+                        val tag = Tag.newFromTagEntry(
+                            transactionUUID = uiState.value.transaction.id,
+                            tagEntry = tagEntry
+                        )
+
+                        val newCurrentTagList = uiState.value.currentTagList + listOf(tag)
+
+                        setUiState(
+                            currentTagList = newCurrentTagList
+                        )
+                    }
+                    is TagEvent.Disable -> {
+
+                        val tagIndex = tagEvent.tagIndex
+
+                        if (tagIndex != null) {
+
+                            val tempTagList = uiState.value.currentTagList as MutableList
+
+                            tempTagList[tagIndex] = tempTagList[tagIndex].decreaseCounter().disableTag()
+
+                            setUiState(
+                                currentTagList = tempTagList
+                            )
+                        }
+                    }
+                    is TagEvent.Enable -> {
+
+                        val tagIndex = tagEvent.tagIndex
+
+                        if (tagIndex != null) {
+                            val tempTagList = uiState.value.currentTagList as MutableList
+
+                            tempTagList[tagIndex] = tempTagList[tagIndex].increaseCounter().enableTag()
+
+                            setUiState(
+                                currentTagList = tempTagList
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     fun amountKeyPress(key: KeypadDigit) {
 
         if (key == KeypadDigit.KeyBack) {
@@ -310,71 +394,6 @@ internal class TransactionEditViewModel(
         setUiState(
             transactionSectionToShow = section
         )
-    }
-
-    fun addTag(tagName: String) {
-        // Clean text
-        val cleanText = removeSpaceFromStringEnd(tagName)
-        if (cleanText.isEmpty()) return
-
-        // Ignore the add tag if the tag is already added
-        if (uiState.value.currentTagList.isNotEmpty()) {
-            uiState.value.currentTagList.forEach { tag ->
-                if (tag.name == cleanText) return
-            }
-        }
-
-        // Check if it exists in tagListInDB
-        val filteredDB = uiState.value.tagListInDB.filter {
-            it.name == cleanText
-        }
-        val tagAlreadyExist = filteredDB.isNotEmpty()
-        val tagEntry = if (tagAlreadyExist) {
-            filteredDB.first().copy(
-                count = filteredDB.first().count + 1
-            )
-        } else {
-            TagEntry(
-                id = UUID.randomUUID(),
-                name = cleanText,
-                count = 1
-            )
-        }
-        val tag = Tag.newFromTagEntry(
-            transactionUUID = uiState.value.transaction.id,
-            tagEntry = tagEntry
-        )
-
-        val newCurrentTagList = uiState.value.currentTagList + listOf(tag)
-
-        setUiState(
-            currentTagList = newCurrentTagList
-        )
-    }
-
-    fun disableTag(tagIndex: Int?) {
-        if (tagIndex != null) {
-
-            val tempTagList = uiState.value.currentTagList as MutableList
-
-            tempTagList[tagIndex] = tempTagList[tagIndex].decreaseCounter().disableTag()
-
-            setUiState(
-                currentTagList = tempTagList
-            )
-        }
-    }
-
-    fun enableTag(tagIndex: Int?) {
-        if (tagIndex != null) {
-            val tempTagList = uiState.value.currentTagList as MutableList
-
-            tempTagList[tagIndex] = tempTagList[tagIndex].increaseCounter().enableTag()
-
-            setUiState(
-                currentTagList = tempTagList
-            )
-        }
     }
 
     fun updateCategory(category: Category) {

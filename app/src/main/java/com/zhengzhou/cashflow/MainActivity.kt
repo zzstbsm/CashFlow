@@ -6,12 +6,12 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
-import com.zhengzhou.cashflow.core.tools.PreloadTransactions
-import com.zhengzhou.cashflow.database.LoadDefaultCategories
 import com.zhengzhou.cashflow.database.api.DatabaseInstance
 import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.CategoryUseCases
+import com.zhengzhou.cashflow.database.data.LoadDefaultCategories
 import com.zhengzhou.cashflow.navigation.NavigationApp
 import com.zhengzhou.cashflow.tools.EventMessages
+import com.zhengzhou.cashflow.tools.PreloadTransactions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.database
+package com.zhengzhou.cashflow.database.data
 
 import com.zhengzhou.cashflow.data.Category
 import com.zhengzhou.cashflow.data.TransactionType

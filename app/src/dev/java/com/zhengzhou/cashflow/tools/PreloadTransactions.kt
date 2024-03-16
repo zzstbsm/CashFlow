@@ -1,4 +1,4 @@
-package com.zhengzhou.cashflow.core.tools
+package com.zhengzhou.cashflow.tools
 
 import com.zhengzhou.cashflow.database.PrepopulateDatabase
 import com.zhengzhou.cashflow.database.api.DatabaseInstance
