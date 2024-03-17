@@ -102,7 +102,9 @@ internal fun AllTransactionsMainBody(
                             navController = navController
                         )
                     },
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp)
                 )
             }
         }

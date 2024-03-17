@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -39,40 +39,45 @@ fun SectionTransactionEntry(
     Surface(
         modifier = modifier
             .fillMaxWidth()
+            .height(64.dp)
             .padding(horizontal = 8.dp, vertical = 2.dp)
-            .height(60.dp)
             .clickable { onClickTransaction() },
-        // shadowElevation = 2.dp,
+        shadowElevation = 2.dp,
         shape = MaterialTheme.shapes.large,
     ) {
         val firstLineStyle = MaterialTheme.typography.bodyLarge
         val secondLineStyle = MaterialTheme.typography.bodySmall
 
         Row(
-            modifier = modifier
-                .padding(horizontal = 8.dp),
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.Start
         ) {
             CategoryIcon(
                 iconName = category.iconName,
                 contentDescription = category.name,
-                modifier = modifier
-                    .size(54.dp)
+                modifier = Modifier
+                    .requiredSize(48.dp)
                     .align(Alignment.CenterVertically)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column(
                 verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = category.name,
                         style = firstLineStyle,
                         textAlign = TextAlign.Start,
-                        modifier = modifier.weight(1f)
+                        //modifier = modifier.weight(1f)
                     )
                     Text(
                         text = CurrencyFormatter.formatCurrency(currency, transaction.amount),
@@ -82,29 +87,35 @@ fun SectionTransactionEntry(
                             Color.Green
                         } else {
                             Color.Red
-                        }
+                        },
                     )
                 }
-                Row {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Text(
                         text = DateFormat.format(
                             "MMM dd",
                             transaction.date
                         ).toString(),
-                        style = secondLineStyle
-                    )
-                    Spacer(modifier = modifier.width(8.dp))
-                    Text(
-                        text = "-",
-                        style = secondLineStyle
-                    )
-                    Spacer(modifier = modifier.width(8.dp))
-                    Text(
-                        text = transaction.description,
                         style = secondLineStyle,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1,
                     )
+                    if (transaction.description != "") {
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "-",
+                            style = secondLineStyle,
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = transaction.description,
+                            style = secondLineStyle,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1,
+                        )
+                    }
                 }
             }
         }
