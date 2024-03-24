@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- AllTransactions -->
+    <string name="TopAppBar">Transaction list</string>
+
+    <string name="nav_back">Go back</string>
+
+</resources>

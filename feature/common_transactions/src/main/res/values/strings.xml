@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- CommonTransactions -->
+    <string name="delete">Delete</string>
+    <string name="no_wallet">There are no wallets</string>
+    <string name="no_model">There are no blueprints</string>
+    <string name="edit_model">Edit model</string>
+    <string name="tag">Tags:</string>
+    <string name="transaction_deleted">Transaction blueprint deleted</string>
+    <string name="wallet">Wallet</string>
+
+    <!-- Accessibility -->
+    <string name="accessibility_transaction_new">New transaction</string>
+
+</resources>

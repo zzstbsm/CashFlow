@@ -3,7 +3,7 @@ package com.zhengzhou.cashflow.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.zhengzhou.cashflow.themes.IconsMappedForDB
+import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
 import java.util.Date
 import java.util.UUID
 

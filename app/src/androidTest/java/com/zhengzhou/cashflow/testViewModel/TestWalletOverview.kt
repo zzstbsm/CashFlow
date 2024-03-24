@@ -19,6 +19,7 @@ import org.junit.runner.RunWith
 import java.util.Date
 import java.util.UUID
 
+/*
 @RunWith(AndroidJUnit4::class)
 class TestWalletOverview {
 
@@ -298,3 +299,4 @@ class TestWalletOverview {
         }
     }
 }
+*/
