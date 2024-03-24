@@ -95,7 +95,7 @@ internal fun AllTransactionsMainBody(
                 SectionTransactionEntry(
                     transaction = transaction,
                     category = category,
-                    currency = allTransactionsUiState.currency,
+                    currency = allTransactionsUiState.wallet.currency,
                     onClickTransaction = {
                         Screen.TransactionReport.navigate(
                             transactionUUID = transaction.id,

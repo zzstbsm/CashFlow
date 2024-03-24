@@ -14,28 +14,20 @@ sealed class Screen(
     )
     data object AllTransactions: Screen(
         route = ApplicationScreensEnum.AllTransactions.name +
-                "/{${NavigationKeys.keyWalletUUID}}" +
-                "/{${NavigationKeys.keyCategoryUUID}}" +
-                "/{${NavigationKeys.keyCurrencyName}}"
+                "/{${NavigationKeys.keyWalletUUID}}"
     ) {
         private fun createRoute(
             walletUUID: UUID,
-            categoryUUID: UUID,
-            currency: Currency,
         ): String = ApplicationScreensEnum.AllTransactions.name +
-                "/${walletUUID}/${categoryUUID}/${currency.name}"
+                "/${walletUUID}"
 
         fun navigate(
             walletUUID: UUID = UUID(0L, 0L),
-            categoryUUID: UUID = UUID(0L, 0L),
-            currency: Currency,
             navController: NavController,
         ) {
             navController.navigate(
                 createRoute(
                     walletUUID = walletUUID,
-                    categoryUUID = categoryUUID,
-                    currency = currency,
                 )
             )
         }

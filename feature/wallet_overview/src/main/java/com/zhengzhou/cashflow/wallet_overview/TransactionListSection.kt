@@ -57,7 +57,6 @@ internal fun TransactionListSection(
                 onClick = {
                     Screen.AllTransactions.navigate(
                         walletUUID = walletOverviewUiState.wallet.id,
-                        currency = walletOverviewUiState.wallet.currency,
                         navController = navController,
                     )
                 }

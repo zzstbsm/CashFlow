@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zhengzhou.cashflow.all_transactions.DateTabWithIndex
 import com.zhengzhou.cashflow.data.Category
-import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.Transaction
+import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.api.complex_data.TransactionAndCategory
 import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.CategoryUseCases
@@ -23,8 +23,6 @@ import java.util.UUID
 class AllTransactionsViewModel(
     repository: RepositoryInterface,
     walletUUID: UUID,
-    categoryUUID: UUID,
-    currency: Currency,
 ): ViewModel() {
 
     private var _uiState = MutableStateFlow(AllTransactionsUiState())
@@ -39,36 +37,42 @@ class AllTransactionsViewModel(
     init {
 
         viewModelScope.launch {
-            walletUseCases.getWalletListByCurrency(currency).collect { walletList ->
-                transactionUseCases.getTransactionListInListOfWallet(walletList).collect { transactionList ->
-                    val transactionListToShow = processTransactionListToShow(
-                        transactionList = transactionList,
-                        walletUUID = walletUUID,
-                        categoryUUID = categoryUUID,
-                    )
 
-                    val dateTabWithIndexList = processDateTabWithIndex(
-                        sortedDescendingDateTransactionListToShow = transactionListToShow
-                    )
+            transactionUseCases.getTransactionListInWallet(walletUUID = walletUUID).collect { transactionList ->
 
-                    setUiState(
-                        isLoading = false,
-                        currency = currency,
-                        transactionListToShow = transactionListToShow,
-                        dateTabWithIndexList = dateTabWithIndexList,
-                        shownTab = dateTabWithIndexList.size-1,
-                    )
-                }
+                val wallet = walletUseCases.getWallet(walletUUID)
+
+                val transactionListToShow = processTransactionListToShow(
+                    transactionList = transactionList,
+                )
+
+                val dateTabWithIndexList = processDateTabWithIndex(
+                    sortedDescendingDateTransactionListToShow = transactionListToShow
+                )
+
+                setUiState(
+                    isLoading = false,
+
+                    wallet = wallet,
+
+                    transactionListToShow = transactionListToShow,
+
+                    dateTabWithIndexList = dateTabWithIndexList,
+                    shownTab = dateTabWithIndexList.size-1,
+                )
+
             }
-
         }
+
     }
 
     private fun setUiState(
         isLoading: Boolean? = null,
 
-        currency: Currency? = null,
+        wallet: Wallet? = null,
+
         transactionListToShow: List<TransactionAndCategory>? = null,
+
         dateTabWithIndexList: List<DateTabWithIndex>? = null,
         shownTab: Int? = null,
     ) {
@@ -80,8 +84,10 @@ class AllTransactionsViewModel(
             _uiState.value = uiState.value.copy(
                 isLoading = isLoading ?: uiState.value.isLoading,
 
-                currency = currency ?: uiState.value.currency,
+                wallet = wallet ?: uiState.value.wallet,
+
                 transactionListToShow = transactionListToShow ?: uiState.value.transactionListToShow,
+
                 dateTabWithIndexList = dateTabWithIndexList ?: uiState.value.dateTabWithIndexList,
                 shownTab = shownTab ?: uiState.value.shownTab,
             )
@@ -124,25 +130,21 @@ class AllTransactionsViewModel(
         return dateTabWithIndexList.sortedBy { it.date }
     }
 
+    /**
+     * @param transactionList list of transactions to process
+     * @return list of [TransactionAndCategory] with the current transaction list
+     */
     private suspend fun processTransactionListToShow(
         transactionList: List<Transaction>,
-        walletUUID: UUID,
-        categoryUUID: UUID,
     ): List<TransactionAndCategory> {
-        return transactionList.filter {
-            if (walletUUID != UUID(0L,0L)) {
-                it.walletUUID == walletUUID || it.secondaryWalletUUID == walletUUID
-            } else true
-        }.filter {
-            if (categoryUUID != UUID(0L,0L)) {
-                it.categoryUUID == categoryUUID
-            } else true
-        }.sortedByDescending { it.date }.map {
+
+        return transactionList.sortedByDescending { it.date }.map {
             TransactionAndCategory(
                 transaction = it,
                 category = categoryUseCases.getCategory(it.categoryUUID) ?: Category.newEmpty()
             )
         }
+
     }
 
     fun updateShownTab(tabIndex: Int) {
