@@ -43,6 +43,7 @@ class AllTransactionsViewModel(
                 val wallet = walletUseCases.getWallet(walletUUID)
 
                 val transactionListToShow = processTransactionListToShow(
+                    walletUUID = walletUUID,
                     transactionList = transactionList,
                 )
 
@@ -135,13 +136,20 @@ class AllTransactionsViewModel(
      * @return list of [TransactionAndCategory] with the current transaction list
      */
     private suspend fun processTransactionListToShow(
+        walletUUID: UUID,
         transactionList: List<Transaction>,
     ): List<TransactionAndCategory> {
 
-        return transactionList.sortedByDescending { it.date }.map {
+        return transactionList.sortedByDescending { it.date }.map { transaction ->
             TransactionAndCategory(
-                transaction = it,
-                category = categoryUseCases.getCategory(it.categoryUUID) ?: Category.newEmpty()
+                transaction = if (transaction.secondaryWalletUUID == walletUUID) {
+                    transaction.copy(
+                        amount = -transaction.amount
+                    )
+                } else {
+                    transaction
+                },
+                category = categoryUseCases.getCategory(transaction.categoryUUID) ?: Category.newEmpty()
             )
         }
 

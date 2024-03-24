@@ -72,10 +72,11 @@ internal fun AllTransactionsMainBody(
             verticalArrangement = Arrangement.Top,
             modifier = Modifier.fillMaxWidth()
         ) {
+
             val transactionAndCategoryList = allTransactionsUiState.transactionListToShow
             val dateTabWithIndexList = allTransactionsUiState.dateTabWithIndexList
-            items(transactionAndCategoryList.size) { position ->
 
+            items(transactionAndCategoryList.size) { position ->
 
                 val transaction = transactionAndCategoryList[position].transaction
                 val category = transactionAndCategoryList[position].category
