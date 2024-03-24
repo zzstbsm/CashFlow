@@ -214,13 +214,19 @@ internal fun SelectWalletDialog(
                                     modifier = Modifier
                                         .size(32.dp)
                                 )
-                                Spacer(
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
                                     modifier = Modifier
-                                        .width(16.dp)
-                                )
-                                Text(text = wallet.name)
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp)
+                                ) {
+                                    Text(text = wallet.name)
+                                    Text(text = wallet.currency.iconEmojiUnicode)
+                                }
                             }
                         }
+                        HorizontalDivider()
                     }
                 }
             }
