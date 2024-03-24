@@ -15,99 +15,22 @@
     <string name="to">To</string>
     <string name="yes">Yes</string>
     <string name="nav_back">Go back</string>
-
-    <string name="nav_name_about_me">About CashFlow</string>
-    <string name="nav_name_all_transactions">All transactions</string>
-    <string name="nav_name_balance">Balance</string>
-    <string name="nav_name_common_transactions_short">Common</string>
-    <string name="nav_name_common_transactions">Common transactions</string>
-    <string name="nav_name_manage_categories">Manage categories</string>
-    <string name="nav_name_overview">Overview</string>
-    <string name="nav_name_profile">Profile</string>
-    <string name="nav_name_transaction_edit">Edit transaction</string>
-    <string name="nav_name_transaction_report">Transaction report</string>
-    <string name="nav_name_wallet">Wallet</string>
     <string name="nav_name_wallet_add">Add wallet</string>
     <string name="nav_name_wallet_edit">Edit wallet</string>
-    <string name="nav_name_wallet_delete">Delete wallet</string>
+
 
     <!-- Accessibility strings -->
     <string name="accessibility_add_category">Add category</string>
     <string name="accessibility_add_tag">Add tag</string>
     <string name="accessibility_close_category">Close category</string>
-    <string name="accessibility_menu_navbar">Navigation bar</string>
-    <string name="accessibility_menu_navbar_balance">Balance</string>
-    <string name="accessibility_menu_navbar_common_transactions">Common transactions</string>
-    <string name="accessibility_menu_navbar_overview">Overview</string>
-    <string name="accessibility_menu_navbar_profile">Profile</string>
-    <string name="accessibility_menu_action_open">Open menu</string>
     <string name="accessibility_open_category">Open category</string>
     <string name="accessibility_transaction_new">New transaction</string>
 
     <string name="wallet">Wallet</string>
-    <string name="balance">Balance: %1$s</string>
     <string name="profile">Profile</string>
 
 
-    <!-- About me -->
-    <string name="AboutMe_description">Greetings from Italy!\nThank you for using CashFlow!\nThis is my first Android application and I hope you like it, I am developing it for fun as side project in my free/spare time.\nFeel free to share it with your friends and relatives!\nIf you like this app/have suggestions/want to leave a feedback, please leave a review on the Play Store!</string>
-    <string name="AboutMe_GitHub">GitHub: zzstbsm</string>
-    <string name="AboutMe_GitHub_link">https://github.com/zzstbsm/CashFlow</string>
-    <string name="AboutMe_LinkedIn">LinkedIn: Zhou Zheng</string>
-    <string name="AboutMe_LinkedIn_link">https://www.linkedin.com/in/zhou-zheng-974b14167/</string>
-    <string name="AboutMe_donate">Make a donation to the project</string>
-    <string name="AboutMe_donate_dialog">Thank you for showing support for the project!\n\nUnfortunately, for the Google policies, I am not authorized to keep the direct link to the donation page. However, you can check my GitHub page.</string>
 
-    <!-- AllTransactions -->
-    <string name="AllTransactions_TopAppBar">Transaction list</string>
-
-    <!-- Balance Screen -->
-    <string name="Balance_all">All</string>
-    <string name="Balance_category">Categories</string>
-    <string name="Balance_choose_currency">Choose currency</string>
-    <string name="Balance_month">Month</string>
-    <string name="Balance_no_transactions">No transactions</string>
-    <string name="Balance_no_wallet">No wallets present in the system. Please first add a wallet.</string>
-    <string name="Balance_personalized">Personalized</string>
-    <string name="Balance_select_currency">Select currency of the wallets</string>
-    <string name="Balance_selected_period_balance">Selected period balance</string>
-    <string name="Balance_transaction">Recent transactions</string>
-    <string name="Balance_wallet_name_currency">%1s wallets</string>
-    <string name="Balance_week">Week</string>
-    <string name="Balance_year">Year</string>
-
-    <!-- CommonTransactions -->
-    <string name="CommonTransactions_no_model">There are no blueprints</string>
-    <string name="CommonTransactions_edit_model">Edit model</string>
-    <string name="CommonTransactions_tag">Tags:</string>
-    <string name="CommonTransactions_transaction_deleted">Transaction blueprint deleted</string>
-
-    <!-- ManageCategories-->
-    <string name="ManageCategories_cannot_delete">Cannot delete the category: there are transactions using this category</string>
-    <string name="ManageCategories_choose_category_icon">Choose category icon</string>
-    <string name="ManageCategories_edit_category">Edit category</string>
-    <string name="ManageCategories_loading_category_occurrences">Loading category occurrences, please wait or reload</string>
-    <string name="ManageCategories_new_category">New category</string>
-    <string name="ManageCategories_occurrences">Occurrences</string>
-
-    <!-- TransactionEdit page strings -->
-    <string name="amount">Amount</string>
-    <string name="description">Description</string>
-    <string name="TransactionEdit_prompt_save_transaction">Do you want to save the transaction?</string>
-    <string name="TransactionEdit_transaction_saved">Transaction saved</string>
-    <string name="TransactionEdit_no_amount">No amount inserted, insert amount</string>
-    <string name="TransactionEdit_no_category">No category inserted, insert category</string>
-    <string name="TransactionEdit_save_transaction">Save transaction</string>
-    <string name="TransactionEdit_transaction_deleted">Transaction deleted</string>
-    <string name="TransactionEdit_transaction_report">Transaction report</string>
-    <string name="TransactionEdit_amount_insert_prompt">Insert the amount</string>
-
-    <!-- TransactionReport -->
-    <string name="TransactionReport_category">Category</string>
-    <string name="TransactionReport_wallet">Wallet</string>
-    <string name="TransactionReport_delete_transaction">Delete transaction</string>
-    <string name="TransactionReport_edit_transaction">Edit transaction</string>
-    <string name="TransactionReport_transaction_deleted">Transaction deleted</string>
 
     <string name="tag">Tag</string>
     <string name="tag_no">No tags</string>
@@ -125,33 +48,5 @@
 
     <string name="movement_select_wallets">Select wallets</string>
 
-    <!-- WalletEdit page -->
-    <string name="WalletEdit_choose_wallet_icon">Choose wallet icon</string>
-    <string name="WalletEdit_currency">Currency</string>
-    <string name="WalletEdit_creation_date">Creation date</string>
-    <string name="WalletEdit_error_amount_non_valid">Inserted amount not valid</string>
-    <string name="WalletEdit_error_wallet_name_already_in_use">Wallet name already in use</string>
-    <string name="WalletEdit_error_wallet_name_not_valid">Wallet name not valid</string>
-    <string name="WalletEdit_initial_amount">Initial amount</string>
-    <string name="WalletEdit_name">Wallet name</string>
-    <string name="WalletEdit_last_access">Last access</string>
-    <string name="WalletEdit_if_budget_on">Enable budget option</string>
-    <string name="WalletEdit_not_set">Not set</string>
-    <string name="WalletEdit_wallet_saved">Wallet saved</string>
-
-    <!-- WalletOverview page-->
-    <string name="WalletOverview_add_wallet">Add wallet</string>
-    <string name="WalletOverview_balance">Balance</string>
-    <string name="WalletOverview_cannot_delete_wallet">Cannot delete wallet, there are transactions registered in it.</string>
-    <string name="WalletOverview_choose_wallet">Choose wallet</string>
-    <string name="WalletOverview_edit_wallet">Edit wallet</string>
-    <string name="WalletOverview_no_transactions">No transactions</string>
-    <string name="WalletOverview_no_wallet">No wallet</string>
-    <string name="WalletOverview_recent_transactions">Recent transactions</string>
-    <string name="WalletOverview_select_wallet">Select wallet</string>
-    <string name="WalletOverview_wallet_deleted">Wallet deleted</string>
-
-    <!-- Other -->
-    <string name="delete_tag">Delete tag %1s</string>
 
 </resources>

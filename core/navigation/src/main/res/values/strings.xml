@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Pages -->
+    <string name="app_name">Cashflow</string>
+
+    <string name="nav_name_about_me">About CashFlow</string>
+    <string name="nav_name_all_transactions">All transactions</string>
+    <string name="nav_name_balance">Balance</string>
+    <string name="nav_name_common_transactions_short">Common</string>
+    <string name="nav_name_common_transactions">Common transactions</string>
+    <string name="nav_name_manage_categories">Manage categories</string>
+    <string name="nav_name_overview">Overview</string>
+    <string name="nav_name_profile">Profile</string>
+    <string name="nav_name_transaction_edit">Edit transaction</string>
+    <string name="nav_name_transaction_report">Transaction report</string>
+    <string name="nav_name_wallet">Wallet</string>
+    <string name="nav_name_wallet_edit">Edit wallet</string>
+
+    <!-- Accessibility -->
+    <string name="accessibility_menu_navbar">Navigation bar</string>
+    <string name="accessibility_menu_navbar_balance">Balance</string>
+    <string name="accessibility_menu_navbar_common_transactions">Common transactions</string>
+    <string name="accessibility_menu_navbar_overview">Overview</string>
+    <string name="accessibility_menu_navbar_profile">Profile</string>
+    <string name="accessibility_menu_action_open">Open menu</string>
+</resources>

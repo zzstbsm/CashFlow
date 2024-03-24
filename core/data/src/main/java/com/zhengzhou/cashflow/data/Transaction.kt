@@ -41,5 +41,9 @@ data class Transaction (
                 isBlueprint = false,
             )
         }
+
+        fun newTransactionUUID(): UUID {
+            return UUID(0L, 0L)
+        }
     }
 }

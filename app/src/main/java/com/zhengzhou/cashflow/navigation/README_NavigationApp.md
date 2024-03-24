@@ -23,7 +23,7 @@ After a `navigationController.popBackStack()`, a recomposition of the screen is 
 ## How to add pages
 
 ### Add new page in the navigation bar
-In order to add a new page in the navigation bar, it is needed to add page in `NavigationCurrentScreen` with `navBarActive = true`
+In order to add a new page in the navigation bar, it is needed to add page in `ApplicationScreensEnum` with `navBarActive = true`
 
 If the navigation path is not ready yet, set also the parameter `routeActive = false` in order to make the screen non navigable.
 After the page has been set ready for the navigation, remove the parameter.

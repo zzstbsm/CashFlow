@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- TransactionReport -->
+    <string name="category">Category</string>
+    <string name="delete_transaction">Delete transaction</string>
+    <string name="edit_transaction">Edit transaction</string>
+    <string name="nav_back">Go back</string>
+    <string name="tag">Tags:</string>
+    <string name="transaction_deleted">Transaction deleted</string>
+    <string name="wallet">Wallet</string>
+
+    <!-- Accessibility -->
+
+</resources>
