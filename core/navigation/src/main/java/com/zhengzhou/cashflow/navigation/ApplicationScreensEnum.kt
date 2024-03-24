@@ -67,6 +67,13 @@ enum class ApplicationScreensEnum(
         accessibilityText = R.string.nav_name_manage_categories,
         navBarActive = true,
     ),
+    ServerUi(
+        iconId = R.drawable.ic_web,
+        optionName = R.string.nav_name_server,
+        optionNameShort = R.string.nav_name_server,
+        accessibilityText = R.string.nav_name_server,
+        navBarActive = true,
+    ),
     Profile (
         iconId = R.drawable.ic_account,
         optionName = R.string.nav_name_profile,

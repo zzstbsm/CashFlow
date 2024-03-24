@@ -16,6 +16,7 @@
     <string name="nav_name_transaction_report">Transaction report</string>
     <string name="nav_name_wallet">Wallet</string>
     <string name="nav_name_wallet_edit">Edit wallet</string>
+    <string name="nav_name_server">Remote access</string>
 
     <!-- Accessibility -->
     <string name="accessibility_menu_navbar">Navigation bar</string>

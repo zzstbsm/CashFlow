@@ -14,6 +14,7 @@ import com.zhengzhou.cashflow.common_transactions.CommonTransactionsScreen
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
+import com.zhengzhou.cashflow.feature.server_ui.ServerUiScreen
 import com.zhengzhou.cashflow.manage_categories.ManageCategoriesScreen
 import com.zhengzhou.cashflow.profile.ProfileScreen
 import com.zhengzhou.cashflow.total_balance.BalanceScreen
@@ -89,6 +90,15 @@ fun NavigationApp(
         }
         composable(route = Screen.Profile.route) {
             ProfileScreen(
+                currentScreen = currentScreen,
+                setCurrentScreen = { screen ->
+                    currentScreen = screen
+                },
+                navController = navController,
+            )
+        }
+        composable(route = Screen.ServerUi.route) {
+            ServerUiScreen(
                 currentScreen = currentScreen,
                 setCurrentScreen = { screen ->
                     currentScreen = screen

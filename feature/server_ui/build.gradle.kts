@@ -15,6 +15,7 @@ dependencies {
     compose()
     test()
 
+    featuresDependencies()
     server()
 
 }

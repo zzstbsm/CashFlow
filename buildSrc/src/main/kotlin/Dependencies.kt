@@ -53,6 +53,7 @@ fun DependencyHandler.allFeatures() {
     implementation(project(":feature:common_transactions"))
     implementation(project(":feature:manage_categories"))
     implementation(project(":feature:profile"))
+    implementation(project(":feature:server_ui"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:total_balance"))
     implementation(project(":feature:transaction_edit"))
