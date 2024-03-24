@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ManageCategories-->
+    <string name="cannot_delete">Cannot delete the category: there are transactions using this category</string>
+    <string name="choose_category_icon">Choose category icon</string>
+    <string name="delete">Delete</string>
+    <string name="edit_category">Edit category</string>
+    <string name="loading_category_occurrences">Loading category occurrences, please wait or reload</string>
+    <string name="name">Name</string>
+    <string name="new_category">New category</string>
+    <string name="occurrences">Occurrences</string>
+    <string name="save">Save</string>
+    <string name="undo">Undo</string>
+
+    <!-- Accessibility -->
+    <string name="accessibility_add_category">Add category</string>
+    <string name="accessibility_close_category">Close category</string>
+    <string name="accessibility_open_category">Open category</string>
+
+</resources>

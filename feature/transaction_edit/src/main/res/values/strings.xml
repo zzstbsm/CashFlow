@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- TransactionEdit page strings -->
+    <string name="amount">Amount</string>
+    <string name="amount_insert_prompt">Insert the amount</string>
+    <string name="category">Category</string>
+    <string name="confirm">Confirm</string>
+    <string name="description_transaction">Description</string>
+    <string name="prompt_save_transaction">Do you want to save the transaction?</string>
+    <string name="nav_back">Go back</string>
+    <string name="no">No</string>
+    <string name="save_transaction">Save transaction</string>
+    <string name="tag">Tag</string>
+    <string name="transaction_deleted">Transaction deleted</string>
+    <string name="transaction_report">Transaction report</string>
+    <string name="wallet">Wallet</string>
+    <string name="yes">Yes</string>
+
+    <!-- Accessibility -->
+    <string name="accessibility_add_tag">Add tag</string>
+
+</resources>

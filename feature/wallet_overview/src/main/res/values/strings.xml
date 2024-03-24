@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- WalletOverview page-->
+    <string name="add_wallet">Add wallet</string>
+    <string name="balance_one_wallet">Balance</string>
+    <string name="cannot_delete_wallet">Cannot delete wallet, there are transactions registered in it.</string>
+    <string name="choose_wallet">Choose wallet</string>
+    <string name="edit_wallet">Edit wallet</string>
+    <string name="no_transactions">No transactions</string>
+    <string name="no_wallet">No wallet</string>
+    <string name="recent_transactions">Recent transactions</string>
+    <string name="select_wallet">Select wallet</string>
+    <string name="see_all">See all</string>
+    <string name="wallet_deleted">Wallet deleted</string>
+    <string name="accessibility_menu_action_open">Open menu</string>
+
+    <!-- Navigation -->
+    <string name="nav_name_wallet_add">Add wallet</string>
+    <string name="nav_name_wallet_edit">Edit wallet</string>
+    <string name="nav_name_wallet_delete">Delete wallet</string>
+
+    <!-- Accessibility -->
+
+</resources>

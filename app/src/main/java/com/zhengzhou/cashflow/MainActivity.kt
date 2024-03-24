@@ -1,14 +1,16 @@
 package com.zhengzhou.cashflow
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.platform.LocalContext
+import com.zhengzhou.cashflow.database.api.DatabaseInstance
+import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.CategoryUseCases
+import com.zhengzhou.cashflow.database.data.LoadDefaultCategories
 import com.zhengzhou.cashflow.navigation.NavigationApp
+import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.PreloadTransactions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,10 +23,11 @@ class MainActivity : ComponentActivity() {
 
         setContent{
 
-            val repository = com.zhengzhou.cashflow.database.DatabaseRepository.get()
+            val repository = DatabaseInstance.getRepository()
+            val categoryUseCases = CategoryUseCases(repository)
             val coroutineScope = CoroutineScope(Dispatchers.Default)
             coroutineScope.launch {
-                repository.getCategoryList().collect {
+                categoryUseCases.getCategoryList().collect {
                     if (it.isEmpty())
                         LoadDefaultCategories.configureTableCategory()
 
@@ -34,18 +37,15 @@ class MainActivity : ComponentActivity() {
             PreloadTransactions.load()
 
             MaterialTheme {
-                NavigationApp()
+                NavigationApp(repository)
             }
 
-            val context = LocalContext.current
-            context.startService(Intent(context, ApplicationConfigurationService::class.java))
-
-            com.zhengzhou.cashflow.tools.EventMessages.messageId.observe(this) {
+            EventMessages.messageId.observe(this) {
                 it.getContentIfNotHandled()?.let { message ->
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 }
             }
-            com.zhengzhou.cashflow.tools.EventMessages.message.observe(this) {
+            EventMessages.message.observe(this) {
                 it.getContentIfNotHandled()?.let { message ->
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 }

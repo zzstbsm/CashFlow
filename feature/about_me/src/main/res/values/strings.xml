@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- About me -->
+    <string name="description">Greetings from Italy!\nThank you for using CashFlow!\nThis is my first Android application and I hope you like it, I am developing it for fun as side project in my free/spare time.\nFeel free to share it with your friends and relatives!\nIf you like this app/have suggestions/want to leave a feedback, please leave a review on the Play Store!</string>
+    <string name="GitHub">GitHub: zzstbsm</string>
+    <string name="GitHub_link">https://github.com/zzstbsm/CashFlow</string>
+    <string name="LinkedIn">LinkedIn: Zhou Zheng</string>
+    <string name="LinkedIn_link">https://www.linkedin.com/in/zhou-zheng-974b14167/</string>
+    <string name="donate">Offer me a coffee</string>
+    <string name="donate_dialog">Thank you for showing support for the project!\n\nUnfortunately, for the Google policies, I am not authorized to keep the direct link to the donation page. However, you can check my GitHub page.</string>
+
+</resources>
