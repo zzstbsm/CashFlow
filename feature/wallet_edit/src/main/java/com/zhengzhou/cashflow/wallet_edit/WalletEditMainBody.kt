@@ -2,11 +2,8 @@ package com.zhengzhou.cashflow.wallet_edit
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -34,6 +31,8 @@ internal fun WalletEditMainBody(
             modifier = modifier,
         )
 
+        /*
+        // TODO: add budget section
         Spacer(modifier = Modifier.height(8.dp))
         HorizontalDivider()
         Spacer(modifier = Modifier.height(8.dp))
@@ -43,6 +42,7 @@ internal fun WalletEditMainBody(
             walletEditViewModel = walletEditViewModel,
             modifier = modifier,
         )
+        */
 
     }
 
