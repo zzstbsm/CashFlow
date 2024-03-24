@@ -17,6 +17,7 @@
     <string name="currency_eur_name">Euro</string>
     <string name="currency_inr_name">Indian Rupee</string>
     <string name="currency_jpy_name">Japanese Yen</string>
+    <string name="currency_pln_name">Polish Złoty</string>
     <string name="currency_rub_name">Russian Ruble</string>
     <string name="currency_usd_name">US Dollar</string>
     <string name="currency_sek_name">Swedish Krona</string>
