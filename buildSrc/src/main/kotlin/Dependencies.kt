@@ -23,6 +23,9 @@ object Dependencies {
 
     const val gson = "com.google.code.gson:gson:${Versions.gson}"
 
+    const val ktorGson = "io.ktor:ktor-gson:${Versions.ktorGson}"
+    const val ktorServerCore = "io.ktor:ktor-server-core:${Versions.ktor}"
+    const val ktorServerNetty = "io.ktor:ktor-server-netty:${Versions.ktor}"
 
     const val junitKtx = "androidx.test.ext:junit-ktx:${Versions.junitKtx}"
     const val junit = "junit:junit:${Versions.junit}"
@@ -83,6 +86,12 @@ fun DependencyHandler.featuresDependencies() {
     tools()
 }
 
+fun DependencyHandler.ktor() {
+    implementation(Dependencies.ktorGson)
+    implementation(Dependencies.ktorServerCore)
+    implementation(Dependencies.ktorServerNetty)
+}
+
 fun DependencyHandler.navigation() {
     implementation(project(":core:navigation"))
 }
@@ -91,6 +100,10 @@ fun DependencyHandler.room() {
     implementation(Dependencies.room)
     implementation(Dependencies.roomKtx)
     ksp(Dependencies.roomCompiler)
+}
+
+fun DependencyHandler.server() {
+    implementation(project(":core:server"))
 }
 
 fun DependencyHandler.test() {

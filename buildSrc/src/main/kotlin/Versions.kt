@@ -17,4 +17,7 @@ object Versions {
     const val junitKtx = "1.1.5"
     const val junitUi = "1.5.4"
 
+    const val ktor = "2.3.9"
+    const val ktorGson = "1.6.8"
+
 }

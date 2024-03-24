@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/core/data" />
             <option value="$PROJECT_DIR$/core/database" />
             <option value="$PROJECT_DIR$/core/navigation" />
+            <option value="$PROJECT_DIR$/core/server" />
             <option value="$PROJECT_DIR$/core/themes" />
             <option value="$PROJECT_DIR$/core/tools" />
             <option value="$PROJECT_DIR$/feature" />
@@ -25,6 +26,7 @@
             <option value="$PROJECT_DIR$/feature/common_transactions" />
             <option value="$PROJECT_DIR$/feature/manage_categories" />
             <option value="$PROJECT_DIR$/feature/profile" />
+            <option value="$PROJECT_DIR$/feature/server_ui" />
             <option value="$PROJECT_DIR$/feature/settings" />
             <option value="$PROJECT_DIR$/feature/total_balance" />
             <option value="$PROJECT_DIR$/feature/transaction_edit" />
