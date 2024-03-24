@@ -39,6 +39,11 @@ enum class Currency(
         nameCurrency = R.string.currency_jpy_name,
         iconEmojiUnicode = "\uD83C\uDDEF\uD83C\uDDF5",
     ),
+    PLN(
+        locale = Locale("pl","pl"),
+        nameCurrency = R.string.currency_pln_name,
+        iconEmojiUnicode = "\uD83C\uDDF5\uD83C\uDDF1",
+    ),
     RUB(
         locale = Locale("ru","ru"),
         nameCurrency = R.string.currency_rub_name,
