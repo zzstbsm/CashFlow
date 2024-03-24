@@ -24,6 +24,7 @@ object Dependencies {
     const val gson = "com.google.code.gson:gson:${Versions.gson}"
 
     const val ktorGson = "io.ktor:ktor-gson:${Versions.ktorGson}"
+    const val ktorHTTP = "io.ktor:ktor-server-html-builder:${Versions.ktor}"
     const val ktorServerCore = "io.ktor:ktor-server-core:${Versions.ktor}"
     const val ktorServerNetty = "io.ktor:ktor-server-netty:${Versions.ktor}"
 
@@ -89,6 +90,7 @@ fun DependencyHandler.featuresDependencies() {
 
 fun DependencyHandler.ktor() {
     implementation(Dependencies.ktorGson)
+    implementation(Dependencies.ktorHTTP)
     implementation(Dependencies.ktorServerCore)
     implementation(Dependencies.ktorServerNetty)
 }

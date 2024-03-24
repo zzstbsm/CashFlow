@@ -1,5 +1,6 @@
 package com.zhengzhou.cashflow.navigation
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +27,7 @@ import java.util.UUID
 
 @Composable
 fun NavigationApp(
+    context: Context,
     repository: RepositoryInterface
 ) {
 
@@ -99,6 +101,7 @@ fun NavigationApp(
         }
         composable(route = Screen.ServerUi.route) {
             ServerUiScreen(
+                context = context,
                 currentScreen = currentScreen,
                 setCurrentScreen = { screen ->
                     currentScreen = screen
