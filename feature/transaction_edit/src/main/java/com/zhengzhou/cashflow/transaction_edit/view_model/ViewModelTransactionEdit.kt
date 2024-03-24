@@ -12,6 +12,8 @@ import com.zhengzhou.cashflow.data.Wallet
 import com.zhengzhou.cashflow.database.api.complex_data.TransactionFullForUI
 import com.zhengzhou.cashflow.database.api.complex_data.TransactionSaveResult
 import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
+import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.CategoryUseCases
+import com.zhengzhou.cashflow.database.api.use_case.tagUseCases.implementations.TagUseCases
 import com.zhengzhou.cashflow.database.api.use_case.walletUseCases.implementations.WalletUseCases
 import com.zhengzhou.cashflow.tools.calculator.Calculator
 import com.zhengzhou.cashflow.tools.calculator.KeypadDigit
@@ -57,7 +59,9 @@ internal class TransactionEditViewModel(
     editBlueprint: Boolean,
 ) : ViewModel() {
 
-    val walletUseCases = WalletUseCases(repository)
+    private val categoryUseCases = CategoryUseCases(repository)
+    private val tagUseCases = TagUseCases(repository)
+    private val walletUseCases = WalletUseCases(repository)
 
     private var _uiState = MutableStateFlow(
         TransactionEditUiState(
@@ -76,7 +80,7 @@ internal class TransactionEditViewModel(
 
     init {
 
-        newTransaction = transactionUUID == UUID(0L, 0L)
+        newTransaction = transactionUUID == Transaction.newTransactionUUID()
 
         var isLoadedTransactionFull: Boolean
 
@@ -95,7 +99,7 @@ internal class TransactionEditViewModel(
 
         collectInfoJob.launch {
             launch {
-                repository.getWalletListByCurrency(
+                walletUseCases.getWalletListByCurrency(
                     currency = currency
                 ).collect {
                     walletList = it
@@ -103,7 +107,7 @@ internal class TransactionEditViewModel(
                 }
             }
             launch {
-                repository.getCategoryList().collect {
+                categoryUseCases.getCategoryList().collect {
                     categoryList = it.filter { category ->
                         category.transactionType == transactionType
                     }
@@ -111,7 +115,7 @@ internal class TransactionEditViewModel(
                 }
             }
             launch {
-                repository.getTagEntryList().collect {
+                tagUseCases.getTagEntryList().collect {
                     tagListInDB = it
                     tagListInDBCollected = true
                 }
@@ -434,7 +438,7 @@ internal class TransactionEditViewModel(
         setUiState(
             secondaryWallet = wallet,
             transaction = uiState.value.transaction.copy(
-                categoryUUID = wallet.id
+                walletUUID = wallet.id
             )
         )
     }
