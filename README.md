@@ -14,6 +14,7 @@ So far the application has only the basic features, in the backlog of this proje
 - A budget system to manage your expense limits.
 - A section with graphs and plots in order to visualize your incomes and expenses.
 - A backup system that saves the transactions on your Google Drive.
+- An HTTP server to access the application from the web browser in order to use a computer to perform the actions.
 
 In order to make the navigation more enjoyable, the following features will be implemented in future:
 - Animations and transitions for in app navigation.
