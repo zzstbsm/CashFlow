@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import com.zhengzhou.cashflow.database.api.DatabaseInstance
 import com.zhengzhou.cashflow.database.api.use_case.categoryUseCases.implementations.CategoryUseCases
@@ -12,6 +13,8 @@ import com.zhengzhou.cashflow.database.data.LoadDefaultCategories
 import com.zhengzhou.cashflow.navigation.NavigationApp
 import com.zhengzhou.cashflow.tools.EventMessages
 import com.zhengzhou.cashflow.tools.PreloadTransactions
+import com.zhengzhou.cashflow.ui.theme.darkColorScheme
+import com.zhengzhou.cashflow.ui.theme.lightColorScheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,9 +39,14 @@ class MainActivity : ComponentActivity() {
 
             PreloadTransactions.load()
 
-            MaterialTheme {
-                NavigationApp(repository)
-            }
+            MaterialTheme(
+                colorScheme = if (isSystemInDarkTheme()) {
+                    darkColorScheme
+                } else {
+                    lightColorScheme
+                },
+                content = { NavigationApp(repository) }
+            )
 
             EventMessages.messageId.observe(this) {
                 it.getContentIfNotHandled()?.let { message ->
