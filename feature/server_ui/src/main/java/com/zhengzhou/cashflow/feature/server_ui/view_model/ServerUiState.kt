@@ -1,7 +1,10 @@
 package com.zhengzhou.cashflow.feature.server_ui.view_model
 
-internal data class ServerUiState(
-    val serverActive: Boolean = false,
+import com.zhengzhou.cashflow.core.server.api.ServerConfiguration
 
-    val ipAddress: String? = null,
+/**
+ * @param serverRunningConfiguration stores the current running configuration. It is null if the server is not active
+ */
+internal data class ServerUiState(
+    val serverRunningConfiguration: ServerConfiguration? = null,
 )

@@ -17,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.feature.server_ui.view_model.ServerActions
@@ -105,14 +106,20 @@ private fun ScreenProfileMainBody(
             .fillMaxSize()
     ) {
 
-        if (serverUiState.serverActive) {
-
-            val text = serverUiState.ipAddress ?: "WIP"
-
-            Text(text = text)
-        }
+        Text(
+            text = if (serverUiState.serverRunningConfiguration != null) {
+                stringResource(
+                    id = R.string.ip_address,
+                    serverUiState.serverRunningConfiguration.type.lowercase(),
+                    serverUiState.serverRunningConfiguration.address,
+                    serverUiState.serverRunningConfiguration.port,
+                )
+            } else {
+                stringResource(id = R.string.server_not_active)
+            }
+        )
         Switch(
-            checked = serverUiState.serverActive,
+            checked = serverUiState.serverRunningConfiguration != null,
             onCheckedChange = { newState ->
                 when (newState) {
                     true -> {

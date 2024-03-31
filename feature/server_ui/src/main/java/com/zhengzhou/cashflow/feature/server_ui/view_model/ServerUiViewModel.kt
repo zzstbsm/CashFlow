@@ -3,6 +3,7 @@ package com.zhengzhou.cashflow.feature.server_ui.view_model
 import android.net.ConnectivityManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zhengzhou.cashflow.core.server.api.ServerConfiguration
 import com.zhengzhou.cashflow.core.server.api.ServerEngineInterface
 import com.zhengzhou.cashflow.core.server.api.ServerInstance
 import kotlinx.coroutines.delay
@@ -11,6 +12,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+private const val DEFAULT_PORT = 8080
+
 internal class ServerUiViewModel(
     val connectivityManager: ConnectivityManager
 ): ViewModel() {
@@ -18,36 +21,39 @@ internal class ServerUiViewModel(
     private var _uiState = MutableStateFlow(ServerUiState())
     val uiState: StateFlow<ServerUiState> = _uiState.asStateFlow()
 
-    private var server: ServerEngineInterface
+    private var _server: ServerEngineInterface
 
-    private var isWriting = false
+    private var _isWriting = false
 
     init {
         ServerInstance.initialize()
-        server = ServerInstance.getServer()!!
+        _server = ServerInstance.getServer()!!
+
+        // Check if the server is active
+        setUiState(
+            Pair(_server.getHostConfiguration(connectivityManager),true)
+        )
+
     }
 
     /**
-     * @param serverActive set the server state
-     * @param ipAddress takes a pair: [ipAddress].first is the string to write, [ipAddress].second verify if the string has to be written.
+     * @param serverRunningConfiguration takes a pair: [serverRunningConfiguration].first is the string to write, [serverRunningConfiguration].second verify if the string has to be written.
      */
     private fun setUiState(
-        serverActive: Boolean? = null,
-
-        ipAddress: Pair<String?,Boolean> = Pair(null,false),
+        serverRunningConfiguration: Pair<ServerConfiguration?,Boolean> = Pair(null,false),
     ) {
         viewModelScope.launch {
-            while (isWriting) delay(5)
 
-            isWriting = true
-            val writeIpAddress = if (ipAddress.second) ipAddress.first else uiState.value.ipAddress
+            while (_isWriting) delay(5)
+
+            _isWriting = true
+            val writeServerRunningConfiguration = if (serverRunningConfiguration.second) serverRunningConfiguration.first else uiState.value.serverRunningConfiguration
 
             _uiState.value = uiState.value.copy(
-                serverActive = serverActive ?: uiState.value.serverActive,
-                ipAddress = writeIpAddress
+                serverRunningConfiguration = writeServerRunningConfiguration
             )
 
-            isWriting = false
+            _isWriting = false
 
         }
     }
@@ -59,19 +65,17 @@ internal class ServerUiViewModel(
                     when (event.serverState) {
                         ServerActions.Activate -> {
 
-                            server.start()
-                            val ipAddress = server.getLocalIP()
+                            _server.start(DEFAULT_PORT)
+                            val serverRunningConfiguration = _server.getHostConfiguration(connectivityManager = connectivityManager)
 
                             setUiState(
-                                serverActive = true,
-                                ipAddress = Pair(ipAddress,true),
+                                serverRunningConfiguration = Pair(serverRunningConfiguration,true),
                             )
                         }
                         ServerActions.Deactivate -> {
-                            server.stop()
+                            _server.stop()
                             setUiState(
-                                serverActive = false,
-                                ipAddress = Pair(null,true),
+                                serverRunningConfiguration = Pair(null,true),
                             )
                         }
                     }
