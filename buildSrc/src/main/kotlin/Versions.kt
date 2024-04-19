@@ -18,6 +18,7 @@ object Versions {
     const val junitUi = "1.5.4"
 
     const val ktor = "2.3.9"
+    const val ktorCSS = "1.0.0-pre.129-kotlin-1.4.20"
     const val ktorGson = "1.6.8"
 
 }

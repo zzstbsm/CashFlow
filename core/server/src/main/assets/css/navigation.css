@@ -1,0 +1,91 @@
+@import url(/css/material/themes.css);
+
+:root {
+
+    --app-name-font-size: 2.2rem;
+
+    --nav-card-font-size: 1.8rem;
+}
+
+nav {
+    width: fit-content;
+    height: 100%;
+
+    background-color: var(--surface-variant);
+
+    padding: 4em;
+    transition: 1s; /* To add on ktor */
+}
+
+nav .logo {
+
+    margin-left: 0.5em;
+    margin-right: 2em;
+    margin-top: 4em;
+    margin-bottom: 4em;
+}
+
+nav .logo a{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 2em;
+
+    text-decoration: none;
+    
+    color: var(--on-background);
+}
+
+nav .logo p {
+    font-size: var(--app-name-font-size);
+    font-weight: bold;
+}
+
+nav ul.features {
+    font-weight: 400;
+    font-size: var(--nav-card-font-size);
+
+    width: max-content;
+
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+}
+
+nav ul.features li {
+
+    margin-top: .5em;
+
+    border-radius: .5em;
+
+    color: var(--on-primary-container);
+    background-color: var(--primary-container);
+
+    transition: .3s; /* To add on ktor */
+
+}
+
+nav ul.features li.active {
+    
+    background-color: var(--primary);
+
+}
+
+nav ul.features li a {
+
+    padding-top: .5em;
+    padding-bottom: .5em;
+    padding-left: 1em;
+    padding-right: 4em;
+
+    display: block;
+    height: inherit;
+    width: inherit;
+    text-decoration: none;
+}
+
+nav ul.features li:hover {
+    color: var(--on-secondary-container);
+    background-color: var(--secondary-container);
+}
