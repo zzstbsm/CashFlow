@@ -47,25 +47,13 @@ fun NavigationApp(
         }
         composable(route = Screen.AllTransactions.route) { navBackStackEntry ->
             val walletUUID = navBackStackEntry.arguments?.getString(NavigationKeys.keyWalletUUID)
-            val categoryUUID = navBackStackEntry.arguments?.getString(NavigationKeys.keyCategoryUUID)
-            val currency = Currency.setCurrency(
-                name = navBackStackEntry.arguments?.getString(NavigationKeys.keyCurrencyName).toString()
-            )
             requireNotNull(walletUUID) {
                 "Exception: passed transactionType not valid"
-            }
-            requireNotNull(categoryUUID) {
-                "Exception: passed updateTransaction not valid"
-            }
-            requireNotNull(currency) {
-                "Exception: passed currency not valid"
             }
 
             AllTransactionsScreen(
                 repository = repository,
                 walletUUID = UUID.fromString(walletUUID),
-                categoryUUID = UUID.fromString(categoryUUID),
-                currency = currency,
                 navController = navController,
             )
         }

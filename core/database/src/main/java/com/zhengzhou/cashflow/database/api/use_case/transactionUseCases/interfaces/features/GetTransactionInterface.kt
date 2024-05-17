@@ -24,7 +24,8 @@ interface GetTransactionInterface {
      */
     fun getTransactionListInListOfWallet(walletList: List<Wallet>): Flow<List<Transaction>>
     /**
-     * Get all the transactions in the wallet in input
+     * Get all the transactions in the wallet in input.
+     * The wallet is both a primary or a secondary one for the transaction.
      */
     fun getTransactionListInWallet(walletUUID: UUID): Flow<List<Transaction>>
 }

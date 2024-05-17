@@ -14,19 +14,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.all_transactions.view_model.AllTransactionsViewModel
-import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
 import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.navigation.functions.ReloadPageAfterPopBackStack
 import com.zhengzhou.cashflow.tools.ui_elements.loading.LoadingLayer
 import java.util.UUID
 
+/**
+ *
+ * I don't remember anymore why I put so many parameters, but here they are
+ *
+ * @param repository to access the database
+ * @param walletUUID UUID of the wallet to open
+ * @param navController navigation controller.
+ *
+ */
 @Composable
 fun AllTransactionsScreen(
     repository: RepositoryInterface,
     walletUUID: UUID,
-    categoryUUID: UUID,
-    currency: Currency,
     navController: NavController
 ) {
 
@@ -34,8 +40,6 @@ fun AllTransactionsScreen(
         AllTransactionsViewModel(
             repository = repository,
             walletUUID = walletUUID,
-            categoryUUID = categoryUUID,
-            currency = currency,
         )
     }
     val allTransactionsUiState by allTransactionsViewModel.uiState.collectAsState()
