@@ -45,7 +45,6 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             isDebuggable = false
             isJniDebuggable = false
-            isRenderscriptDebuggable = false
             signingConfig = signingConfigs.getByName(ProjectConfig.release)
             isMinifyEnabled = true
         }
@@ -55,7 +54,6 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             isDebuggable = false
             isJniDebuggable = false
-            isRenderscriptDebuggable = false
             signingConfig = signingConfigs.getByName(ProjectConfig.release)
             isMinifyEnabled = true
         }
@@ -64,7 +62,6 @@ android {
             versionNameSuffix = ".${ProjectConfig.staging}"
             isDebuggable = true
             isJniDebuggable = true
-            isRenderscriptDebuggable = true
             signingConfig = signingConfigs.getByName(ProjectConfig.debug)
             isMinifyEnabled = false
         }
@@ -73,7 +70,6 @@ android {
             versionNameSuffix = ".${ProjectConfig.developement}"
             isDebuggable = true
             isJniDebuggable = true
-            isRenderscriptDebuggable = true
             signingConfig = signingConfigs.getByName(ProjectConfig.debug)
             isMinifyEnabled = false
         }
@@ -82,7 +78,6 @@ android {
             versionNameSuffix = ".${ProjectConfig.debug}"
             isDebuggable = true
             isJniDebuggable = true
-            isRenderscriptDebuggable = true
             signingConfig = signingConfigs.getByName(ProjectConfig.debug)
             isMinifyEnabled = false
         }
