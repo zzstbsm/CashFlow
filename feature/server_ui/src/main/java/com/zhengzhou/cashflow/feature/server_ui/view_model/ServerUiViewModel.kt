@@ -1,5 +1,6 @@
 package com.zhengzhou.cashflow.feature.server_ui.view_model
 
+import android.content.res.AssetManager
 import android.net.ConnectivityManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 private const val DEFAULT_PORT = 8080
 
 internal class ServerUiViewModel(
-    val connectivityManager: ConnectivityManager
+    val connectivityManager: ConnectivityManager,
+    private val assetManager: AssetManager,
 ): ViewModel() {
 
     private var _uiState = MutableStateFlow(ServerUiState())
@@ -65,7 +67,10 @@ internal class ServerUiViewModel(
                     when (event.serverState) {
                         ServerActions.Activate -> {
 
-                            _server.start(DEFAULT_PORT)
+                            _server.start(
+                                port = DEFAULT_PORT,
+                                assetManager = assetManager
+                            )
                             val serverRunningConfiguration = _server.getHostConfiguration(connectivityManager = connectivityManager)
 
                             setUiState(

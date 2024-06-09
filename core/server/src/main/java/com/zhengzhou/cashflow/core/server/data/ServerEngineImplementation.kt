@@ -1,8 +1,10 @@
 package com.zhengzhou.cashflow.core.server.data
 
+import android.content.res.AssetManager
 import android.net.ConnectivityManager
 import android.net.LinkProperties
 import com.zhengzhou.cashflow.core.server.api.ServerEngineInterface
+import com.zhengzhou.cashflow.core.server.data.serverResources.ServerAssets
 import com.zhengzhou.cashflow.core.server.data.serverResources.module
 import io.ktor.server.application.Application
 import io.ktor.server.engine.embeddedServer
@@ -12,29 +14,31 @@ import io.ktor.server.netty.NettyApplicationEngine
 internal class ServerEngineImplementation: ServerEngineInterface {
 
     private lateinit var _server: NettyApplicationEngine
-    private var _serverInitialized: Boolean = false
+    private var _serverStarted: Boolean = false
 
     override fun start(
-        port: Int
+        port: Int,
+        assetManager: AssetManager,
     ) {
 
+        ServerAssets.setAssetManager(assetManager)
         _server = embeddedServer(
             Netty,
             port = port,
             module = Application::module
         )
         _server.start()
-        _serverInitialized = true
+        _serverStarted = true
     }
 
     override fun stop() {
         _server.stop()
-        _serverInitialized = false
+        _serverStarted = false
     }
 
     override fun getHostAddress(connectivityManager: ConnectivityManager): String? {
 
-        if (!_serverInitialized) return null
+        if (!_serverStarted) return null
 
         val link: LinkProperties =  connectivityManager.getLinkProperties(connectivityManager.activeNetwork) as LinkProperties
 
@@ -48,14 +52,14 @@ internal class ServerEngineImplementation: ServerEngineInterface {
 
     override fun getHostPort(): Int? {
 
-        if (!_serverInitialized) return null
+        if (!_serverStarted) return null
 
         return _server.environment.connectors.firstOrNull()?.port
     }
 
     override fun getHostType(): String? {
 
-        if (!_serverInitialized) return null
+        if (!_serverStarted) return null
 
         return _server.environment.connectors.firstOrNull()?.type?.name
     }

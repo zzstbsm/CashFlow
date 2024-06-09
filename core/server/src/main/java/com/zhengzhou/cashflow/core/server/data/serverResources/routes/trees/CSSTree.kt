@@ -6,15 +6,15 @@ enum class CSSTree(
 ) {
     Base(
         route = "/css/base.css",
-        resourcePath = "core/server/src/main/resources/css/base.css"
+        resourcePath = "css/base.css"
     ),
     Navigation(
         route = "/css/navigation.css",
-        resourcePath = "core/server/src/main/resources/css/navigation.css"
+        resourcePath = "css/navigation.css"
     ),
     MaterialTheme(
         route = "/css/themes.css",
-        resourcePath = "core/server/src/main/resources/css/themes.css",
+        resourcePath = "css/themes.css",
     );
 
     companion object {

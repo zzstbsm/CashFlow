@@ -41,7 +41,8 @@ fun ServerUiScreen(
 
     val serverUiViewModel: ServerUiViewModel = viewModel {
         ServerUiViewModel(
-            connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager,
+            assetManager = context.assets
         )
     }
     val serverUiState by serverUiViewModel.uiState.collectAsState()

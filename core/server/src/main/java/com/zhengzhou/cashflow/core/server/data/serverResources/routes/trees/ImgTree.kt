@@ -6,7 +6,7 @@ enum class ImgTree(
 ) {
     Logo(
         route = "/img/logo.webp",
-        resourcePath = "file:///android_asset/images/logo.webp",
+        resourcePath = "images/logo.webp",
     );
 
     companion object {

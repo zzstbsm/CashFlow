@@ -1,5 +1,7 @@
 package com.zhengzhou.cashflow.core.server.data.serverResources.routes
 
+import com.zhengzhou.cashflow.core.server.data.serverResources.ServerAssets
+import com.zhengzhou.cashflow.core.server.data.serverResources.plugins.retrieveAsset
 import com.zhengzhou.cashflow.core.server.data.serverResources.routes.pages.about
 import com.zhengzhou.cashflow.core.server.data.serverResources.routes.pages.commonTransactions
 import com.zhengzhou.cashflow.core.server.data.serverResources.routes.pages.home
@@ -9,21 +11,19 @@ import com.zhengzhou.cashflow.core.server.data.serverResources.routes.trees.CSST
 import com.zhengzhou.cashflow.core.server.data.serverResources.routes.trees.FontTree
 import com.zhengzhou.cashflow.core.server.data.serverResources.routes.trees.ImgTree
 import com.zhengzhou.cashflow.core.server.data.serverResources.routes.trees.fontPack.RobotoFontTree
+import io.ktor.http.ContentType
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
-import io.ktor.server.response.respondFile
+import io.ktor.server.response.respondBytes
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
-import java.io.File
 
 fun Application.configureRouting() {
 
     routing {
 
-        cssRoutes()
-        fontRoutes()
-        imgRoutes()
+        assetRoutes()
 
         pageRoutes()
 
@@ -38,32 +38,53 @@ fun Route.pageRoutes() {
     about()
 }
 
-fun Route.cssRoutes() {
-    for (cssResource in CSSTree.getAllRoutes()) {
-        get(cssResource.route) {
-            call.respondFile(file = File(cssResource.resourcePath))
-        }
-    }
-}
+fun Route.assetRoutes() {
 
-fun Route.fontRoutes() {
-    for (fontResource in FontTree.getAllRoutes()) {
-        get(fontResource.route) {
-            call.respondFile(file = File(fontResource.resourcePath))
+    val assetManager = ServerAssets.getAssetManager()
+    if (assetManager != null) {
+        for (cssResource in CSSTree.getAllRoutes()) {
+            get(cssResource.route) {
+                call.respondBytes(
+                    bytes = retrieveAsset(
+                        assetManager = assetManager,
+                        position = cssResource.resourcePath
+                    ),
+                    contentType = ContentType.Text.CSS
+                )
+            }
         }
-    }
-
-    for (robotoFont in RobotoFontTree.getAllRoutes()) {
-        get(robotoFont.route) {
-            call.respondFile(file = File(robotoFont.resourcePath))
+        for (imgResource in ImgTree.getAllRoutes()) {
+            get(imgResource.route) {
+                call.respondBytes(
+                    bytes = retrieveAsset(
+                        assetManager = assetManager,
+                        position = imgResource.resourcePath
+                    ),
+                    contentType = ContentType.Image.Any
+                )
+            }
         }
-    }
-}
-
-fun Route.imgRoutes() {
-    for (imgResource in ImgTree.getAllRoutes()) {
-        get(imgResource.route) {
-            call.respondFile(file = File(imgResource.resourcePath))
+        for (fontResource in FontTree.getAllRoutes()) {
+            get(fontResource.route) {
+                call.respondBytes(
+                    bytes = retrieveAsset(
+                        assetManager = assetManager,
+                        position = fontResource.resourcePath
+                    ),
+                    contentType = ContentType.Text.CSS,
+                )
+            }
+        }
+        for (fontResource in RobotoFontTree.getAllRoutes()) {
+            get(fontResource.route) {
+                call.respondBytes(
+                    bytes = retrieveAsset(
+                        assetManager = assetManager,
+                        position = fontResource.resourcePath,
+                    ),
+                    contentType = ContentType.Font.Any,
+                )
+            }
         }
     }
 }

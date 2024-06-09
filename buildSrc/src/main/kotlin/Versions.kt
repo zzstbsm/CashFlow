@@ -5,7 +5,7 @@ object Versions {
     const val datastore = "1.0.0"
 
     const val compose = "1.5.4"
-    const val composeMaterial3 = "1.3.0-alpha02"
+    const val composeMaterial3 = "1.3.0-beta02"
     const val composeActivity = "1.8.1"
     const val composeNavigation = "2.7.5"
     const val composeLifecycle = "2.6.2"

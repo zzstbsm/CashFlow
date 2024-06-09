@@ -1,5 +1,6 @@
 package com.zhengzhou.cashflow.core.server.api
 
+import android.content.res.AssetManager
 import android.net.ConnectivityManager
 
 interface ServerEngineInterface {
@@ -7,8 +8,12 @@ interface ServerEngineInterface {
     /**
      * Start the server engine
      * @param port port to use for the server
+     * @param assetManager asset manager to use for the server
      */
-    fun start(port: Int)
+    fun start(
+        port: Int,
+        assetManager: AssetManager,
+    )
 
     /**
      * Stop the server engine

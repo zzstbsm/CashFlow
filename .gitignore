@@ -3,9 +3,8 @@
 /.idea/
 /build
 /tools
-/local.properties
-/keystore.properties
 .cxx
 .DS_Store
 .externalNativeBuild
 local.properties
+keystore.properties

@@ -6,7 +6,7 @@ enum class FontTree(
 ) {
     Roboto(
         route = "/font/Roboto.css",
-        resourcePath = "core/server/core/server/src/main/resources/font/Roboto.css",
+        resourcePath = "font/Roboto.css",
     );
     companion object {
         fun getAllRoutes(): List<FontTree> {
