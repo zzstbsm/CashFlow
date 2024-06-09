@@ -23,17 +23,14 @@ internal class ServerUiViewModel(
     private var _uiState = MutableStateFlow(ServerUiState())
     val uiState: StateFlow<ServerUiState> = _uiState.asStateFlow()
 
-    private var _server: ServerEngineInterface
+    private var _server: ServerEngineInterface? = null
 
     private var _isWriting = false
 
     init {
-        ServerInstance.initialize()
-        _server = ServerInstance.getServer()!!
-
         // Check if the server is active
         setUiState(
-            Pair(_server.getHostConfiguration(connectivityManager),true)
+            serverRunningConfiguration = Pair(null, true)
         )
 
     }
@@ -67,18 +64,23 @@ internal class ServerUiViewModel(
                     when (event.serverState) {
                         ServerActions.Activate -> {
 
-                            _server.start(
+                            if (_server == null) {
+                                ServerInstance.initialize()
+                                _server = ServerInstance.getServer()!!
+                            }
+
+                            _server?.start(
                                 port = DEFAULT_PORT,
                                 assetManager = assetManager
                             )
-                            val serverRunningConfiguration = _server.getHostConfiguration(connectivityManager = connectivityManager)
+                            val serverRunningConfiguration = _server?.getHostConfiguration(connectivityManager = connectivityManager)
 
                             setUiState(
                                 serverRunningConfiguration = Pair(serverRunningConfiguration,true),
                             )
                         }
                         ServerActions.Deactivate -> {
-                            _server.stop()
+                            _server?.stop()
                             setUiState(
                                 serverRunningConfiguration = Pair(null,true),
                             )
