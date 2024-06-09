@@ -12,6 +12,7 @@
     <string name="nav_name_manage_categories">Manage categories</string>
     <string name="nav_name_overview">Overview</string>
     <string name="nav_name_profile">Profile</string>
+    <string name="nav_name_settings">Settings</string>
     <string name="nav_name_transaction_edit">Edit transaction</string>
     <string name="nav_name_transaction_report">Transaction report</string>
     <string name="nav_name_wallet">Wallet</string>

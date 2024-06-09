@@ -51,10 +51,10 @@ fun ServerUiScreen(
 
 
     ReloadPageAfterPopBackStack(
-        pageRoute = Screen.Profile.route,
+        pageRoute = Screen.ServerUi.route,
         navController = navController,
     ) {
-        setCurrentScreen(ApplicationScreensEnum.Profile)
+        setCurrentScreen(ApplicationScreensEnum.ServerUi)
     }
 
     ModalNavigationDrawer(

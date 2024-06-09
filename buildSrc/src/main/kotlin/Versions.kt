@@ -17,6 +17,8 @@ object Versions {
     const val junitKtx = "1.1.5"
     const val junitUi = "1.5.4"
 
+    const val espresso = "3.5.1"
+
     const val ktor = "2.3.9"
     const val ktorCSS = "1.0.0-pre.129-kotlin-1.4.20"
     const val ktorGson = "1.6.8"

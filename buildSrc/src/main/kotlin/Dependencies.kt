@@ -1,5 +1,6 @@
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.kotlin.dsl.project
+import java.lang.Runtime.Version
 
 object Dependencies {
     const val core = "androidx.core:core-ktx:${Versions.core}"
@@ -30,8 +31,10 @@ object Dependencies {
     const val ktorServerNetty = "io.ktor:ktor-server-netty:${Versions.ktor}"
 
     const val junitKtx = "androidx.test.ext:junit-ktx:${Versions.junitKtx}"
+    const val junitAndroid = "androidx.test.ext:junit:${Versions.junitKtx}"
     const val junit = "junit:junit:${Versions.junit}"
     const val junitUi = "androidx.compose.ui:ui-test-junit4:${Versions.junitUi}"
+    const val testEspresso = "androidx.test.espresso:espresso-core:${Versions.espresso}"
 }
 
 fun DependencyHandler.compose() {
@@ -114,6 +117,8 @@ fun DependencyHandler.server() {
 fun DependencyHandler.test() {
     implementation(Dependencies.junitKtx)
     testImplementation(Dependencies.junit)
+    androidTestImplementation(Dependencies.junitAndroid)
+    androidTestImplementation(Dependencies.testEspresso)
 }
 
 fun DependencyHandler.themes() {

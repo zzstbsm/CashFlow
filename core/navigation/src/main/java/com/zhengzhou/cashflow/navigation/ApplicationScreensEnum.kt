@@ -82,6 +82,14 @@ enum class ApplicationScreensEnum(
         navBarActive = false,
         bottomActive = false,
     ),
+    Settings (
+        iconId = R.drawable.ic_settings,
+        optionName = R.string.nav_name_settings,
+        optionNameShort = R.string.nav_name_settings,
+        accessibilityText = R.string.nav_name_settings,
+        navBarActive = true,
+        bottomActive = false,
+    ),
     AboutMe (
         iconId = R.drawable.ic_info,
         optionName = R.string.nav_name_about_me,

@@ -48,6 +48,9 @@ sealed class Screen(
     data object ServerUi: Screen(
         route = ApplicationScreensEnum.ServerUi.name
     )
+    data object Settings: Screen(
+        route = ApplicationScreensEnum.Settings.name,
+    )
     data object TransactionEdit: Screen(
         route = ApplicationScreensEnum.TransactionEdit.name +
                 "/{${NavigationKeys.keyTransactionTypeID}}" +
