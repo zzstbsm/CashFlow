@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
             PreloadTransactions.load()
 
             MaterialTheme {
-                NavigationApp(repository)
+                NavigationApp(applicationContext,repository)
             }
 
             EventMessages.messageId.observe(this) {

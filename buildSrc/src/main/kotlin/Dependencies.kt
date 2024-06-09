@@ -23,6 +23,11 @@ object Dependencies {
 
     const val gson = "com.google.code.gson:gson:${Versions.gson}"
 
+    const val ktorGson = "io.ktor:ktor-gson:${Versions.ktorGson}"
+    const val ktorHTTP = "io.ktor:ktor-server-html-builder:${Versions.ktor}"
+    const val ktorCSS = "org.jetbrains:kotlin-css-jvm:${Versions.ktorCSS}"
+    const val ktorServerCore = "io.ktor:ktor-server-core:${Versions.ktor}"
+    const val ktorServerNetty = "io.ktor:ktor-server-netty:${Versions.ktor}"
 
     const val junitKtx = "androidx.test.ext:junit-ktx:${Versions.junitKtx}"
     const val junit = "junit:junit:${Versions.junit}"
@@ -50,6 +55,7 @@ fun DependencyHandler.allFeatures() {
     implementation(project(":feature:common_transactions"))
     implementation(project(":feature:manage_categories"))
     implementation(project(":feature:profile"))
+    implementation(project(":feature:server_ui"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:total_balance"))
     implementation(project(":feature:transaction_edit"))
@@ -83,6 +89,14 @@ fun DependencyHandler.featuresDependencies() {
     tools()
 }
 
+fun DependencyHandler.ktor() {
+    implementation(Dependencies.ktorGson)
+    implementation(Dependencies.ktorHTTP)
+    //implementation(Dependencies.ktorCSS)
+    implementation(Dependencies.ktorServerCore)
+    implementation(Dependencies.ktorServerNetty)
+}
+
 fun DependencyHandler.navigation() {
     implementation(project(":core:navigation"))
 }
@@ -91,6 +105,10 @@ fun DependencyHandler.room() {
     implementation(Dependencies.room)
     implementation(Dependencies.roomKtx)
     ksp(Dependencies.roomCompiler)
+}
+
+fun DependencyHandler.server() {
+    implementation(project(":core:server"))
 }
 
 fun DependencyHandler.test() {

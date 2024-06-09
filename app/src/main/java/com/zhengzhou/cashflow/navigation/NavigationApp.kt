@@ -1,5 +1,6 @@
 package com.zhengzhou.cashflow.navigation
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,6 +15,7 @@ import com.zhengzhou.cashflow.common_transactions.CommonTransactionsScreen
 import com.zhengzhou.cashflow.data.Currency
 import com.zhengzhou.cashflow.data.TransactionType
 import com.zhengzhou.cashflow.database.api.repository.RepositoryInterface
+import com.zhengzhou.cashflow.feature.server_ui.ServerUiScreen
 import com.zhengzhou.cashflow.manage_categories.ManageCategoriesScreen
 import com.zhengzhou.cashflow.profile.ProfileScreen
 import com.zhengzhou.cashflow.total_balance.BalanceScreen
@@ -25,6 +27,7 @@ import java.util.UUID
 
 @Composable
 fun NavigationApp(
+    context: Context,
     repository: RepositoryInterface
 ) {
 
@@ -89,6 +92,16 @@ fun NavigationApp(
         }
         composable(route = Screen.Profile.route) {
             ProfileScreen(
+                currentScreen = currentScreen,
+                setCurrentScreen = { screen ->
+                    currentScreen = screen
+                },
+                navController = navController,
+            )
+        }
+        composable(route = Screen.ServerUi.route) {
+            ServerUiScreen(
+                context = context,
                 currentScreen = currentScreen,
                 setCurrentScreen = { screen ->
                     currentScreen = screen

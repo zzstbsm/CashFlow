@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ip_address">Open %s://%s:%s/ on the browser</string>>
+    <string name="network_not_active">Network not active</string>
+    <string name="server_not_active">Remote access not active</string>
+</resources>
