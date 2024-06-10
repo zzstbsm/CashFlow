@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Title -->
+    <string name="settings_option_title_backup">Backup</string>
+    <string name="settings_option_title_restore">Restore</string>
+
+    <!-- Description -->
+    <string name="settings_option_description_backup">Perform a backup of the data</string>
+    <string name="settings_option_description_restore">Restore the data from a backup</string>
+
 </resources>

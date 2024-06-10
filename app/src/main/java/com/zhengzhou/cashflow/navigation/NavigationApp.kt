@@ -112,6 +112,7 @@ fun NavigationApp(
         }
         composable(route = Screen.Settings.route) {
             SettingsScreen(
+                context = context,
                 currentScreen = currentScreen,
                 setCurrentScreen = { screen ->
                     currentScreen = screen
