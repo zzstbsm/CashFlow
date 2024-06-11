@@ -17,7 +17,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.feature.settings.components.SingleOptionTile
@@ -27,14 +26,14 @@ import com.zhengzhou.cashflow.feature.settings.view_model.SettingsViewModel
 import com.zhengzhou.cashflow.navigation.ApplicationScreensEnum
 import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.navigation.functions.ReloadPageAfterPopBackStack
-import com.zhengzhou.cashflow.settings.R
 import com.zhengzhou.cashflow.tools.accessToSharedStorage.handleSaveJsonResult
 import com.zhengzhou.cashflow.tools.accessToSharedStorage.saveJsonWithSAF
 import com.zhengzhou.cashflow.tools.ui_elements.navigation.BottomNavigationBar
 import com.zhengzhou.cashflow.tools.ui_elements.navigation.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.tools.ui_elements.navigation.SectionTopAppBar
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun SettingsScreen(
@@ -123,7 +122,13 @@ private fun SettingsScreenMainBody(
                     stringResource(it)
                 },
                 icon = SettingsList.Backup.icon,
-                onClick = { saveJsonWithSAF(fileName = "Cashflow_backup - use_current_datetime", launcher = launcher) }, // TODO: Implement use of current datetime for filename
+                onClick = {
+
+                    val timestampFormat = SimpleDateFormat("yyyyMMdd-HHmmss", Locale.getDefault())
+                    val currentDateTime = timestampFormat.format(Date())
+
+                    saveJsonWithSAF(fileName = "Cashflow_backup - $currentDateTime", launcher = launcher)
+                },
                 modifier = Modifier.fillMaxWidth()
             )
         }
