@@ -1,6 +1,7 @@
 package com.zhengzhou.cashflow.feature.settings
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,20 +21,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zhengzhou.cashflow.feature.settings.components.SingleOptionTile
+import com.zhengzhou.cashflow.feature.settings.view_model.SettingsEvents
 import com.zhengzhou.cashflow.feature.settings.view_model.SettingsList
 import com.zhengzhou.cashflow.feature.settings.view_model.SettingsState
 import com.zhengzhou.cashflow.feature.settings.view_model.SettingsViewModel
 import com.zhengzhou.cashflow.navigation.ApplicationScreensEnum
 import com.zhengzhou.cashflow.navigation.Screen
 import com.zhengzhou.cashflow.navigation.functions.ReloadPageAfterPopBackStack
+import com.zhengzhou.cashflow.tools.EventMessages
+import com.zhengzhou.cashflow.tools.accessToSharedStorage.handleLoadJsonResult
 import com.zhengzhou.cashflow.tools.accessToSharedStorage.handleSaveJsonResult
-import com.zhengzhou.cashflow.tools.accessToSharedStorage.saveJsonWithSAF
+import com.zhengzhou.cashflow.tools.accessToSharedStorage.LoadJsonWithSAF
+import com.zhengzhou.cashflow.tools.accessToSharedStorage.SaveJsonWithSAF
 import com.zhengzhou.cashflow.tools.ui_elements.navigation.BottomNavigationBar
 import com.zhengzhou.cashflow.tools.ui_elements.navigation.SectionNavigationDrawerSheet
 import com.zhengzhou.cashflow.tools.ui_elements.navigation.SectionTopAppBar
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
+const val TAG = "SettingsScreen"
 
 @Composable
 fun SettingsScreen(
@@ -103,10 +110,20 @@ private fun SettingsScreenMainBody(
     settingsViewModel: SettingsViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val launcher = handleSaveJsonResult(
+
+    val handleSaveJsonResult = handleSaveJsonResult(
         context = context,
         coroutineScope = rememberCoroutineScope(),
-        jsonData = "{}" // TODO: Implement retrival of data from database
+        jsonData = { "{}" } // TODO: Implement save data, replace with a function that retrieves the actual json data
+    )
+    val handleLoadJsonResult = handleLoadJsonResult(
+        context = context,
+        coroutineScope = rememberCoroutineScope(),
+        onJsonLoaded = { json ->
+            EventMessages.sendMessage(
+                json
+            )
+        }
     )
 
     LazyColumn(
@@ -123,11 +140,7 @@ private fun SettingsScreenMainBody(
                 },
                 icon = SettingsList.Backup.icon,
                 onClick = {
-
-                    val timestampFormat = SimpleDateFormat("yyyyMMdd-HHmmss", Locale.getDefault())
-                    val currentDateTime = timestampFormat.format(Date())
-
-                    saveJsonWithSAF(fileName = "Cashflow_backup - $currentDateTime", launcher = launcher)
+                    settingsViewModel.onEvent(SettingsEvents.ActivateTriggerSave)
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -140,9 +153,34 @@ private fun SettingsScreenMainBody(
                     stringResource(it)
                 },
                 icon = SettingsList.Restore.icon,
-                onClick = { /* TODO: implement restore configuration in the database */ },
+                onClick = {
+                    settingsViewModel.onEvent(SettingsEvents.ActivateTriggerLoad)
+                },
                 modifier = Modifier.fillMaxWidth()
             )
         }
+    }
+
+    if (settingsViewModel.accessSaveTrigger()) {
+        Log.d(TAG, "Save triggered")
+        val timestampFormat = SimpleDateFormat("yyyyMMdd-HHmmss", Locale.getDefault())
+        val currentDateTime = timestampFormat.format(Date())
+
+
+        // Handle save data
+        SaveJsonWithSAF(
+            fileName = "Cashflow_backup - $currentDateTime",
+            launcher = handleSaveJsonResult,
+        )
+    }
+
+    if (settingsViewModel.accessLoadTrigger()) {
+        Log.d(TAG, "Load triggered")
+        // Handle load data
+
+        LoadJsonWithSAF(
+            launcher = handleLoadJsonResult,
+        )
+
     }
 }

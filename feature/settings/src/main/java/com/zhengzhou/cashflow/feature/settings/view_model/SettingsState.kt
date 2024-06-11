@@ -1,7 +1,6 @@
 package com.zhengzhou.cashflow.feature.settings.view_model
 
 internal data class SettingsState(
-    val selectedOptionInSettings: SettingsList? = null
+    val loadTrigger: Boolean = false,
+    val saveTrigger: Boolean = false,
 )
-
-typealias ApplySettingBool = Boolean

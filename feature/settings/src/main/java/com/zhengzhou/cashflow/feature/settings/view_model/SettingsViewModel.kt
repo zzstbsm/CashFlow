@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 internal class SettingsViewModel: ViewModel() {
 
-    private val _uiState = MutableStateFlow(SettingsState())
+    private var _uiState = MutableStateFlow(SettingsState())
     val uiState: StateFlow<SettingsState> = _uiState.asStateFlow()
 
     private var writingUiState: Boolean = false
@@ -22,11 +22,12 @@ internal class SettingsViewModel: ViewModel() {
 
     /**
      * Sets the selected option in settings.
-     * @param settingsList is composed by [SettingsList] (that can be null) and
-     * [ApplySettingBool] that is a boolean that eventually sets the field to null
+     * @param loadTrigger: set on true to trigger the save
+     * @param saveTrigger: set on true to trigger the save
      */
     private fun setUiState(
-        settingsList: Pair<SettingsList?,ApplySettingBool> = Pair(null, false)
+        loadTrigger: Boolean? = null,
+        saveTrigger: Boolean? = null,
     ) {
 
         viewModelScope.launch {
@@ -35,14 +36,47 @@ internal class SettingsViewModel: ViewModel() {
             writingUiState = true
 
             _uiState.value = uiState.value.copy(
-                selectedOptionInSettings = settingsList.first ?: if (settingsList.second) {
-                    null
-                } else {
-                    uiState.value.selectedOptionInSettings
-                },
+                loadTrigger = loadTrigger ?: uiState.value.loadTrigger,
+                saveTrigger = saveTrigger ?: uiState.value.saveTrigger,
             )
 
             writingUiState = false
         }
     }
+
+    fun onEvent(
+        settingsEvents: SettingsEvents,
+    ) {
+        when (settingsEvents) {
+            is SettingsEvents.ActivateTriggerLoad -> {
+                setUiState(
+                    loadTrigger = true,
+                )
+            }
+            is SettingsEvents.ActivateTriggerSave -> {
+                setUiState(
+                    saveTrigger = true
+                )
+            }
+        }
+    }
+
+    fun accessLoadTrigger(): Boolean {
+        return if (uiState.value.loadTrigger) {
+            setUiState(
+                loadTrigger = false,
+            )
+            true
+        } else false
+    }
+
+    fun accessSaveTrigger(): Boolean {
+        return if (uiState.value.saveTrigger) {
+            setUiState(
+                saveTrigger = false,
+            )
+            true
+        } else false
+    }
+
 }

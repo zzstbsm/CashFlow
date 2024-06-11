@@ -13,15 +13,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun SaveJsonWithSAF(
-    fileName: String,
+fun LoadJsonWithSAF(
     launcher: ManagedActivityResultLauncher<Intent, ActivityResult>,
 ) {
 
-    val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
         addCategory(Intent.CATEGORY_OPENABLE)
         type = "application/json"
-        putExtra(Intent.EXTRA_TITLE, fileName)
     }
 
     // Trigger the SAF intent
@@ -29,10 +27,10 @@ fun SaveJsonWithSAF(
 }
 
 @Composable
-fun handleSaveJsonResult(
+fun handleLoadJsonResult(
     context: Context,
     coroutineScope: CoroutineScope,
-    jsonData: () -> String,
+    onJsonLoaded: (String) -> Unit,
 ): ManagedActivityResultLauncher<Intent, ActivityResult> {
     return rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -41,20 +39,24 @@ fun handleSaveJsonResult(
             val uri: Uri? = result.data?.data
             uri?.let {
                 coroutineScope.launch {
-                    saveJsonToFile(context, it, jsonData())
+                    val jsonData = loadJsonFromFile(context, it)
+                    onJsonLoaded(jsonData)
                 }
             }
         }
     }
 }
 
-private fun saveJsonToFile(context: Context, uri: Uri, jsonData: String) {
-    try {
-        context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-            outputStream.write(jsonData.toByteArray())
-        }
+private fun loadJsonFromFile(context: Context, uri: Uri): String {
+    return try {
+        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            inputStream.bufferedReader().use { reader ->
+                reader.readText()
+            }
+        } ?: ""
     } catch (e: Exception) {
         // Handle exceptions, e.g., log the error or show a message to the user
         e.printStackTrace()
+        ""
     }
 }
