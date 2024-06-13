@@ -1,6 +1,5 @@
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.kotlin.dsl.project
-import java.lang.Runtime.Version
 
 object Dependencies {
     const val core = "androidx.core:core-ktx:${Versions.core}"
@@ -23,6 +22,7 @@ object Dependencies {
     const val roomKtx = "androidx.room:room-ktx:${Versions.room}"
 
     const val gson = "com.google.code.gson:gson:${Versions.gson}"
+    const val serializationJson = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.serializationJson}"
 
     const val ktorGson = "io.ktor:ktor-gson:${Versions.ktorGson}"
     const val ktorHTTP = "io.ktor:ktor-server-html-builder:${Versions.ktor}"
@@ -74,6 +74,7 @@ fun DependencyHandler.core() {
 
 fun DependencyHandler.data() {
     implementation(project(":core:data"))
+    implementation(Dependencies.serializationJson)
 }
 
 fun DependencyHandler.database() {

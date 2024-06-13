@@ -28,4 +28,9 @@ internal interface TagEntryDao {
     suspend fun updateTagEntryDecreaseCounter(tagUUID: UUID)
     @Query("UPDATE tag_entry SET count = count + 1 WHERE id=(:tagUUID)")
     suspend fun updateTagEntryIncreaseCounter(tagUUID: UUID)
+
+    // Get all TagEntry as a list
+    @Query("SELECT * FROM tag_entry")
+    suspend fun getAllTagEntry(): List<TagEntry>
+
 }

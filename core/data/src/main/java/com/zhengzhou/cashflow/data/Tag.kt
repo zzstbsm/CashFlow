@@ -3,6 +3,8 @@ package com.zhengzhou.cashflow.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import java.util.UUID
 import kotlin.math.min
 
@@ -124,12 +126,17 @@ data class Tag (
  * @param transactionUUID ID of the transaction that has the current tag.
  * @param tagUUID ID of the TagEntry linked to the current TagTransaction.
  */
+@Serializable
 @Entity(tableName = "tag_transaction")
 data class TagTransaction (
-    @PrimaryKey val id: UUID = UUID(0L,0L),
+    @PrimaryKey
+    @Contextual
+    val id: UUID = UUID(0L,0L),
     @ColumnInfo(name = "id_movement")
+    @Contextual
     val transactionUUID: UUID = UUID(0L, 0L),
     @ColumnInfo(name = "id_tag")
+    @Contextual
     val tagUUID: UUID = UUID(0L, 0L),
 )
 
@@ -141,9 +148,12 @@ data class TagTransaction (
  * @param count times that the tag is used in all the transactions registered in the application.
  *
  */
+@Serializable
 @Entity(tableName = "tag_entry")
 data class TagEntry(
-    @PrimaryKey val id: UUID = UUID.randomUUID(),
+    @PrimaryKey
+    @Contextual
+    val id: UUID = UUID.randomUUID(),
     val name: String = "",
     val count: Int = 0,
 ) {

@@ -1,6 +1,7 @@
 plugins {
     `android-library`
     `kotlin-android`
+    kotlin("plugin.serialization")
 }
 
 apply<MainGradlePlugin>()
@@ -10,6 +11,8 @@ android {
 }
 
 dependencies {
+
+    implementation(Dependencies.serializationJson)
 
     compose()
     core()

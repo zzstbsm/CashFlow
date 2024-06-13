@@ -4,11 +4,16 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.zhengzhou.cashflow.themes.icons.IconsMappedForDB
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import java.util.UUID
 
+@Serializable
 @Entity(tableName = "category")
 data class Category (
-    @PrimaryKey val id: UUID,
+    @PrimaryKey
+    @Contextual
+    val id: UUID,
     var name: String,
     @ColumnInfo(name = "id_icon")
     val iconName: IconsMappedForDB,

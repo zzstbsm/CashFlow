@@ -45,7 +45,7 @@ enum class TransactionType (
         ): TransactionType? {
 
             // Return the type of transaction
-            TransactionType.values().forEach { transactionType: TransactionType ->
+            entries.forEach { transactionType: TransactionType ->
                 if (transactionType.id == id) {
                     return transactionType
                 }

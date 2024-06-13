@@ -33,4 +33,9 @@ internal interface WalletDao {
     fun getWalletListByCurrency(currency: Currency): Flow<List<Wallet>>
     @Query("SELECT name FROM wallet")
     fun getWalletListOfNames(): Flow<List<String>>
+
+    // Get all Wallet as a list
+    @Query("SELECT * FROM wallet")
+    fun getAllWallet(): List<Wallet>
+
 }

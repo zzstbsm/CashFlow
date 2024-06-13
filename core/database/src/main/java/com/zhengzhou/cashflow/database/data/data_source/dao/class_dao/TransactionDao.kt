@@ -30,4 +30,9 @@ internal interface TransactionDao {
     fun getTransactionListInWallet(walletUUID: UUID): Flow<List<Transaction>>
     @Query("SELECT * FROM movement WHERE is_blueprint != 0")
     fun getTransactionIsBlueprint(): Flow<List<Transaction>>
+
+    // Get all Transaction as list
+    @Query("SELECT * FROM movement")
+    fun getAllTransaction(): List<Transaction>
+
 }

@@ -11,6 +11,7 @@ object Versions {
     const val composeLifecycle = "2.6.2"
 
     const val room = "2.6.0"
+    const val serializationJson = "1.7.0"
     const val gson = "2.10.1"
 
     const val junit = "4.13.2"

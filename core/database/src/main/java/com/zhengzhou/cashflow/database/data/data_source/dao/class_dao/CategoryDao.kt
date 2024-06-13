@@ -29,4 +29,9 @@ internal interface CategoryDao {
 
     @Query("SELECT count(*) FROM movement WHERE id_category=(:categoryUUID)")
     suspend fun getCategoryOccurrences(categoryUUID: UUID): Int
+
+    // Get all categories as list
+    @Query("SELECT * FROM category")
+    suspend fun getAllCategories(): List<Category>
+
 }
