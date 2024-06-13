@@ -14,5 +14,5 @@ object ProjectConfig {
     const val developement = "dev"
     const val debug = "debug"
 
-    const val kotlinCompilerExtensionVersion = "1.5.4"
+    const val kotlinCompilerExtensionVersion = "1.5.14"
 }
